@@ -23,7 +23,7 @@ func main() {
 	}()
 
 	collection := client.Database("testdb").Collection("testcollection")
-	documents := bson.D{{Key: helloWorldField, Value: "Hello, World!"},}
+	documents := bson.D{{Key: helloWorldField, Value: "Hello, World!"}}
 	res, err := collection.InsertOne(context.Background(), documents)
 	if err != nil {
 		panic(fmt.Errorf("can't insert document: %w", err))
