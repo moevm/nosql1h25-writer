@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+    command: mongod --logpath /dev/null
+  
+  app:
+    environment:
+      MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
+    build: .
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
+    driver: local
