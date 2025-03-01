@@ -1,9 +1,9 @@
 # SOURCE CODE AND DEPENDENCIES
-FROM golang:1.23.0-alpine AS builder
+FROM golang:1.24.0-alpine AS builder
 WORKDIR /main
-COPY hello_world go.mod go.sum ./
+COPY . .
 RUN go mod download
-RUN go build -o bin/main main.go
+RUN go build -o bin/main cmd/main/main.go
 
 # FINAL STAGE
 FROM alpine AS final
