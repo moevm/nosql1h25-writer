@@ -1,0 +1,98 @@
+{
+  "bsonType": "object",
+  "description": "Коллекция переписок (чатов).",
+  "required": [
+    "client",
+    "orderId",
+    "active",
+    "freelancer",
+    "createdAt",
+    "updatedAt",
+    "messages"
+  ],
+  "properties": {
+    "createdAt": {
+      "bsonType": "timestamp",
+      "description": "Дата создания документа."
+    },
+    "orderId": {
+      "bsonType": "objectId",
+      "description": "ID заказа, по которому ведётся переписка."
+    },
+    "client": {
+      "bsonType": "object",
+      "description": "Информация о заказчике (одном из участников переписки).",
+      "required": [
+        "id",
+        "publicName"
+      ],
+      "properties": {
+        "publicName": {
+          "bsonType": "string",
+          "description": "Публичное имя заказчика."
+        },
+        "id": {
+          "bsonType": "objectId",
+          "description": "ID заказчика."
+        }
+      }
+    },
+    "active": {
+      "bsonType": "bool",
+      "description": "Активная ли переписка, можно ли отправлять новые сообщения."
+    },
+    "messages": {
+      "bsonType": "array",
+      "description": "Список сообщений в чате.",
+      "items": {
+        "bsonType": "object",
+        "description": "Список сообщений в чате.",
+        "required": [
+          "createdAt",
+          "sender",
+          "content"
+        ],
+        "properties": {
+          "createdAt": {
+            "bsonType": "timestamp",
+            "description": "Дата создания документа."
+          },
+          "sender": {
+            "description": "Отправитель сообщения (может быть система, исполнитель или заказчик).",
+            "enum": [
+              "system",
+              "client",
+              "freelancer"
+            ]
+          },
+          "content": {
+            "bsonType": "long",
+            "description": "Текст сообщения."
+          }
+        }
+      }
+    },
+    "freelancer": {
+      "bsonType": "object",
+      "description": "Информация об исполнителе (одном из участников переписки).",
+      "required": [
+        "id",
+        "publicName"
+      ],
+      "properties": {
+        "publicName": {
+          "bsonType": "string",
+          "description": "Публичное имя исполнителя."
+        },
+        "id": {
+          "bsonType": "objectId",
+          "description": "ID исполнителя."
+        }
+      }
+    },
+    "updatedAt": {
+      "bsonType": "timestamp",
+      "description": "Дата обновления документа."
+    }
+  }
+}

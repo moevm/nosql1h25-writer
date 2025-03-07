@@ -1,0 +1,135 @@
+{
+  "bsonType": "object",
+  "description": "Коллекция заказов.",
+  "required": [
+    "clientId",
+    "title",
+    "description",
+    "completionTime",
+    "active",
+    "responses",
+    "statuses",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "completionTime": {
+      "bsonType": "int",
+      "description": "Срок выполнения заказа (int64), хранится в наносекундах. Максимальный срок при использовании int64 - 292 года."
+    },
+    "createdAt": {
+      "bsonType": "timestamp",
+      "description": "Дата создания документа."
+    },
+    "freelancerId": {
+      "bsonType": "objectId",
+      "description": "ID выбранного исполнителя, появляется в документе на определённом этапе заказа."
+    },
+    "clientId": {
+      "bsonType": "objectId",
+      "description": "ID пользователя, разместившего заказ."
+    },
+    "cost": {
+      "bsonType": "int",
+      "description": "Стоимость заказа, может быть числом, может быть неопределённой. Если это поле не задано, считать стоимость договорной."
+    },
+    "description": {
+      "bsonType": "long",
+      "description": "Описание заказа, задаётся пользователем."
+    },
+    "active": {
+      "bsonType": "bool",
+      "description": "Активен ли заказ (может быть неактивен, если заказ был скрыт администратором или удалён заказчиком)."
+    },
+    "responses": {
+      "bsonType": "array",
+      "description": "Список откликов от фрилансеров.",
+      "items": {
+        "bsonType": "object",
+        "description": "Список откликов от фрилансеров.",
+        "required": [
+          "freelancerName",
+          "freelancerId",
+          "chatId",
+          "coverLetter",
+          "active",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "bsonType": "timestamp",
+            "description": "Дата создания документа."
+          },
+          "freelancerId": {
+            "bsonType": "objectId",
+            "description": "ID пользователя, откликнувшегося на заказ."
+          },
+          "chatId": {
+            "bsonType": "objectId",
+            "description": "ID чата, созданного для переписки в рамках отклика."
+          },
+          "active": {
+            "bsonType": "bool",
+            "description": "Активен ли отклик."
+          },
+          "coverLetter": {
+            "bsonType": "long",
+            "description": "Сопроводительное письмо фрилансера, по совместительству первое сообщение в переписке."
+          },
+          "freelancerName": {
+            "bsonType": "string",
+            "description": "Публичное имя пользователя, откликнувшегося на заказ."
+          },
+          "updatedAt": {
+            "bsonType": "timestamp",
+            "description": "Дата обновления документа."
+          }
+        }
+      }
+    },
+    "statuses": {
+      "bsonType": "array",
+      "description": "История изменений статусов заказа. Последний элемент массива всегда отражает актуальный статус.",
+      "items": {
+        "bsonType": "object",
+        "description": "История изменений статусов заказа. Последний элемент массива всегда отражает актуальный статус.",
+        "required": [
+          "title",
+          "createdAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "bsonType": "timestamp",
+            "description": "Дата создания документа."
+          },
+          "title": {
+            "description": "Название статуса.",
+            "enum": [
+              "approved",
+              "work",
+              "finished",
+              "dispute"
+            ]
+          },
+          "content": {
+            "bsonType": "string",
+            "description": "Дополнительная информация, если нужно."
+          }
+        }
+      }
+    },
+    "title": {
+      "bsonType": "string",
+      "description": "Название статуса."
+    },
+    "budget": {
+      "bsonType": "int",
+      "description": "Зарезервированный заказчиком бюджет сделки. Может быть не указан в коллекции до определённого этапа. В отличие от cost, используется для расчётов, а не для показа карточки заказа."
+    },
+    "updatedAt": {
+      "bsonType": "timestamp",
+      "description": "Дата обновления документа."
+    }
+  }
+}
