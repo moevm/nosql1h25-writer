@@ -34,7 +34,7 @@
       "description": "Стоимость заказа, может быть числом, может быть неопределённой. Если это поле не задано, считать стоимость договорной."
     },
     "description": {
-      "bsonType": "long",
+      "bsonType": "string",
       "description": "Описание заказа, задаётся пользователем."
     },
     "active": {
@@ -74,7 +74,7 @@
             "description": "Активен ли отклик."
           },
           "coverLetter": {
-            "bsonType": "long",
+            "bsonType": "string",
             "description": "Сопроводительное письмо фрилансера, по совместительству первое сообщение в переписке."
           },
           "freelancerName": {
@@ -106,8 +106,11 @@
           "title": {
             "description": "Название статуса.",
             "enum": [
-              "approved",
+              "beginning",
+              "negotiation",
+              "budgeting",
               "work",
+              "reviews",
               "finished",
               "dispute"
             ]

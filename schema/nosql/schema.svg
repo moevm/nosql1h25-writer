@@ -249,17 +249,8 @@
   </linearGradient>
   <linearGradient id='tln_BED3F4' x1='0%' y1='0%' x2='100%' y2='0%' >
      <stop offset='0%' stop-color='#D7DEEB' /> 
-     <stop offset='20%' stop-color='#6882AE' /> 
+     <stop offset='20%' stop-color='#6883AE' /> 
      <stop offset='100%' stop-color='#D7DEEB' /> 
-  </linearGradient>
-  <linearGradient id='tbg_F4DDBE' x1='0%' y1='0%' x2='100%' y2='0%' >
-     <stop offset='0%' stop-color='#EEDCC5' /> 
-     <stop offset='100%' stop-color='#F7F1EB' /> 
-  </linearGradient>
-  <linearGradient id='tln_F4DDBE' x1='0%' y1='0%' x2='100%' y2='0%' >
-     <stop offset='0%' stop-color='#EBE2D7' /> 
-     <stop offset='20%' stop-color='#AE8F68' /> 
-     <stop offset='100%' stop-color='#EBE2D7' /> 
   </linearGradient>
   <linearGradient id='tbg_C7F4BE' x1='0%' y1='0%' x2='100%' y2='0%' >
      <stop offset='0%' stop-color='#CBEEC5' /> 
@@ -269,6 +260,15 @@
      <stop offset='0%' stop-color='#DAEBD7' /> 
      <stop offset='20%' stop-color='#73AE68' /> 
      <stop offset='100%' stop-color='#DAEBD7' /> 
+  </linearGradient>
+  <linearGradient id='tbg_F4DDBE' x1='0%' y1='0%' x2='100%' y2='0%' >
+     <stop offset='0%' stop-color='#EEDCC5' /> 
+     <stop offset='100%' stop-color='#F7F1EB' /> 
+  </linearGradient>
+  <linearGradient id='tln_F4DDBE' x1='0%' y1='0%' x2='100%' y2='0%' >
+     <stop offset='0%' stop-color='#EBE2D7' /> 
+     <stop offset='20%' stop-color='#AE9068' /> 
+     <stop offset='100%' stop-color='#EBE2D7' /> 
   </linearGradient>
 </defs>
 
@@ -282,22 +282,46 @@
   <rect x='10' y='10' width='360' height='70' rx='7' ry='7' class='legend'/> 
   <use x='349' y='28' xlink:href='#bulb' width='24' height='24'><title>Read column and table comments by hovering the columns and tables.
 Zoom with CTRL+whell mouse button, pan by dragging the diagram with the right-mouse button</title></use>
-  <use x='20' y='40' xlink:href='#logo'><title>DbSchema Database Designer </title></use>  <text x='20' y='30' class='legendTitle' >Main Diagram</text> 
+  <use x='20' y='40' xlink:href='#logo'><title>DbSchema Database Designer </title></use>  <text x='20' y='30' class='legendTitle' >Writer</text> 
   <text x='57' y='47' class='legendSubTitle'><tspan>Read schema comments as mouse-over tooltips</tspan></text>
-  <a xlink:href='https://dbschema.com'><text x='57' y='61' class='legendSubTitle'><tspan>DbSchema.com © 2025-03-07 Wise Coders<title>DbSchema is an universal database designer.
+  <a xlink:href='https://dbschema.com'><text x='57' y='61' class='legendSubTitle'><tspan>DbSchema.com © 2025-03-08 Wise Coders<title>DbSchema is an universal database designer.
 DbSchema has a free Community Edition.</title></tspan></text></a> 
 </g>
 
 <g transform='translate(0,110)'>
 <!-- == Group 'orders' == -->
-<rect class='grp' style='fill:#F4FFF2;stroke:#98C590' x='352' y='893' width='416' height='514' rx='8' ry='8' />
-<text x='364' y='909' style='fill:#98C590;'>orders</text>
+<rect class='grp' style='fill:#F4FFF2;stroke:#99C590' x='352' y='893' width='416' height='514' rx='8' ry='8' />
+<text x='364' y='909' style='fill:#99C590;'>orders</text>
 <!-- == Group 'chats' == -->
-<rect class='grp' style='fill:#F2F6FF;stroke:#90A4C5' x='352' y='45' width='416' height='466' rx='8' ry='8' />
-<text x='364' y='61' style='fill:#90A4C5;'>chats</text>
+<rect class='grp' style='fill:#F2F6FF;stroke:#90A3C5' x='352' y='45' width='416' height='466' rx='8' ry='8' />
+<text x='364' y='61' style='fill:#90A3C5;'>chats</text>
 <!-- == Group 'users' == -->
-<rect class='grp' style='fill:#FFF9F2;stroke:#C5AE90' x='32' y='141' width='224' height='658' rx='8' ry='8' />
-<text x='44' y='157' style='fill:#C5AE90;'>users</text>
+<rect class='grp' style='fill:#FFF9F2;stroke:#C5AC90' x='32' y='141' width='224' height='658' rx='8' ry='8' />
+<text x='44' y='157' style='fill:#C5AC90;'>users</text>
+<!-- == Fk 'chats_fk_chats_users' == -->
+<path id='chats_fk_chats_users'  onmouseover="hghl(['chats_fk_chats_users','schema_editor.chats.id','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users','schema_editor.chats.id','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 480,192L 264,192Q 256,192 256,200L 256,200Q 256,208 248,208L 240,208' >
+	<title>&#x1F517;  Foreign Key fk_chats_users
+chats ref users ( freelancer.id -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 480,192L 264,192Q 256,192 256,200L 256,200Q 256,208 248,208L 240,208' ><title>&#x1F517;  Foreign Key fk_chats_users
+chats ref users ( freelancer.id -&gt; _id )</title></path>
+<text x='479' y='187' transform='rotate(0 479,187)' class='relName'>id</text>
+<!-- == Fk 'chats_fk_chats_users_0' == -->
+<path id='chats_fk_chats_users_0'  onmouseover="hghl(['chats_fk_chats_users_0','schema_editor.chats.id','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users_0','schema_editor.chats.id','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 656,192L 664,192Q 672,192 672,184L 672,56Q 672,48 664,48L 440,48Q 432,48 432,56L 432,184Q 432,192 424,192L 416,192' >
+	<title>&#x1F517;  Foreign Key fk_chats_users_0
+chats ref users ( client.id -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#OneMore)'   class='virtual'  d='M 656,192L 664,192Q 672,192 672,184L 672,56Q 672,48 664,48L 440,48Q 432,48 432,56L 432,184Q 432,192 424,192L 416,192' ><title>&#x1F517;  Foreign Key fk_chats_users_0
+chats ref users ( client.id -&gt; _id )</title></path>
+<text x='665' y='187' transform='rotate(0 665,187)' class='relName'>id</text>
+<!-- == Fk 'chats_fk_chats_orders' == -->
+<path id='chats_fk_chats_orders'  onmouseover="hghl(['chats_fk_chats_orders','schema_editor.chats.orderId','schema_editor.orders._id'])" onmouseout="uhghl(['chats_fk_chats_orders','schema_editor.chats.orderId','schema_editor.orders._id'])" transform='translate(8,0)' class='unhighlight' d='M 480,240L 312,240Q 304,240 304,248L 304,952Q 304,960 312,960L 448,960' >
+	<title>&#x1F517;  Foreign Key fk_chats_orders
+chats ref orders ( orderId -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 480,240L 312,240Q 304,240 304,248L 304,952Q 304,960 312,960L 448,960' ><title>&#x1F517;  Foreign Key fk_chats_orders
+chats ref orders ( orderId -&gt; _id )</title></path>
+<text x='447' y='235' transform='rotate(0 447,235)' class='relName'>orderId</text>
 <!-- == Fk 'client_JSon' == -->
 <path id='client_JSon'  onmouseover="hghl(['client_JSon','schema_editor.chats.client'])" onmouseout="uhghl(['client_JSon','schema_editor.chats.client'])" transform='translate(8,0)' class='unhighlight' d='M 752,416L 760,416Q 768,416 768,408L 768,232Q 768,224 760,224L 656,224' >
 	<title>&#x1F517;  Foreign Key JSon
@@ -322,6 +346,38 @@ messages ref chats (  )</title>
 <path transform='translate(8,0)' marker-start='url(#ZeroOne)' marker-end='url(#One)'    d='M 352,416L 344,416Q 336,416 336,408L 336,328Q 336,320 344,320L 480,320' ><title>&#x1F517;  Foreign Key JSon
 messages ref chats (  )</title></path>
 <text x='344' y='411' transform='rotate(0 344,411)' class='relName'>Arr</text>
+<!-- == Fk 'orders_fk_orders_users' == -->
+<path id='orders_fk_orders_users'  onmouseover="hghl(['orders_fk_orders_users','schema_editor.orders.freelancerId','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users','schema_editor.orders.freelancerId','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 448,944L 24,944Q 16,944 16,936L 16,216Q 16,208 24,208L 32,208' >
+	<title>&#x1F517;  Foreign Key fk_orders_users
+orders ref users ( responses.freelancerId -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 448,944L 24,944Q 16,944 16,936L 16,216Q 16,208 24,208L 32,208' ><title>&#x1F517;  Foreign Key fk_orders_users
+orders ref users ( responses.freelancerId -&gt; _id )</title></path>
+<text x='390' y='939' transform='rotate(0 390,939)' class='relName'>freelancerId</text>
+<!-- == Fk 'orders_fk_orders_users_0' == -->
+<path id='orders_fk_orders_users_0'  onmouseover="hghl(['orders_fk_orders_users_0','schema_editor.orders.clientId','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_0','schema_editor.orders.clientId','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 448,976L 440,976Q 432,976 432,968L 432,952Q 432,944 424,944L 416,944' >
+	<title>&#x1F517;  Foreign Key fk_orders_users_0
+orders ref users ( clientId -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#OneMore)'   class='virtual'  d='M 448,976L 440,976Q 432,976 432,968L 432,952Q 432,944 424,944L 416,944' ><title>&#x1F517;  Foreign Key fk_orders_users_0
+orders ref users ( clientId -&gt; _id )</title></path>
+<text x='416' y='971' transform='rotate(0 416,971)' class='relName'>clientId</text>
+<!-- == Fk 'orders_fk_orders_users_1' == -->
+<path id='orders_fk_orders_users_1'  onmouseover="hghl(['orders_fk_orders_users_1','schema_editor.orders.freelancerId','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_1','schema_editor.orders.freelancerId','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 448,1088L 440,1088Q 432,1088 432,1080L 432,960' >
+	<title>&#x1F517;  Foreign Key fk_orders_users_1
+orders ref users ( freelancerId -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#ZeroMore)'   class='dotted virtual'  d='M 448,1088L 440,1088Q 432,1088 432,1080L 432,960' ><title>&#x1F517;  Foreign Key fk_orders_users_1
+orders ref users ( freelancerId -&gt; _id )</title></path>
+<text x='390' y='1083' transform='rotate(0 390,1083)' class='relName'>freelancerId</text>
+<!-- == Fk 'orders_fk_orders_chats' == -->
+<path id='orders_fk_orders_chats'  onmouseover="hghl(['orders_fk_orders_chats','schema_editor.orders.chatId','schema_editor.chats._id'])" onmouseout="uhghl(['orders_fk_orders_chats','schema_editor.orders.chatId','schema_editor.chats._id'])" transform='translate(8,0)' class='unhighlight' d='M 624,944L 632,944Q 640,944 640,936L 640,520Q 640,512 632,512L 328,512Q 320,512 320,504L 320,216Q 320,208 328,208L 480,208' >
+	<title>&#x1F517;  Foreign Key fk_orders_chats
+orders ref chats ( responses.chatId -&gt; _id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 624,944L 632,944Q 640,944 640,936L 640,520Q 640,512 632,512L 328,512Q 320,512 320,504L 320,216Q 320,208 328,208L 480,208' ><title>&#x1F517;  Foreign Key fk_orders_chats
+orders ref chats ( responses.chatId -&gt; _id )</title></path>
+<text x='633' y='939' transform='rotate(0 633,939)' class='relName'>chatId</text>
 <!-- == Fk 'profiles_JSon' == -->
 <path id='profiles_JSon'  onmouseover="hghl(['profiles_JSon','schema_editor.users.profiles'])" onmouseout="uhghl(['profiles_JSon','schema_editor.users.profiles'])" transform='translate(8,0)' class='unhighlight' d='M 240,464L 248,464Q 256,464 256,456L 256,312Q 256,304 248,304L 240,304' >
 	<title>&#x1F517;  Foreign Key JSon
@@ -362,380 +418,11 @@ users ref users ( profiles.reviews.authorId -&gt; _id )</title>
 <path transform='translate(8,0)' marker-start='url(#OneMore)'   class='virtual'  d='M 240,192L 248,192Q 256,192 256,200L 256,208' ><title>&#x1F517;  Foreign Key fk_users_users
 users ref users ( profiles.reviews.authorId -&gt; _id )</title></path>
 <text x='249' y='187' transform='rotate(0 249,187)' class='relName'>authorId</text>
-<!-- == Fk 'orders_fk_orders_users' == -->
-<path id='orders_fk_orders_users'  onmouseover="hghl(['orders_fk_orders_users','schema_editor.orders.freelancerId','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users','schema_editor.orders.freelancerId','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 448,944L 312,944Q 304,944 304,936L 304,200Q 304,192 296,192L 288,192' >
-	<title>&#x1F517;  Foreign Key fk_orders_users
-orders ref users ( responses.freelancerId -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#OneMore)'   class='virtual'  d='M 448,944L 312,944Q 304,944 304,936L 304,200Q 304,192 296,192L 288,192' ><title>&#x1F517;  Foreign Key fk_orders_users
-orders ref users ( responses.freelancerId -&gt; _id )</title></path>
-<text x='390' y='939' transform='rotate(0 390,939)' class='relName'>freelancerId</text>
-<!-- == Fk 'orders_fk_orders_users_0' == -->
-<path id='orders_fk_orders_users_0'  onmouseover="hghl(['orders_fk_orders_users_0','schema_editor.orders.clientId','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_0','schema_editor.orders.clientId','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 448,976L 312,976Q 304,976 304,968L 304,928' >
-	<title>&#x1F517;  Foreign Key fk_orders_users_0
-orders ref users ( clientId -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#OneMore)'   class='virtual'  d='M 448,976L 312,976Q 304,976 304,968L 304,928' ><title>&#x1F517;  Foreign Key fk_orders_users_0
-orders ref users ( clientId -&gt; _id )</title></path>
-<text x='416' y='971' transform='rotate(0 416,971)' class='relName'>clientId</text>
-<!-- == Fk 'orders_fk_orders_users_1' == -->
-<path id='orders_fk_orders_users_1'  onmouseover="hghl(['orders_fk_orders_users_1','schema_editor.orders.freelancerId','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_1','schema_editor.orders.freelancerId','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 448,1088L 440,1088Q 432,1088 432,1080L 432,984Q 432,976 424,976L 416,976' >
-	<title>&#x1F517;  Foreign Key fk_orders_users_1
-orders ref users ( freelancerId -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#ZeroMore)'   class='dotted virtual'  d='M 448,1088L 440,1088Q 432,1088 432,1080L 432,984Q 432,976 424,976L 416,976' ><title>&#x1F517;  Foreign Key fk_orders_users_1
-orders ref users ( freelancerId -&gt; _id )</title></path>
-<text x='390' y='1083' transform='rotate(0 390,1083)' class='relName'>freelancerId</text>
-<!-- == Fk 'orders_fk_orders_chats' == -->
-<path id='orders_fk_orders_chats'  onmouseover="hghl(['orders_fk_orders_chats','schema_editor.orders.chatId','schema_editor.chats._id'])" onmouseout="uhghl(['orders_fk_orders_chats','schema_editor.orders.chatId','schema_editor.chats._id'])" transform='translate(8,0)' class='unhighlight' d='M 624,944L 632,944Q 640,944 640,936L 640,504Q 640,496 632,496L 584,496Q 576,496 576,488L 576,376Q 576,368 584,368L 664,368Q 672,368 672,360L 672,216Q 672,208 664,208L 656,208' >
-	<title>&#x1F517;  Foreign Key fk_orders_chats
-orders ref chats ( responses.chatId -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 624,944L 632,944Q 640,944 640,936L 640,504Q 640,496 632,496L 584,496Q 576,496 576,488L 576,376Q 576,368 584,368L 664,368Q 672,368 672,360L 672,216Q 672,208 664,208L 656,208' ><title>&#x1F517;  Foreign Key fk_orders_chats
-orders ref chats ( responses.chatId -&gt; _id )</title></path>
-<text x='633' y='939' transform='rotate(0 633,939)' class='relName'>chatId</text>
-<!-- == Fk 'chats_fk_chats_users' == -->
-<path id='chats_fk_chats_users'  onmouseover="hghl(['chats_fk_chats_users','schema_editor.chats.id','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users','schema_editor.chats.id','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 480,192L 264,192Q 256,192 256,200L 256,200Q 256,208 248,208L 240,208' >
-	<title>&#x1F517;  Foreign Key fk_chats_users
-chats ref users ( freelancer.id -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 480,192L 264,192Q 256,192 256,200L 256,200Q 256,208 248,208L 240,208' ><title>&#x1F517;  Foreign Key fk_chats_users
-chats ref users ( freelancer.id -&gt; _id )</title></path>
-<text x='479' y='187' transform='rotate(0 479,187)' class='relName'>id</text>
-<!-- == Fk 'chats_fk_chats_users_0' == -->
-<path id='chats_fk_chats_users_0'  onmouseover="hghl(['chats_fk_chats_users_0','schema_editor.chats.id','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users_0','schema_editor.chats.id','schema_editor.users._id'])" transform='translate(8,0)' class='unhighlight' d='M 656,192L 664,192Q 672,192 672,184L 672,56Q 672,48 664,48L 440,48Q 432,48 432,56L 432,184Q 432,192 424,192L 416,192' >
-	<title>&#x1F517;  Foreign Key fk_chats_users_0
-chats ref users ( client.id -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#OneMore)'   class='virtual'  d='M 656,192L 664,192Q 672,192 672,184L 672,56Q 672,48 664,48L 440,48Q 432,48 432,56L 432,184Q 432,192 424,192L 416,192' ><title>&#x1F517;  Foreign Key fk_chats_users_0
-chats ref users ( client.id -&gt; _id )</title></path>
-<text x='665' y='187' transform='rotate(0 665,187)' class='relName'>id</text>
-<!-- == Fk 'chats_fk_chats_orders' == -->
-<path id='chats_fk_chats_orders'  onmouseover="hghl(['chats_fk_chats_orders','schema_editor.chats.orderId','schema_editor.orders._id'])" onmouseout="uhghl(['chats_fk_chats_orders','schema_editor.chats.orderId','schema_editor.orders._id'])" transform='translate(8,0)' class='unhighlight' d='M 480,240L 328,240Q 320,240 320,248L 320,952Q 320,960 328,960L 448,960' >
-	<title>&#x1F517;  Foreign Key fk_chats_orders
-chats ref orders ( orderId -&gt; _id )</title>
-</path>
-<path transform='translate(8,0)' marker-start='url(#OneMore)' marker-end='url(#One)'  class='virtual'  d='M 480,240L 328,240Q 320,240 320,248L 320,952Q 320,960 328,960L 448,960' ><title>&#x1F517;  Foreign Key fk_chats_orders
-chats ref orders ( orderId -&gt; _id )</title></path>
-<text x='447' y='235' transform='rotate(0 447,235)' class='relName'>orderId</text>
-<!-- == Table 'client' == -->
-<rect id='depict_client' class='entity' style='stroke:none;' x='608' y='392' width='144' height='80' rx='4' ry='4' />
-<path d='M 608 420 L 608 396 Q 608 392 612 392 L 748 392 Q 752 392 752 396 L 752 420 L608 420 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
-<rect class='entity' x='608' y='392' width='144' height='80' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
-<use x='744' y='392' xlink:href='#leaf'/>
-<a xlink:href='#client'><text id='depict&#45;client' x='659' y='411' class='tableHeader' style='fill:#27416D;'>client</text><title>Sub-document client
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Информация о заказчике (одном из участников переписки).</title></a>
-  <use x='610' y='429' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.client.id'><text id='client&#46;id' x='627' y='439' onmouseover="hghl(['chats_fk_chats_users_0','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users_0','schema_editor.users._id'])">id</text><title>&#10697;  id
-     * objectid
- &#8599; chats( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID заказчика.</title></a>
-<text x='736' y='440' class='dataType' style='fill:#B2B7C0;'>objectId</text><a xlink:href='#schema_editor.chats.client.id'><use x='740' y='428' xlink:href='#fk'/><title>&#x1F517;  References users ( client.id -&gt; _id ) </title></a>
-  <use x='610' y='445' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.client.publicName'><text id='client&#46;publicName' x='627' y='455'>publicName</text><title>&#10697;  publicName
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Публичное имя заказчика.</title></a>
-<text x='736' y='456' class='dataType' style='fill:#B2B7C0;'>string</text>
-<!-- == Table 'freelancer' == -->
-<rect id='depict_freelancer' class='entity' style='stroke:none;' x='480' y='72' width='144' height='80' rx='4' ry='4' />
-<path d='M 480 100 L 480 76 Q 480 72 484 72 L 620 72 Q 624 72 624 76 L 624 100 L480 100 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
-<rect class='entity' x='480' y='72' width='144' height='80' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
-<use x='616' y='72' xlink:href='#leaf'/>
-<a xlink:href='#freelancer'><text id='depict&#45;freelancer' x='517' y='91' class='tableHeader' style='fill:#27416D;'>freelancer</text><title>Sub-document freelancer
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Информация об исполнителе (одном из участников переписки).</title></a>
-  <use x='482' y='109' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.freelancer.id'><text id='freelancer&#46;id' x='499' y='119' onmouseover="hghl(['chats_fk_chats_users','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users','schema_editor.users._id'])">id</text><title>&#10697;  id
-     * objectid
- &#8599; chats( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID исполнителя.</title></a>
-<text x='608' y='120' class='dataType' style='fill:#B2B7C0;'>objectId</text><a xlink:href='#schema_editor.chats.freelancer.id'><use x='612' y='108' xlink:href='#fk'/><title>&#x1F517;  References users ( freelancer.id -&gt; _id ) </title></a>
-  <use x='482' y='125' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.freelancer.publicName'><text id='freelancer&#46;publicName' x='499' y='135'>publicName</text><title>&#10697;  publicName
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Публичное имя исполнителя.</title></a>
-<text x='608' y='136' class='dataType' style='fill:#B2B7C0;'>string</text>
-<!-- == Table 'messages' == -->
-<rect id='depict_messages' class='entity' style='stroke:none;' x='368' y='392' width='192' height='96' rx='4' ry='4' />
-<path d='M 368 420 L 368 396 Q 368 392 372 392 L 556 392 Q 560 392 560 396 L 560 420 L368 420 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
-<rect class='entity' x='368' y='392' width='192' height='96' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
-<use x='552' y='392' xlink:href='#leafArray'/>
-<a xlink:href='#messages'><text id='depict&#45;messages' x='430' y='411' class='tableHeader' style='fill:#27416D;'>messages</text><title>Sub-document messages
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Список сообщений в чате.</title></a>
-  <use x='370' y='429' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.messages.createdAt'><text id='messages&#46;createdAt' x='387' y='439'>createdAt</text><title>&#10697;  createdAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='544' y='440' class='dataType' style='fill:#B2B7C0;'>timestamp</text>  <use x='370' y='445' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.messages.sender'><text id='messages&#46;sender' x='387' y='455'>sender</text><title>&#10697;  sender
-     * enum(&apos;system&apos;,&apos;client&apos;,&apos;freelancer&apos;)
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Отправитель сообщения (может быть система, исполнитель или заказчик).</title></a>
-<text x='544' y='456' class='dataType' style='fill:#B2B7C0;'>enum&#40;&#39;system&#39;&#44;&#39;client&#46;&#46;&#46;</text>  <use x='370' y='461' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.messages.content'><text id='messages&#46;content' x='387' y='471'>content</text><title>&#10697;  content
-     * long
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Текст сообщения.</title></a>
-<text x='544' y='472' class='dataType' style='fill:#B2B7C0;'>long</text>
-<!-- == Table 'profiles' == -->
-<rect id='depict_profiles' class='entity' style='stroke:none;' x='64' y='440' width='176' height='144' rx='4' ry='4' />
-<path d='M 64 468 L 64 444 Q 64 440 68 440 L 236 440 Q 240 440 240 444 L 240 468 L64 468 ' style='fill:url(#tbg_F4DDBE);stroke:none;' />
-<rect class='entity' x='64' y='440' width='176' height='144' rx='4' ry='4' style='fill:none;stroke:#F2EAE1'/>
-<use x='232' y='440' xlink:href='#leafArray'/>
-<a xlink:href='#profiles'><text id='depict&#45;profiles' x='124' y='459' class='tableHeader' style='fill:#6D4E27;'>profiles</text><title>Sub-document profiles
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Профили пользователя (как заказчика или исполнителя).</title></a>
-  <use x='66' y='477' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.role'><text id='profiles&#46;role' x='83' y='487'>role</text><title>&#10697;  role
-     * enum(&apos;client&apos;,&apos;freelancer&apos;)
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Роль (заказчик или исполнитель).</title></a>
-<text x='224' y='488' class='dataType' style='fill:#C0B9B2;'>enum&#40;&#39;client&#39;&#44;&#39;freela&#46;&#46;&#46;</text>  <use x='66' y='493' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.rating'><text id='profiles&#46;rating' x='83' y='503'>rating</text><title>&#10697;  rating
-     * double default 0
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Рейтинг, основан на отзывах.</title></a>
-<text x='224' y='504' class='dataType' style='fill:#C0B9B2;'>double</text>  <use x='66' y='509' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.description'><text id='profiles&#46;description' x='83' y='519'>description</text><title>&#10697;  description
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Пользовательское поле &quot;О себе&quot;.</title></a>
-<text x='224' y='520' class='dataType' style='fill:#C0B9B2;'>string</text>  <use x='66' y='525' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.createdAt'><text id='profiles&#46;createdAt' x='83' y='535'>createdAt</text><title>&#10697;  createdAt
-     * timestamp
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='224' y='536' class='dataType' style='fill:#C0B9B2;'>timestamp</text>  <use x='66' y='541' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.updatedAt'><text id='profiles&#46;updatedAt' x='83' y='551'>updatedAt</text><title>&#10697;  updatedAt
-     * timestamp
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата обновления документа.</title></a>
-<text x='224' y='552' class='dataType' style='fill:#C0B9B2;'>timestamp</text>  <use x='66' y='557' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews'><text id='profiles&#46;reviews' x='83' y='567'>reviews</text><title>&#10697;  reviews
-     * array[object]
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Отзывы на профиль пользователя.</title></a>
-<text x='224' y='568' class='dataType' style='fill:#C0B9B2;'>array&#91;object&#93;</text>
-<!-- == Table 'responses' == -->
-<rect id='depict_responses' class='entity' style='stroke:none;' x='592' y='1224' width='160' height='160' rx='4' ry='4' />
-<path d='M 592 1252 L 592 1228 Q 592 1224 596 1224 L 748 1224 Q 752 1224 752 1228 L 752 1252 L592 1252 ' style='fill:url(#tbg_C7F4BE);stroke:none;' />
-<rect class='entity' x='592' y='1224' width='160' height='160' rx='4' ry='4' style='fill:none;stroke:#E3F2E1'/>
-<use x='744' y='1224' xlink:href='#leafArray'/>
-<a xlink:href='#responses'><text id='depict&#45;responses' x='637' y='1243' class='tableHeader' style='fill:#326D27;'>responses</text><title>Sub-document responses
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Список откликов от фрилансеров.</title></a>
-  <use x='594' y='1261' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.freelancerName'><text id='responses&#46;freelancerName' x='611' y='1271'>freelancerName</text><title>&#10697;  freelancerName
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Публичное имя пользователя, откликнувшегося на заказ.</title></a>
-<text x='736' y='1272' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='594' y='1277' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.freelancerId'><text id='responses&#46;freelancerId' x='611' y='1287' onmouseover="hghl(['orders_fk_orders_users','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users','schema_editor.users._id'])">freelancerId</text><title>&#10697;  freelancerId
-     * objectid
- &#8599; orders( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID пользователя, откликнувшегося на заказ.</title></a>
-<text x='736' y='1288' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.responses.freelancerId'><use x='740' y='1276' xlink:href='#fk'/><title>&#x1F517;  References users ( responses.freelancerId -&gt; _id ) </title></a>
-  <use x='594' y='1293' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.chatId'><text id='responses&#46;chatId' x='611' y='1303' onmouseover="hghl(['orders_fk_orders_chats','schema_editor.chats._id'])" onmouseout="uhghl(['orders_fk_orders_chats','schema_editor.chats._id'])">chatId</text><title>&#10697;  chatId
-     * objectid
- &#8599; orders( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID чата, созданного для переписки в рамках отклика.</title></a>
-<text x='736' y='1304' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.responses.chatId'><use x='740' y='1292' xlink:href='#fk'/><title>&#x1F517;  References chats ( responses.chatId -&gt; _id ) </title></a>
-  <use x='594' y='1309' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.coverLetter'><text id='responses&#46;coverLetter' x='611' y='1319'>coverLetter</text><title>&#10697;  coverLetter
-     * long
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Сопроводительное письмо фрилансера, по совместительству первое сообщение в переписке.</title></a>
-<text x='736' y='1320' class='dataType' style='fill:#B4C0B2;'>long</text>  <use x='594' y='1325' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.active'><text id='responses&#46;active' x='611' y='1335'>active</text><title>&#10697;  active
-     * bool default true
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Активен ли отклик.</title></a>
-<text x='736' y='1336' class='dataType' style='fill:#B4C0B2;'>bool</text>  <use x='594' y='1341' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.createdAt'><text id='responses&#46;createdAt' x='611' y='1351'>createdAt</text><title>&#10697;  createdAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='736' y='1352' class='dataType' style='fill:#B4C0B2;'>timestamp</text>  <use x='594' y='1357' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.updatedAt'><text id='responses&#46;updatedAt' x='611' y='1367'>updatedAt</text><title>&#10697;  updatedAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата обновления документа.</title></a>
-<text x='736' y='1368' class='dataType' style='fill:#B4C0B2;'>timestamp</text>
-<!-- == Table 'reviews' == -->
-<rect id='depict_reviews' class='entity' style='stroke:none;' x='64' y='648' width='160' height='128' rx='4' ry='4' />
-<path d='M 64 676 L 64 652 Q 64 648 68 648 L 220 648 Q 224 648 224 652 L 224 676 L64 676 ' style='fill:url(#tbg_F4DDBE);stroke:none;' />
-<rect class='entity' x='64' y='648' width='160' height='128' rx='4' ry='4' style='fill:none;stroke:#F2EAE1'/>
-<use x='216' y='648' xlink:href='#leafArray'/>
-<a xlink:href='#reviews'><text id='depict&#45;reviews' x='117' y='667' class='tableHeader' style='fill:#6D4E27;'>reviews</text><title>Sub-document reviews
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Отзывы на профиль пользователя.</title></a>
-  <use x='66' y='685' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.authorId'><text id='reviews&#46;authorId' x='83' y='695' onmouseover="hghl(['users_fk_users_users','schema_editor.users._id'])" onmouseout="uhghl(['users_fk_users_users','schema_editor.users._id'])">authorId</text><title>&#10697;  authorId
-     * objectid
- &#8599; users( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID пользователя, оставившего отзыв.</title></a>
-<text x='208' y='696' class='dataType' style='fill:#C0B9B2;'>objectId</text><a xlink:href='#schema_editor.users.profiles.reviews.authorId'><use x='212' y='684' xlink:href='#fk'/><title>&#x1F517;  References users ( profiles.reviews.authorId -&gt; _id ) </title></a>
-  <use x='66' y='701' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.authorName'><text id='reviews&#46;authorName' x='83' y='711'>authorName</text><title>&#10697;  authorName
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Публичное имя пользователя, оставившего отзыв.</title></a>
-<text x='208' y='712' class='dataType' style='fill:#C0B9B2;'>string</text>  <use x='66' y='717' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.score'><text id='reviews&#46;score' x='83' y='727'>score</text><title>&#10697;  score
-     * int
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Оценка (от 1 до 5).</title></a>
-<text x='208' y='728' class='dataType' style='fill:#C0B9B2;'>int</text>  <a xlink:href='#schema_editor.users.profiles.reviews.content'><text id='reviews&#46;content' x='83' y='743'>content</text><title>&#10697;  content
-     string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Текст отзыва.</title></a>
-<text x='208' y='744' class='dataType' style='fill:#C0B9B2;'>string</text>  <use x='66' y='749' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.createdAt'><text id='reviews&#46;createdAt' x='83' y='759'>createdAt</text><title>&#10697;  createdAt
-     * timestamp default now()
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='208' y='760' class='dataType' style='fill:#C0B9B2;'>timestamp</text>
-<!-- == Table 'statuses' == -->
-<rect id='depict_statuses' class='entity' style='stroke:none;' x='368' y='1224' width='192' height='96' rx='4' ry='4' />
-<path d='M 368 1252 L 368 1228 Q 368 1224 372 1224 L 556 1224 Q 560 1224 560 1228 L 560 1252 L368 1252 ' style='fill:url(#tbg_C7F4BE);stroke:none;' />
-<rect class='entity' x='368' y='1224' width='192' height='96' rx='4' ry='4' style='fill:none;stroke:#E3F2E1'/>
-<use x='552' y='1224' xlink:href='#leafArray'/>
-<a xlink:href='#statuses'><text id='depict&#45;statuses' x='435' y='1243' class='tableHeader' style='fill:#326D27;'>statuses</text><title>Sub-document statuses
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      История изменений статусов заказа. Последний элемент массива всегда отражает актуальный статус.</title></a>
-  <use x='370' y='1261' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.statuses.title'><text id='statuses&#46;title' x='387' y='1271'>title</text><title>&#10697;  title
-     * enum(&apos;approved&apos;,&apos;work&apos;,&apos;finished&apos;,&apos;dispute&apos;)
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Название статуса.</title></a>
-<text x='544' y='1272' class='dataType' style='fill:#B4C0B2;'>enum&#40;&#39;approved&#39;&#44;&#39;work&#46;&#46;&#46;</text>  <a xlink:href='#schema_editor.orders.statuses.content'><text id='statuses&#46;content' x='387' y='1287'>content</text><title>&#10697;  content
-     string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дополнительная информация, если нужно.</title></a>
-<text x='544' y='1288' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='370' y='1293' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.statuses.createdAt'><text id='statuses&#46;createdAt' x='387' y='1303'>createdAt</text><title>&#10697;  createdAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='544' y='1304' class='dataType' style='fill:#B4C0B2;'>timestamp</text>
-<!-- == Table 'users' == -->
-<rect id='depict_schema&#95;editor&#46;users' class='entity' style='stroke:none;' x='48' y='168' width='192' height='208' rx='4' ry='4' />
-<path d='M 48 196 L 48 172 Q 48 168 52 168 L 236 168 Q 240 168 240 172 L 240 196 L48 196 ' style='fill:url(#tbg_F4DDBE);stroke:none;' />
-<rect class='entity' x='48' y='168' width='192' height='208' rx='4' ry='4' style='fill:none;stroke:#F2EAE1'/>
-<a xlink:href='#schema_editor.users'><text id='depict&#45;schema&#95;editor&#46;users' x='124' y='187' class='tableHeader' style='fill:#6D4E27;'>users</text><title>Collection schema_editor.users
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Коллекция пользователей.</title></a>
-  <use x='50' y='205' xlink:href='#nn'/><use x='50' y='204' xlink:href='#pk'><title>&#x1F511;  Pk _id_ ( _id ) </title></use><a xlink:href='#schema_editor.users._id'><text id='schema&#95;editor&#46;users&#46;&#95;id' x='67' y='215' onmouseover="hghl(['orders_fk_orders_users','schema_editor.orders.freelancerId','orders_fk_orders_users_0','schema_editor.orders.clientId','orders_fk_orders_users_1','schema_editor.orders.freelancerId','users_fk_users_users','schema_editor.users.authorId','chats_fk_chats_users','schema_editor.chats.id','chats_fk_chats_users_0','schema_editor.chats.id'])" onmouseout="uhghl(['orders_fk_orders_users','schema_editor.orders.freelancerId','orders_fk_orders_users_0','schema_editor.orders.clientId','orders_fk_orders_users_1','schema_editor.orders.freelancerId','users_fk_users_users','schema_editor.users.authorId','chats_fk_chats_users','schema_editor.chats.id','chats_fk_chats_users_0','schema_editor.chats.id'])" class='colPk'>&#95;id</text><title>&#10697;  _id
-     * objectid
- &#8601; orders( _id )
- &#8601; orders( _id )
- &#8601; orders( _id )
- &#8601; users( _id )
- &#8601; chats( _id )
- &#8601; chats( _id )</title></a>
-<text x='224' y='216' class='dataType' style='fill:#C0B9B2;'>objectId</text><a xlink:href='#schema_editor.users._id'><use x='228' y='204' xlink:href='#ref'/><title>&#x1F517;  Referred by orders ( responses.freelancerId -&gt; _id ) 
-Referred by orders ( clientId -&gt; _id ) 
-Referred by orders ( freelancerId -&gt; _id ) 
-Referred by users ( profiles.reviews.authorId -&gt; _id ) 
-Referred by chats ( freelancer.id -&gt; _id ) 
-Referred by chats ( client.id -&gt; _id ) </title></a>
-  <use x='50' y='221' xlink:href='#nn'/><a xlink:href='#schema_editor.users.displayName'><text id='schema&#95;editor&#46;users&#46;displayName' x='67' y='231'>displayName</text><title>&#10697;  displayName
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Отображаемое имя пользователя (ФИО или ФИ).</title></a>
-<text x='224' y='232' class='dataType' style='fill:#C0B9B2;'>string</text>  <use x='50' y='237' xlink:href='#nn'/><use x='50' y='236' xlink:href='#unq'><title>&#x1F50D;  Unq unq_users_email ( email ) </title></use><a xlink:href='#schema_editor.users.email'><text id='schema&#95;editor&#46;users&#46;email' x='67' y='247'>email</text><title>&#10697;  email
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Адрес электронной почты.</title></a>
-<text x='224' y='248' class='dataType' style='fill:#C0B9B2;'>string</text>  <use x='50' y='253' xlink:href='#nn'/><a xlink:href='#schema_editor.users.password'><text id='schema&#95;editor&#46;users&#46;password' x='67' y='263'>password</text><title>&#10697;  password
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Хэш пароля.</title></a>
-<text x='224' y='264' class='dataType' style='fill:#C0B9B2;'>string</text>  <use x='50' y='269' xlink:href='#nn'/><a xlink:href='#schema_editor.users.balance'><text id='schema&#95;editor&#46;users&#46;balance' x='67' y='279'>balance</text><title>&#10697;  balance
-     * int default 0
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Количество денег на счету пользователя.</title></a>
-<text x='224' y='280' class='dataType' style='fill:#C0B9B2;'>int</text>  <a xlink:href='#schema_editor.users.systemRole'><text id='schema&#95;editor&#46;users&#46;systemRole' x='67' y='295'>systemRole</text><title>&#10697;  systemRole
-     enum(&apos;admin&apos;)
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Системная роль (администратор, модератор и т.п.). Определяет возможность пользователя авторизовываться и попадать на служебные страницы.</title></a>
-<text x='224' y='296' class='dataType' style='fill:#C0B9B2;'>enum&#40;&#39;admin&#39;&#41;</text>  <use x='50' y='301' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles'><text id='schema&#95;editor&#46;users&#46;profiles' x='67' y='311' onmouseover="hghl(['profiles_JSon','profiles_JSon','profiles_JSon'])" onmouseout="uhghl(['profiles_JSon','profiles_JSon','profiles_JSon'])">profiles</text><title>&#10697;  profiles
-     * array[object]
- &#8601; profiles( profiles )
- &#8601; profiles( profiles )
- &#8601; profiles( profiles )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Профили пользователя (как заказчика или исполнителя).</title></a>
-<text x='224' y='312' class='dataType' style='fill:#C0B9B2;'>array&#91;object&#93;</text>  <use x='50' y='317' xlink:href='#nn'/><a xlink:href='#schema_editor.users.active'><text id='schema&#95;editor&#46;users&#46;active' x='67' y='327'>active</text><title>&#10697;  active
-     * bool default true
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Активен ли аккаунт пользователя в данный момент. Альтернатива удалению документа из коллекции.</title></a>
-<text x='224' y='328' class='dataType' style='fill:#C0B9B2;'>bool</text>  <use x='50' y='333' xlink:href='#nn'/><a xlink:href='#schema_editor.users.createdAt'><text id='schema&#95;editor&#46;users&#46;createdAt' x='67' y='343'>createdAt</text><title>&#10697;  createdAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='224' y='344' class='dataType' style='fill:#C0B9B2;'>timestamp</text>  <use x='50' y='349' xlink:href='#nn'/><a xlink:href='#schema_editor.users.updatedAt'><text id='schema&#95;editor&#46;users&#46;updatedAt' x='67' y='359'>updatedAt</text><title>&#10697;  updatedAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата обновления документа.</title></a>
-<text x='224' y='360' class='dataType' style='fill:#C0B9B2;'>timestamp</text>
-<!-- == Table 'orders' == -->
-<rect id='depict_schema&#95;editor&#46;orders' class='entity' style='stroke:none;' x='464' y='920' width='160' height='256' rx='4' ry='4' />
-<path d='M 464 948 L 464 924 Q 464 920 468 920 L 620 920 Q 624 920 624 924 L 624 948 L464 948 ' style='fill:url(#tbg_C7F4BE);stroke:none;' />
-<rect class='entity' x='464' y='920' width='160' height='256' rx='4' ry='4' style='fill:none;stroke:#E3F2E1'/>
-<a xlink:href='#schema_editor.orders'><text id='depict&#45;schema&#95;editor&#46;orders' x='520' y='939' class='tableHeader' style='fill:#326D27;'>orders</text><title>Collection schema_editor.orders
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Коллекция заказов.</title></a>
-  <use x='466' y='957' xlink:href='#nn'/><use x='466' y='956' xlink:href='#pk'><title>&#x1F511;  Pk _id_ ( _id ) </title></use><a xlink:href='#schema_editor.orders._id'><text id='schema&#95;editor&#46;orders&#46;&#95;id' x='483' y='967' onmouseover="hghl(['chats_fk_chats_orders','schema_editor.chats.orderId'])" onmouseout="uhghl(['chats_fk_chats_orders','schema_editor.chats.orderId'])" class='colPk'>&#95;id</text><title>&#10697;  _id
-     * objectid
- &#8601; chats( _id )</title></a>
-<text x='608' y='968' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders._id'><use x='612' y='956' xlink:href='#ref'/><title>&#x1F517;  Referred by chats ( orderId -&gt; _id ) </title></a>
-  <use x='466' y='973' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.clientId'><text id='schema&#95;editor&#46;orders&#46;clientId' x='483' y='983' onmouseover="hghl(['orders_fk_orders_users_0','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_0','schema_editor.users._id'])">clientId</text><title>&#10697;  clientId
-     * objectid
- &#8599; orders( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID пользователя, разместившего заказ.</title></a>
-<text x='608' y='984' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.clientId'><use x='612' y='972' xlink:href='#fk'/><title>&#x1F517;  References users ( clientId -&gt; _id ) </title></a>
-  <use x='466' y='989' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.title'><text id='schema&#95;editor&#46;orders&#46;title' x='483' y='999'>title</text><title>&#10697;  title
-     * string
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Название статуса.</title></a>
-<text x='608' y='1000' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='466' y='1005' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.description'><text id='schema&#95;editor&#46;orders&#46;description' x='483' y='1015'>description</text><title>&#10697;  description
-     * long
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Описание заказа, задаётся пользователем.</title></a>
-<text x='608' y='1016' class='dataType' style='fill:#B4C0B2;'>long</text>  <use x='466' y='1021' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.completionTime'><text id='schema&#95;editor&#46;orders&#46;completionTime' x='483' y='1031'>completionTime</text><title>&#10697;  completionTime
-     * int
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Срок выполнения заказа (int64), хранится в наносекундах. Максимальный срок при использовании int64 - 292 года.</title></a>
-<text x='608' y='1032' class='dataType' style='fill:#B4C0B2;'>int</text>  <a xlink:href='#schema_editor.orders.cost'><text id='schema&#95;editor&#46;orders&#46;cost' x='483' y='1047'>cost</text><title>&#10697;  cost
-     int
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Стоимость заказа, может быть числом, может быть неопределённой. Если это поле не задано, считать стоимость договорной.</title></a>
-<text x='608' y='1048' class='dataType' style='fill:#B4C0B2;'>int</text>  <use x='466' y='1053' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.active'><text id='schema&#95;editor&#46;orders&#46;active' x='483' y='1063'>active</text><title>&#10697;  active
-     * bool default true
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Активен ли заказ (может быть неактивен, если заказ был скрыт администратором или удалён заказчиком).</title></a>
-<text x='608' y='1064' class='dataType' style='fill:#B4C0B2;'>bool</text>  <use x='466' y='1069' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses'><text id='schema&#95;editor&#46;orders&#46;responses' x='483' y='1079' onmouseover="hghl(['responses_JSon'])" onmouseout="uhghl(['responses_JSon'])">responses</text><title>&#10697;  responses
-     * array[object]
- &#8601; responses( responses )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Список откликов от фрилансеров.</title></a>
-<text x='608' y='1080' class='dataType' style='fill:#B4C0B2;'>array&#91;object&#93;</text>  <a xlink:href='#schema_editor.orders.freelancerId'><text id='schema&#95;editor&#46;orders&#46;freelancerId' x='483' y='1095' onmouseover="hghl(['orders_fk_orders_users_1','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_1','schema_editor.users._id'])">freelancerId</text><title>&#10697;  freelancerId
-     objectid
- &#8599; orders( _id )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      ID выбранного исполнителя, появляется в документе на определённом этапе заказа.</title></a>
-<text x='608' y='1096' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.freelancerId'><use x='612' y='1084' xlink:href='#fk'/><title>&#x1F517;  References users ( freelancerId -&gt; _id ) </title></a>
-  <a xlink:href='#schema_editor.orders.budget'><text id='schema&#95;editor&#46;orders&#46;budget' x='483' y='1111'>budget</text><title>&#10697;  budget
-     int
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Зарезервированный заказчиком бюджет сделки. Может быть не указан в коллекции до определённого этапа. В отличие от cost, используется для расчётов, а не для показа карточки заказа.</title></a>
-<text x='608' y='1112' class='dataType' style='fill:#B4C0B2;'>int</text>  <use x='466' y='1117' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.statuses'><text id='schema&#95;editor&#46;orders&#46;statuses' x='483' y='1127' onmouseover="hghl(['statuses_JSon','statuses_JSon'])" onmouseout="uhghl(['statuses_JSon','statuses_JSon'])">statuses</text><title>&#10697;  statuses
-     * array[object]
- &#8601; statuses( statuses )
- &#8601; statuses( statuses )
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      История изменений статусов заказа. Последний элемент массива всегда отражает актуальный статус.</title></a>
-<text x='608' y='1128' class='dataType' style='fill:#B4C0B2;'>array&#91;object&#93;</text>  <use x='466' y='1133' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.createdAt'><text id='schema&#95;editor&#46;orders&#46;createdAt' x='483' y='1143'>createdAt</text><title>&#10697;  createdAt
-     * timestamp default &apos;now()&apos;
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата создания документа.</title></a>
-<text x='608' y='1144' class='dataType' style='fill:#B4C0B2;'>timestamp</text>  <use x='466' y='1149' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.updatedAt'><text id='schema&#95;editor&#46;orders&#46;updatedAt' x='483' y='1159'>updatedAt</text><title>&#10697;  updatedAt
-     * timestamp
- ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-      Дата обновления документа.</title></a>
-<text x='608' y='1160' class='dataType' style='fill:#B4C0B2;'>timestamp</text>
 <!-- == Table 'chats' == -->
 <rect id='depict_schema&#95;editor&#46;chats' class='entity' style='stroke:none;' x='496' y='168' width='160' height='176' rx='4' ry='4' />
 <path d='M 496 196 L 496 172 Q 496 168 500 168 L 652 168 Q 656 168 656 172 L 656 196 L496 196 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
 <rect class='entity' x='496' y='168' width='160' height='176' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
-<a xlink:href='#schema_editor.chats'><text id='depict&#45;schema&#95;editor&#46;chats' x='556' y='187' class='tableHeader' style='fill:#27416D;'>chats</text><title>Collection schema_editor.chats
+<a xlink:href='#schema_editor.chats'><text id='depict&#45;schema&#95;editor&#46;chats' x='556' y='187' class='tableHeader' style='fill:#27426D;'>chats</text><title>Collection schema_editor.chats
  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
       Коллекция переписок (чатов).</title></a>
   <use x='498' y='205' xlink:href='#nn'/><use x='498' y='204' xlink:href='#pk'><title>&#x1F511;  Pk _id_ ( _id ) </title></use><a xlink:href='#schema_editor.chats._id'><text id='schema&#95;editor&#46;chats&#46;&#95;id' x='515' y='215' onmouseover="hghl(['orders_fk_orders_chats','schema_editor.orders.chatId'])" onmouseout="uhghl(['orders_fk_orders_chats','schema_editor.orders.chatId'])" class='colPk'>&#95;id</text><title>&#10697;  _id
@@ -776,4 +463,314 @@ Referred by chats ( client.id -&gt; _id ) </title></a>
  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
       Список сообщений в чате.</title></a>
 <text x='640' y='328' class='dataType' style='fill:#B2B7C0;'>array&#91;object&#93;</text>
+<!-- == Table 'client' == -->
+<rect id='depict_client' class='entity' style='stroke:none;' x='608' y='392' width='144' height='80' rx='4' ry='4' />
+<path d='M 608 420 L 608 396 Q 608 392 612 392 L 748 392 Q 752 392 752 396 L 752 420 L608 420 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
+<rect class='entity' x='608' y='392' width='144' height='80' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
+<use x='744' y='392' xlink:href='#leaf'/>
+<a xlink:href='#client'><text id='depict&#45;client' x='659' y='411' class='tableHeader' style='fill:#27426D;'>client</text><title>Sub-document client
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Информация о заказчике (одном из участников переписки).</title></a>
+  <use x='610' y='429' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.client.id'><text id='client&#46;id' x='627' y='439' onmouseover="hghl(['chats_fk_chats_users_0','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users_0','schema_editor.users._id'])">id</text><title>&#10697;  id
+     * objectid
+ &#8599; chats( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID заказчика.</title></a>
+<text x='736' y='440' class='dataType' style='fill:#B2B7C0;'>objectId</text><a xlink:href='#schema_editor.chats.client.id'><use x='740' y='428' xlink:href='#fk'/><title>&#x1F517;  References users ( client.id -&gt; _id ) </title></a>
+  <use x='610' y='445' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.client.publicName'><text id='client&#46;publicName' x='627' y='455'>publicName</text><title>&#10697;  publicName
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Публичное имя заказчика.</title></a>
+<text x='736' y='456' class='dataType' style='fill:#B2B7C0;'>string</text>
+<!-- == Table 'freelancer' == -->
+<rect id='depict_freelancer' class='entity' style='stroke:none;' x='480' y='72' width='144' height='80' rx='4' ry='4' />
+<path d='M 480 100 L 480 76 Q 480 72 484 72 L 620 72 Q 624 72 624 76 L 624 100 L480 100 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
+<rect class='entity' x='480' y='72' width='144' height='80' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
+<use x='616' y='72' xlink:href='#leaf'/>
+<a xlink:href='#freelancer'><text id='depict&#45;freelancer' x='517' y='91' class='tableHeader' style='fill:#27426D;'>freelancer</text><title>Sub-document freelancer
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Информация об исполнителе (одном из участников переписки).</title></a>
+  <use x='482' y='109' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.freelancer.id'><text id='freelancer&#46;id' x='499' y='119' onmouseover="hghl(['chats_fk_chats_users','schema_editor.users._id'])" onmouseout="uhghl(['chats_fk_chats_users','schema_editor.users._id'])">id</text><title>&#10697;  id
+     * objectid
+ &#8599; chats( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID исполнителя.</title></a>
+<text x='608' y='120' class='dataType' style='fill:#B2B7C0;'>objectId</text><a xlink:href='#schema_editor.chats.freelancer.id'><use x='612' y='108' xlink:href='#fk'/><title>&#x1F517;  References users ( freelancer.id -&gt; _id ) </title></a>
+  <use x='482' y='125' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.freelancer.publicName'><text id='freelancer&#46;publicName' x='499' y='135'>publicName</text><title>&#10697;  publicName
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Публичное имя исполнителя.</title></a>
+<text x='608' y='136' class='dataType' style='fill:#B2B7C0;'>string</text>
+<!-- == Table 'messages' == -->
+<rect id='depict_messages' class='entity' style='stroke:none;' x='368' y='392' width='192' height='96' rx='4' ry='4' />
+<path d='M 368 420 L 368 396 Q 368 392 372 392 L 556 392 Q 560 392 560 396 L 560 420 L368 420 ' style='fill:url(#tbg_BED3F4);stroke:none;' />
+<rect class='entity' x='368' y='392' width='192' height='96' rx='4' ry='4' style='fill:none;stroke:#E1E7F2'/>
+<use x='552' y='392' xlink:href='#leafArray'/>
+<a xlink:href='#messages'><text id='depict&#45;messages' x='430' y='411' class='tableHeader' style='fill:#27426D;'>messages</text><title>Sub-document messages
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Список сообщений в чате.</title></a>
+  <use x='370' y='429' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.messages.createdAt'><text id='messages&#46;createdAt' x='387' y='439'>createdAt</text><title>&#10697;  createdAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='544' y='440' class='dataType' style='fill:#B2B7C0;'>timestamp</text>  <use x='370' y='445' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.messages.sender'><text id='messages&#46;sender' x='387' y='455'>sender</text><title>&#10697;  sender
+     * enum(&apos;system&apos;,&apos;client&apos;,&apos;freelancer&apos;)
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Отправитель сообщения (может быть система, исполнитель или заказчик).</title></a>
+<text x='544' y='456' class='dataType' style='fill:#B2B7C0;'>enum&#40;&#39;system&#39;&#44;&#39;client&#46;&#46;&#46;</text>  <use x='370' y='461' xlink:href='#nn'/><a xlink:href='#schema_editor.chats.messages.content'><text id='messages&#46;content' x='387' y='471'>content</text><title>&#10697;  content
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Текст сообщения.</title></a>
+<text x='544' y='472' class='dataType' style='fill:#B2B7C0;'>string</text>
+<!-- == Table 'orders' == -->
+<rect id='depict_schema&#95;editor&#46;orders' class='entity' style='stroke:none;' x='464' y='920' width='160' height='256' rx='4' ry='4' />
+<path d='M 464 948 L 464 924 Q 464 920 468 920 L 620 920 Q 624 920 624 924 L 624 948 L464 948 ' style='fill:url(#tbg_C7F4BE);stroke:none;' />
+<rect class='entity' x='464' y='920' width='160' height='256' rx='4' ry='4' style='fill:none;stroke:#E3F2E1'/>
+<a xlink:href='#schema_editor.orders'><text id='depict&#45;schema&#95;editor&#46;orders' x='520' y='939' class='tableHeader' style='fill:#326D27;'>orders</text><title>Collection schema_editor.orders
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Коллекция заказов.</title></a>
+  <use x='466' y='957' xlink:href='#nn'/><use x='466' y='956' xlink:href='#pk'><title>&#x1F511;  Pk _id_ ( _id ) </title></use><a xlink:href='#schema_editor.orders._id'><text id='schema&#95;editor&#46;orders&#46;&#95;id' x='483' y='967' onmouseover="hghl(['chats_fk_chats_orders','schema_editor.chats.orderId'])" onmouseout="uhghl(['chats_fk_chats_orders','schema_editor.chats.orderId'])" class='colPk'>&#95;id</text><title>&#10697;  _id
+     * objectid
+ &#8601; chats( _id )</title></a>
+<text x='608' y='968' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders._id'><use x='612' y='956' xlink:href='#ref'/><title>&#x1F517;  Referred by chats ( orderId -&gt; _id ) </title></a>
+  <use x='466' y='973' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.clientId'><text id='schema&#95;editor&#46;orders&#46;clientId' x='483' y='983' onmouseover="hghl(['orders_fk_orders_users_0','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_0','schema_editor.users._id'])">clientId</text><title>&#10697;  clientId
+     * objectid
+ &#8599; orders( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID пользователя, разместившего заказ.</title></a>
+<text x='608' y='984' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.clientId'><use x='612' y='972' xlink:href='#fk'/><title>&#x1F517;  References users ( clientId -&gt; _id ) </title></a>
+  <use x='466' y='989' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.title'><text id='schema&#95;editor&#46;orders&#46;title' x='483' y='999'>title</text><title>&#10697;  title
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Название статуса.</title></a>
+<text x='608' y='1000' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='466' y='1005' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.description'><text id='schema&#95;editor&#46;orders&#46;description' x='483' y='1015'>description</text><title>&#10697;  description
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Описание заказа, задаётся пользователем.</title></a>
+<text x='608' y='1016' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='466' y='1021' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.completionTime'><text id='schema&#95;editor&#46;orders&#46;completionTime' x='483' y='1031'>completionTime</text><title>&#10697;  completionTime
+     * int
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Срок выполнения заказа (int64), хранится в наносекундах. Максимальный срок при использовании int64 - 292 года.</title></a>
+<text x='608' y='1032' class='dataType' style='fill:#B4C0B2;'>int</text>  <a xlink:href='#schema_editor.orders.cost'><text id='schema&#95;editor&#46;orders&#46;cost' x='483' y='1047'>cost</text><title>&#10697;  cost
+     int
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Стоимость заказа, может быть числом, может быть неопределённой. Если это поле не задано, считать стоимость договорной.</title></a>
+<text x='608' y='1048' class='dataType' style='fill:#B4C0B2;'>int</text>  <use x='466' y='1053' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.active'><text id='schema&#95;editor&#46;orders&#46;active' x='483' y='1063'>active</text><title>&#10697;  active
+     * bool default true
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Активен ли заказ (может быть неактивен, если заказ был скрыт администратором или удалён заказчиком).</title></a>
+<text x='608' y='1064' class='dataType' style='fill:#B4C0B2;'>bool</text>  <use x='466' y='1069' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses'><text id='schema&#95;editor&#46;orders&#46;responses' x='483' y='1079' onmouseover="hghl(['responses_JSon'])" onmouseout="uhghl(['responses_JSon'])">responses</text><title>&#10697;  responses
+     * array[object]
+ &#8601; responses( responses )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Список откликов от фрилансеров.</title></a>
+<text x='608' y='1080' class='dataType' style='fill:#B4C0B2;'>array&#91;object&#93;</text>  <a xlink:href='#schema_editor.orders.freelancerId'><text id='schema&#95;editor&#46;orders&#46;freelancerId' x='483' y='1095' onmouseover="hghl(['orders_fk_orders_users_1','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users_1','schema_editor.users._id'])">freelancerId</text><title>&#10697;  freelancerId
+     objectid
+ &#8599; orders( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID выбранного исполнителя, появляется в документе на определённом этапе заказа.</title></a>
+<text x='608' y='1096' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.freelancerId'><use x='612' y='1084' xlink:href='#fk'/><title>&#x1F517;  References users ( freelancerId -&gt; _id ) </title></a>
+  <a xlink:href='#schema_editor.orders.budget'><text id='schema&#95;editor&#46;orders&#46;budget' x='483' y='1111'>budget</text><title>&#10697;  budget
+     int
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Зарезервированный заказчиком бюджет сделки. Может быть не указан в коллекции до определённого этапа. В отличие от cost, используется для расчётов, а не для показа карточки заказа.</title></a>
+<text x='608' y='1112' class='dataType' style='fill:#B4C0B2;'>int</text>  <use x='466' y='1117' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.statuses'><text id='schema&#95;editor&#46;orders&#46;statuses' x='483' y='1127' onmouseover="hghl(['statuses_JSon'])" onmouseout="uhghl(['statuses_JSon'])">statuses</text><title>&#10697;  statuses
+     * array[object]
+ &#8601; statuses( statuses )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      История изменений статусов заказа. Последний элемент массива всегда отражает актуальный статус.</title></a>
+<text x='608' y='1128' class='dataType' style='fill:#B4C0B2;'>array&#91;object&#93;</text>  <use x='466' y='1133' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.createdAt'><text id='schema&#95;editor&#46;orders&#46;createdAt' x='483' y='1143'>createdAt</text><title>&#10697;  createdAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='608' y='1144' class='dataType' style='fill:#B4C0B2;'>timestamp</text>  <use x='466' y='1149' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.updatedAt'><text id='schema&#95;editor&#46;orders&#46;updatedAt' x='483' y='1159'>updatedAt</text><title>&#10697;  updatedAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата обновления документа.</title></a>
+<text x='608' y='1160' class='dataType' style='fill:#B4C0B2;'>timestamp</text>
+<!-- == Table 'profiles' == -->
+<rect id='depict_profiles' class='entity' style='stroke:none;' x='64' y='440' width='176' height='144' rx='4' ry='4' />
+<path d='M 64 468 L 64 444 Q 64 440 68 440 L 236 440 Q 240 440 240 444 L 240 468 L64 468 ' style='fill:url(#tbg_F4DDBE);stroke:none;' />
+<rect class='entity' x='64' y='440' width='176' height='144' rx='4' ry='4' style='fill:none;stroke:#F2EAE1'/>
+<use x='232' y='440' xlink:href='#leafArray'/>
+<a xlink:href='#profiles'><text id='depict&#45;profiles' x='124' y='459' class='tableHeader' style='fill:#6D4F27;'>profiles</text><title>Sub-document profiles
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Профили пользователя (как заказчика или исполнителя).</title></a>
+  <use x='66' y='477' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.role'><text id='profiles&#46;role' x='83' y='487'>role</text><title>&#10697;  role
+     * enum(&apos;client&apos;,&apos;freelancer&apos;)
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Роль (заказчик или исполнитель).</title></a>
+<text x='224' y='488' class='dataType' style='fill:#C0BAB2;'>enum&#40;&#39;client&#39;&#44;&#39;freela&#46;&#46;&#46;</text>  <use x='66' y='493' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.rating'><text id='profiles&#46;rating' x='83' y='503'>rating</text><title>&#10697;  rating
+     * double default 0
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Рейтинг, основан на отзывах.</title></a>
+<text x='224' y='504' class='dataType' style='fill:#C0BAB2;'>double</text>  <use x='66' y='509' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.description'><text id='profiles&#46;description' x='83' y='519'>description</text><title>&#10697;  description
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Пользовательское поле &quot;О себе&quot;.</title></a>
+<text x='224' y='520' class='dataType' style='fill:#C0BAB2;'>string</text>  <use x='66' y='525' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.createdAt'><text id='profiles&#46;createdAt' x='83' y='535'>createdAt</text><title>&#10697;  createdAt
+     * timestamp
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='224' y='536' class='dataType' style='fill:#C0BAB2;'>timestamp</text>  <use x='66' y='541' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.updatedAt'><text id='profiles&#46;updatedAt' x='83' y='551'>updatedAt</text><title>&#10697;  updatedAt
+     * timestamp
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата обновления документа.</title></a>
+<text x='224' y='552' class='dataType' style='fill:#C0BAB2;'>timestamp</text>  <use x='66' y='557' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews'><text id='profiles&#46;reviews' x='83' y='567'>reviews</text><title>&#10697;  reviews
+     * array[object]
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Отзывы на профиль пользователя.</title></a>
+<text x='224' y='568' class='dataType' style='fill:#C0BAB2;'>array&#91;object&#93;</text>
+<!-- == Table 'responses' == -->
+<rect id='depict_responses' class='entity' style='stroke:none;' x='592' y='1224' width='160' height='160' rx='4' ry='4' />
+<path d='M 592 1252 L 592 1228 Q 592 1224 596 1224 L 748 1224 Q 752 1224 752 1228 L 752 1252 L592 1252 ' style='fill:url(#tbg_C7F4BE);stroke:none;' />
+<rect class='entity' x='592' y='1224' width='160' height='160' rx='4' ry='4' style='fill:none;stroke:#E3F2E1'/>
+<use x='744' y='1224' xlink:href='#leafArray'/>
+<a xlink:href='#responses'><text id='depict&#45;responses' x='637' y='1243' class='tableHeader' style='fill:#326D27;'>responses</text><title>Sub-document responses
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Список откликов от фрилансеров.</title></a>
+  <use x='594' y='1261' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.freelancerName'><text id='responses&#46;freelancerName' x='611' y='1271'>freelancerName</text><title>&#10697;  freelancerName
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Публичное имя пользователя, откликнувшегося на заказ.</title></a>
+<text x='736' y='1272' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='594' y='1277' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.freelancerId'><text id='responses&#46;freelancerId' x='611' y='1287' onmouseover="hghl(['orders_fk_orders_users','schema_editor.users._id'])" onmouseout="uhghl(['orders_fk_orders_users','schema_editor.users._id'])">freelancerId</text><title>&#10697;  freelancerId
+     * objectid
+ &#8599; orders( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID пользователя, откликнувшегося на заказ.</title></a>
+<text x='736' y='1288' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.responses.freelancerId'><use x='740' y='1276' xlink:href='#fk'/><title>&#x1F517;  References users ( responses.freelancerId -&gt; _id ) </title></a>
+  <use x='594' y='1293' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.chatId'><text id='responses&#46;chatId' x='611' y='1303' onmouseover="hghl(['orders_fk_orders_chats','schema_editor.chats._id'])" onmouseout="uhghl(['orders_fk_orders_chats','schema_editor.chats._id'])">chatId</text><title>&#10697;  chatId
+     * objectid
+ &#8599; orders( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID чата, созданного для переписки в рамках отклика.</title></a>
+<text x='736' y='1304' class='dataType' style='fill:#B4C0B2;'>objectId</text><a xlink:href='#schema_editor.orders.responses.chatId'><use x='740' y='1292' xlink:href='#fk'/><title>&#x1F517;  References chats ( responses.chatId -&gt; _id ) </title></a>
+  <use x='594' y='1309' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.coverLetter'><text id='responses&#46;coverLetter' x='611' y='1319'>coverLetter</text><title>&#10697;  coverLetter
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Сопроводительное письмо фрилансера, по совместительству первое сообщение в переписке.</title></a>
+<text x='736' y='1320' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='594' y='1325' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.active'><text id='responses&#46;active' x='611' y='1335'>active</text><title>&#10697;  active
+     * bool default true
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Активен ли отклик.</title></a>
+<text x='736' y='1336' class='dataType' style='fill:#B4C0B2;'>bool</text>  <use x='594' y='1341' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.createdAt'><text id='responses&#46;createdAt' x='611' y='1351'>createdAt</text><title>&#10697;  createdAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='736' y='1352' class='dataType' style='fill:#B4C0B2;'>timestamp</text>  <use x='594' y='1357' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.responses.updatedAt'><text id='responses&#46;updatedAt' x='611' y='1367'>updatedAt</text><title>&#10697;  updatedAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата обновления документа.</title></a>
+<text x='736' y='1368' class='dataType' style='fill:#B4C0B2;'>timestamp</text>
+<!-- == Table 'reviews' == -->
+<rect id='depict_reviews' class='entity' style='stroke:none;' x='64' y='648' width='160' height='128' rx='4' ry='4' />
+<path d='M 64 676 L 64 652 Q 64 648 68 648 L 220 648 Q 224 648 224 652 L 224 676 L64 676 ' style='fill:url(#tbg_F4DDBE);stroke:none;' />
+<rect class='entity' x='64' y='648' width='160' height='128' rx='4' ry='4' style='fill:none;stroke:#F2EAE1'/>
+<use x='216' y='648' xlink:href='#leafArray'/>
+<a xlink:href='#reviews'><text id='depict&#45;reviews' x='117' y='667' class='tableHeader' style='fill:#6D4F27;'>reviews</text><title>Sub-document reviews
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Отзывы на профиль пользователя.</title></a>
+  <use x='66' y='685' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.authorId'><text id='reviews&#46;authorId' x='83' y='695' onmouseover="hghl(['users_fk_users_users','schema_editor.users._id'])" onmouseout="uhghl(['users_fk_users_users','schema_editor.users._id'])">authorId</text><title>&#10697;  authorId
+     * objectid
+ &#8599; users( _id )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      ID пользователя, оставившего отзыв.</title></a>
+<text x='208' y='696' class='dataType' style='fill:#C0BAB2;'>objectId</text><a xlink:href='#schema_editor.users.profiles.reviews.authorId'><use x='212' y='684' xlink:href='#fk'/><title>&#x1F517;  References users ( profiles.reviews.authorId -&gt; _id ) </title></a>
+  <use x='66' y='701' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.authorName'><text id='reviews&#46;authorName' x='83' y='711'>authorName</text><title>&#10697;  authorName
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Публичное имя пользователя, оставившего отзыв.</title></a>
+<text x='208' y='712' class='dataType' style='fill:#C0BAB2;'>string</text>  <use x='66' y='717' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.score'><text id='reviews&#46;score' x='83' y='727'>score</text><title>&#10697;  score
+     * int
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Оценка (от 1 до 5).</title></a>
+<text x='208' y='728' class='dataType' style='fill:#C0BAB2;'>int</text>  <a xlink:href='#schema_editor.users.profiles.reviews.content'><text id='reviews&#46;content' x='83' y='743'>content</text><title>&#10697;  content
+     string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Текст отзыва.</title></a>
+<text x='208' y='744' class='dataType' style='fill:#C0BAB2;'>string</text>  <use x='66' y='749' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles.reviews.createdAt'><text id='reviews&#46;createdAt' x='83' y='759'>createdAt</text><title>&#10697;  createdAt
+     * timestamp default now()
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='208' y='760' class='dataType' style='fill:#C0BAB2;'>timestamp</text>
+<!-- == Table 'statuses' == -->
+<rect id='depict_statuses' class='entity' style='stroke:none;' x='368' y='1224' width='192' height='96' rx='4' ry='4' />
+<path d='M 368 1252 L 368 1228 Q 368 1224 372 1224 L 556 1224 Q 560 1224 560 1228 L 560 1252 L368 1252 ' style='fill:url(#tbg_C7F4BE);stroke:none;' />
+<rect class='entity' x='368' y='1224' width='192' height='96' rx='4' ry='4' style='fill:none;stroke:#E3F2E1'/>
+<use x='552' y='1224' xlink:href='#leafArray'/>
+<a xlink:href='#statuses'><text id='depict&#45;statuses' x='435' y='1243' class='tableHeader' style='fill:#326D27;'>statuses</text><title>Sub-document statuses
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      История изменений статусов заказа. Последний элемент массива всегда отражает актуальный статус.</title></a>
+  <use x='370' y='1261' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.statuses.title'><text id='statuses&#46;title' x='387' y='1271'>title</text><title>&#10697;  title
+     * enum(&apos;beginning&apos;,&apos;negotiation&apos;,&apos;budgeting&apos;,&apos;work&apos;,&apos;reviews&apos;,&apos;finished&apos;,&apos;dispute&apos;)
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Название статуса.</title></a>
+<text x='544' y='1272' class='dataType' style='fill:#B4C0B2;'>enum&#40;&#39;beginning&#39;&#44;&#39;neg&#46;&#46;&#46;</text>  <a xlink:href='#schema_editor.orders.statuses.content'><text id='statuses&#46;content' x='387' y='1287'>content</text><title>&#10697;  content
+     string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дополнительная информация, если нужно.</title></a>
+<text x='544' y='1288' class='dataType' style='fill:#B4C0B2;'>string</text>  <use x='370' y='1293' xlink:href='#nn'/><a xlink:href='#schema_editor.orders.statuses.createdAt'><text id='statuses&#46;createdAt' x='387' y='1303'>createdAt</text><title>&#10697;  createdAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='544' y='1304' class='dataType' style='fill:#B4C0B2;'>timestamp</text>
+<!-- == Table 'users' == -->
+<rect id='depict_schema&#95;editor&#46;users' class='entity' style='stroke:none;' x='48' y='168' width='192' height='208' rx='4' ry='4' />
+<path d='M 48 196 L 48 172 Q 48 168 52 168 L 236 168 Q 240 168 240 172 L 240 196 L48 196 ' style='fill:url(#tbg_F4DDBE);stroke:none;' />
+<rect class='entity' x='48' y='168' width='192' height='208' rx='4' ry='4' style='fill:none;stroke:#F2EAE1'/>
+<a xlink:href='#schema_editor.users'><text id='depict&#45;schema&#95;editor&#46;users' x='124' y='187' class='tableHeader' style='fill:#6D4F27;'>users</text><title>Collection schema_editor.users
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Коллекция пользователей.</title></a>
+  <use x='50' y='205' xlink:href='#nn'/><use x='50' y='204' xlink:href='#pk'><title>&#x1F511;  Pk _id_ ( _id ) </title></use><a xlink:href='#schema_editor.users._id'><text id='schema&#95;editor&#46;users&#46;&#95;id' x='67' y='215' onmouseover="hghl(['chats_fk_chats_users','schema_editor.chats.id','chats_fk_chats_users_0','schema_editor.chats.id','orders_fk_orders_users','schema_editor.orders.freelancerId','orders_fk_orders_users_0','schema_editor.orders.clientId','orders_fk_orders_users_1','schema_editor.orders.freelancerId','users_fk_users_users','schema_editor.users.authorId'])" onmouseout="uhghl(['chats_fk_chats_users','schema_editor.chats.id','chats_fk_chats_users_0','schema_editor.chats.id','orders_fk_orders_users','schema_editor.orders.freelancerId','orders_fk_orders_users_0','schema_editor.orders.clientId','orders_fk_orders_users_1','schema_editor.orders.freelancerId','users_fk_users_users','schema_editor.users.authorId'])" class='colPk'>&#95;id</text><title>&#10697;  _id
+     * objectid
+ &#8601; chats( _id )
+ &#8601; chats( _id )
+ &#8601; orders( _id )
+ &#8601; orders( _id )
+ &#8601; orders( _id )
+ &#8601; users( _id )</title></a>
+<text x='224' y='216' class='dataType' style='fill:#C0BAB2;'>objectId</text><a xlink:href='#schema_editor.users._id'><use x='228' y='204' xlink:href='#ref'/><title>&#x1F517;  Referred by chats ( freelancer.id -&gt; _id ) 
+Referred by chats ( client.id -&gt; _id ) 
+Referred by orders ( responses.freelancerId -&gt; _id ) 
+Referred by orders ( clientId -&gt; _id ) 
+Referred by orders ( freelancerId -&gt; _id ) 
+Referred by users ( profiles.reviews.authorId -&gt; _id ) </title></a>
+  <use x='50' y='221' xlink:href='#nn'/><a xlink:href='#schema_editor.users.displayName'><text id='schema&#95;editor&#46;users&#46;displayName' x='67' y='231'>displayName</text><title>&#10697;  displayName
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Отображаемое имя пользователя (ФИО или ФИ).</title></a>
+<text x='224' y='232' class='dataType' style='fill:#C0BAB2;'>string</text>  <use x='50' y='237' xlink:href='#nn'/><use x='50' y='236' xlink:href='#unq'><title>&#x1F50D;  Unq unq_users_email ( email ) </title></use><a xlink:href='#schema_editor.users.email'><text id='schema&#95;editor&#46;users&#46;email' x='67' y='247'>email</text><title>&#10697;  email
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Адрес электронной почты.</title></a>
+<text x='224' y='248' class='dataType' style='fill:#C0BAB2;'>string</text>  <use x='50' y='253' xlink:href='#nn'/><a xlink:href='#schema_editor.users.password'><text id='schema&#95;editor&#46;users&#46;password' x='67' y='263'>password</text><title>&#10697;  password
+     * string
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Хэш пароля.</title></a>
+<text x='224' y='264' class='dataType' style='fill:#C0BAB2;'>string</text>  <use x='50' y='269' xlink:href='#nn'/><a xlink:href='#schema_editor.users.balance'><text id='schema&#95;editor&#46;users&#46;balance' x='67' y='279'>balance</text><title>&#10697;  balance
+     * int default 0
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Количество денег на счету пользователя.</title></a>
+<text x='224' y='280' class='dataType' style='fill:#C0BAB2;'>int</text>  <a xlink:href='#schema_editor.users.systemRole'><text id='schema&#95;editor&#46;users&#46;systemRole' x='67' y='295'>systemRole</text><title>&#10697;  systemRole
+     enum(&apos;admin&apos;)
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Системная роль (администратор, модератор и т.п.). Определяет возможность пользователя авторизоваться и попадать на служебные страницы.</title></a>
+<text x='224' y='296' class='dataType' style='fill:#C0BAB2;'>enum&#40;&#39;admin&#39;&#41;</text>  <use x='50' y='301' xlink:href='#nn'/><a xlink:href='#schema_editor.users.profiles'><text id='schema&#95;editor&#46;users&#46;profiles' x='67' y='311' onmouseover="hghl(['profiles_JSon'])" onmouseout="uhghl(['profiles_JSon'])">profiles</text><title>&#10697;  profiles
+     * array[object]
+ &#8601; profiles( profiles )
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Профили пользователя (как заказчика или исполнителя).</title></a>
+<text x='224' y='312' class='dataType' style='fill:#C0BAB2;'>array&#91;object&#93;</text>  <use x='50' y='317' xlink:href='#nn'/><a xlink:href='#schema_editor.users.active'><text id='schema&#95;editor&#46;users&#46;active' x='67' y='327'>active</text><title>&#10697;  active
+     * bool default true
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Активен ли аккаунт пользователя в данный момент. Альтернатива удалению документа из коллекции.</title></a>
+<text x='224' y='328' class='dataType' style='fill:#C0BAB2;'>bool</text>  <use x='50' y='333' xlink:href='#nn'/><a xlink:href='#schema_editor.users.createdAt'><text id='schema&#95;editor&#46;users&#46;createdAt' x='67' y='343'>createdAt</text><title>&#10697;  createdAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата создания документа.</title></a>
+<text x='224' y='344' class='dataType' style='fill:#C0BAB2;'>timestamp</text>  <use x='50' y='349' xlink:href='#nn'/><a xlink:href='#schema_editor.users.updatedAt'><text id='schema&#95;editor&#46;users&#46;updatedAt' x='67' y='359'>updatedAt</text><title>&#10697;  updatedAt
+     * timestamp default &apos;now()&apos;
+ ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+      Дата обновления документа.</title></a>
+<text x='224' y='360' class='dataType' style='fill:#C0BAB2;'>timestamp</text>
 </g></svg>
