@@ -1,0 +1,127 @@
+{
+  "bsonType": "object",
+  "description": "Коллекция пользователей.",
+  "required": [
+    "displayName",
+    "email",
+    "password",
+    "balance",
+    "profiles",
+    "active",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "createdAt": {
+      "bsonType": "timestamp",
+      "description": "Дата создания документа."
+    },
+    "password": {
+      "bsonType": "string",
+      "description": "Хэш пароля."
+    },
+    "balance": {
+      "bsonType": "int",
+      "description": "Количество денег на счету пользователя."
+    },
+    "systemRole": {
+      "description": "Системная роль (администратор, модератор и т.п.). Определяет возможность пользователя авторизоваться и попадать на служебные страницы.",
+      "enum": [
+        "admin"
+      ]
+    },
+    "displayName": {
+      "bsonType": "string",
+      "description": "Отображаемое имя пользователя (ФИО или ФИ)."
+    },
+    "profiles": {
+      "bsonType": "array",
+      "description": "Профили пользователя (как заказчика или исполнителя).",
+      "items": {
+        "bsonType": "object",
+        "description": "Профили пользователя (как заказчика или исполнителя).",
+        "required": [
+          "role",
+          "rating",
+          "description",
+          "createdAt",
+          "updatedAt",
+          "reviews"
+        ],
+        "properties": {
+          "createdAt": {
+            "bsonType": "timestamp",
+            "description": "Дата создания документа."
+          },
+          "role": {
+            "description": "Роль (заказчик или исполнитель).",
+            "enum": [
+              "client",
+              "freelancer"
+            ]
+          },
+          "reviews": {
+            "bsonType": "array",
+            "description": "Отзывы на профиль пользователя.",
+            "items": {
+              "bsonType": "object",
+              "description": "Отзывы на профиль пользователя.",
+              "required": [
+                "authorId",
+                "authorName",
+                "score",
+                "createdAt"
+              ],
+              "properties": {
+                "score": {
+                  "bsonType": "int",
+                  "description": "Оценка (от 1 до 5)."
+                },
+                "createdAt": {
+                  "bsonType": "timestamp",
+                  "description": "Дата создания документа."
+                },
+                "authorName": {
+                  "bsonType": "string",
+                  "description": "Публичное имя пользователя, оставившего отзыв."
+                },
+                "authorId": {
+                  "bsonType": "objectId",
+                  "description": "ID пользователя, оставившего отзыв."
+                },
+                "content": {
+                  "bsonType": "string",
+                  "description": "Текст отзыва."
+                }
+              }
+            }
+          },
+          "rating": {
+            "bsonType": "double",
+            "description": "Рейтинг, основан на отзывах."
+          },
+          "description": {
+            "bsonType": "string",
+            "description": "Пользовательское поле \"О себе\"."
+          },
+          "updatedAt": {
+            "bsonType": "timestamp",
+            "description": "Дата обновления документа."
+          }
+        }
+      }
+    },
+    "active": {
+      "bsonType": "bool",
+      "description": "Активен ли аккаунт пользователя в данный момент. Альтернатива удалению документа из коллекции."
+    },
+    "email": {
+      "bsonType": "string",
+      "description": "Адрес электронной почты."
+    },
+    "updatedAt": {
+      "bsonType": "timestamp",
+      "description": "Дата обновления документа."
+    }
+  }
+}
