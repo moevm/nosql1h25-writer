@@ -1,0 +1,12 @@
+app:
+  name: 'writer'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+logger:
+  level: 'debug'
+
+jwt:
+  token_ttl: 2h
