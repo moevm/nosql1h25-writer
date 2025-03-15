@@ -11,6 +11,7 @@ services:
     build: ./backend
     environment:
       MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
+      CONFIG_PATH: ${BACKEND_CONFIG_PATH}
     depends_on:
       - mongodb
     volumes:
@@ -48,12 +49,3 @@ services:
       - net
     restart: unless-stopped
     command: mongod --logpath /dev/null
-  
-  hello_world:
-    environment:
-      MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
-    build: ./hello_world
-    depends_on:
-      - mongodb
-    networks:
-      - net

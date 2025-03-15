@@ -2,17 +2,16 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/ilyakaznacheev/cleanenv"
-	"time"
 )
 
 type (
 	Config struct {
-		App    `yaml:"app"`
-		HTTP   `yaml:"http"`
-		Log    `yaml:"logger"`
-		JWT    `yaml:"jwt"`
-		Hasher `yaml:"hasher"`
+		App   `yaml:"app"`
+		HTTP  `yaml:"http"`
+		Log   `yaml:"logger"`
+		Mongo `yaml:"mongo"`
 	}
 
 	App struct {
@@ -24,17 +23,13 @@ type (
 		Port string `env-required:"true" yaml:"port" env:"HTTP_PORT"`
 	}
 
+	Mongo struct {
+		Uri             string `env-required:"true" yaml:"uri" env:"MONGO_URI"`
+		ShutdownTimeout int    `env-required:"true" yaml:"shutdownTimeout" env:"MONGO_SHUTDOWN_TIMEOUT"`
+	}
+
 	Log struct {
 		Level string `env-required:"true" yaml:"level" env:"LOG_LEVEL"`
-	}
-
-	JWT struct {
-		SignKey  string        `env-required:"true" env:"JWT_SIGN_KEY"`
-		TokenTTL time.Duration `env-required:"true" yaml:"token_ttl" env:"JWT_TOKEN_TTL"`
-	}
-
-	Hasher struct {
-		Salt string `env-required:"true" env:"HASHER_SALT"`
 	}
 )
 

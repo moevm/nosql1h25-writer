@@ -1,8 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/moevm/nosql1h25-writer/backend/internal/app"
+)
 
 func main() {
-	// app.Run()
-	fmt.Println("Hello World")
+	app := app.New(os.Getenv("CONFIG_PATH"))
+	app.Start()
 }
