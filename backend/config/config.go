@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -24,8 +25,8 @@ type (
 	}
 
 	Mongo struct {
-		Uri             string `env-required:"true" yaml:"uri" env:"MONGO_URI"`
-		ShutdownTimeout int    `env-required:"true" yaml:"shutdown-timeout" env:"MONGO_SHUTDOWN_TIMEOUT"`
+		Uri             string        `env-required:"true" yaml:"uri" env:"MONGO_URI"`
+		ShutdownTimeout time.Duration `env-required:"true" yaml:"shutdown-timeout" env:"MONGO_SHUTDOWN_TIMEOUT"`
 	}
 
 	Log struct {

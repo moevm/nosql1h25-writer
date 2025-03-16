@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/moevm/nosql1h25-writer/backend/config"
@@ -59,7 +58,7 @@ func (app *App) Start() {
 	app.mongoClient = mongoClient
 
 	defer func() {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(app.cfg.Mongo.ShutdownTimeout))
+		ctx, cancel := context.WithTimeout(context.Background(), app.cfg.Mongo.ShutdownTimeout)
 		defer cancel()
 
 		if err := mongoClient.Disconnect(ctx); err != nil {
