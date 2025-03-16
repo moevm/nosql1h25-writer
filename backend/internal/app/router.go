@@ -20,10 +20,17 @@ func (app *App) getEchoHandler() *echo.Echo {
 		Output: setLogsFile(),
 	}))
 	handler.Use(middleware.Recover())
-	configureRouter(handler)
+	app.configureRouter(handler)
 
 	app.echoHandler = handler
-	return handler
+	return app.echoHandler
+}
+
+func (app *App) configureRouter(handler *echo.Echo) {
+	apiGroup := handler.Group("/api")
+	{
+		apiGroup.GET("/health", get_health.New(app.getOrdersCollection()).Handle)
+	}
 }
 
 func setLogsFile() *os.File {
@@ -32,11 +39,4 @@ func setLogsFile() *os.File {
 		log.Fatalf("v1 - setLogsFile - os.OpenFile: %v", err)
 	}
 	return file
-}
-
-func configureRouter(handler *echo.Echo) {
-	apiGroup := handler.Group("/api")
-	{
-		apiGroup.GET("/health", get_health.New().Handle)
-	}
 }

@@ -5,14 +5,17 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/moevm/nosql1h25-writer/backend/api"
+	"github.com/sv-tools/mongoifc"
 )
 
-type handler struct{}
+type handler struct {
+	orders mongoifc.Collection
+}
 
-func New() api.Handler {
-	return &handler{}
+func New(orders mongoifc.Collection) api.Handler {
+	return &handler{orders: orders}
 }
 
 func (h *handler) Handle(c echo.Context) error {
-	return c.String(http.StatusOK, "OK")
+	return c.String(http.StatusOK, h.orders.Name())
 }

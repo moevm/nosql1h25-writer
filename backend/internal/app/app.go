@@ -12,13 +12,25 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
 	log "github.com/sirupsen/logrus"
+	"github.com/sv-tools/mongoifc"
 )
 
 type App struct {
+	// exists after call [App.New]
 	cfg       *config.Config
 	interrupt <-chan os.Signal
 
+	// appears after call [App.Start]
+	mongoClient mongoifc.Client
+
+	// Echo stuff
 	echoHandler *echo.Echo
+
+	// dbs
+	mainDb mongoifc.Database
+
+	// collections
+	ordersCollection mongoifc.Collection
 }
 
 func New(configPath string) *App {
@@ -44,6 +56,7 @@ func (app *App) Start() {
 	if err != nil {
 		log.Fatalf("app - Start - mongodb.New: %v", err)
 	}
+	app.mongoClient = mongoClient
 
 	defer func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(app.cfg.Mongo.ShutdownTimeout))
@@ -54,14 +67,13 @@ func (app *App) Start() {
 		}
 	}()
 
-	
 	log.Info("Start server...")
 	httpServer := httpserver.New(app.getEchoHandler(), httpserver.Port(app.cfg.HTTP.Port))
 	httpServer.Start()
 
 	defer func() {
 		if err := httpServer.Shutdown(); err != nil {
-			log.Errorf("app - Run - httpServer.Shutdown: %v", err)
+			log.Errorf("app - Start - httpServer.Shutdown: %v", err)
 		}
 	}()
 
