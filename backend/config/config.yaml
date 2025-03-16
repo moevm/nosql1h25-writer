@@ -9,4 +9,4 @@ logger:
   level: 'debug'
 
 mongo:
-  shutdownTimeout: 3
+  shutdown-timeout: 3

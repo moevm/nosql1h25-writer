@@ -17,6 +17,8 @@ import (
 type App struct {
 	cfg       *config.Config
 	interrupt <-chan os.Signal
+
+	echoHandler *echo.Echo
 }
 
 func New(configPath string) *App {
@@ -26,7 +28,7 @@ func New(configPath string) *App {
 	}
 
 	initLogger(cfg.Log.Level)
-	
+
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
@@ -52,10 +54,9 @@ func (app *App) Start() {
 		}
 	}()
 
-	httpHandler := echo.New()
-	httpServer := httpserver.New(httpHandler, httpserver.Port(app.cfg.HTTP.Port))
-
+	
 	log.Info("Start server...")
+	httpServer := httpserver.New(app.getEchoHandler(), httpserver.Port(app.cfg.HTTP.Port))
 	httpServer.Start()
 
 	defer func() {
