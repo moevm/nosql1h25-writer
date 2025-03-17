@@ -26,7 +26,7 @@ type (
 
 	Mongo struct {
 		Uri             string        `env-required:"true" yaml:"uri" env:"MONGO_URI"`
-		ShutdownTimeout time.Duration `env-required:"true" yaml:"shutdown-timeout" env:"MONGO_SHUTDOWN_TIMEOUT"`
+		ShutdownTimeout time.Duration `env-required:"true" yaml:"shutdown_timeout" env:"MONGO_SHUTDOWN_TIMEOUT"`
 	}
 
 	Log struct {

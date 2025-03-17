@@ -5,7 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/moevm/nosql1h25-writer/backend/api/get_health"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	log "github.com/sirupsen/logrus"
 )
 

@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/moevm/nosql1h25-writer/backend/api"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api"
+
 	"github.com/sv-tools/mongoifc"
 )
 
