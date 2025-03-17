@@ -8,10 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const connectTimeoutSecond = 7
+const connectTimeout = 7 * time.Second
 
 func New(uri string) (mongoifc.Client, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*connectTimeoutSecond)
+	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout)
 	defer cancel()
 
 	client, err := mongoifc.Connect(ctx, options.Client().ApplyURI(uri))
