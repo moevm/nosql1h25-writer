@@ -3,5 +3,5 @@ package api
 import "github.com/labstack/echo/v4"
 
 type Handler interface {
-	Handle (c echo.Context) error
+	Handle(c echo.Context) error
 }

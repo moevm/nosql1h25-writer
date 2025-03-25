@@ -5,7 +5,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -27,10 +26,7 @@ func (app *App) getEchoHandler() *echo.Echo {
 }
 
 func (app *App) configureRouter(handler *echo.Echo) {
-	apiGroup := handler.Group("/api")
-	{
-		apiGroup.GET("/health", get_health.New(app.getOrdersCollection()).Handle)
-	}
+	handler.GET("/health", app.getGetHealthHandler().Handle)
 }
 
 func setLogsFile() *os.File {

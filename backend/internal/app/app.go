@@ -8,6 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/moevm/nosql1h25-writer/backend/config"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
 	log "github.com/sirupsen/logrus"
@@ -30,6 +31,9 @@ type App struct {
 
 	// collections
 	ordersCollection mongoifc.Collection
+
+	// handlers
+	getHealthHandler api.Handler
 }
 
 func New(configPath string) *App {
