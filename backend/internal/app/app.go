@@ -72,7 +72,7 @@ func (app *App) Start() {
 	}()
 
 	log.Info("Start server...")
-	httpServer := httpserver.New(app.getEchoHandler(), httpserver.Port(app.cfg.HTTP.Port))
+	httpServer := httpserver.New(app.EchoHandler(), httpserver.Port(app.cfg.HTTP.Port))
 	httpServer.Start()
 
 	defer func() {

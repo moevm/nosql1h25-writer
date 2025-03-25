@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (app *App) getEchoHandler() *echo.Echo {
+func (app *App) EchoHandler() *echo.Echo {
 	if app.echoHandler != nil {
 		return app.echoHandler
 	}
@@ -26,7 +26,7 @@ func (app *App) getEchoHandler() *echo.Echo {
 }
 
 func (app *App) configureRouter(handler *echo.Echo) {
-	handler.GET("/health", app.getGetHealthHandler().Handle)
+	handler.GET("/health", app.GetHealthHandler().Handle)
 }
 
 func setLogsFile() *os.File {
