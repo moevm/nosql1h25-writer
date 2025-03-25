@@ -7,12 +7,13 @@ import (
 	"syscall"
 
 	"github.com/labstack/echo/v4"
+	log "github.com/sirupsen/logrus"
+	"github.com/sv-tools/mongoifc"
+
 	"github.com/moevm/nosql1h25-writer/backend/config"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
-	log "github.com/sirupsen/logrus"
-	"github.com/sv-tools/mongoifc"
 )
 
 type App struct {

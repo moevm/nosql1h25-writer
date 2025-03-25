@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/moevm/nosql1h25-writer/backend/internal/api"
-
 	"github.com/sv-tools/mongoifc"
+
+	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 )
 
 type handler struct {
