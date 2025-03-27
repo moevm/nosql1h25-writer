@@ -37,7 +37,7 @@ type updateSongInput struct {
 
 ## Образец `handler.go`
 ```go
-package get_user
+package get_users
 
 import (
 	"net/http"
@@ -56,8 +56,16 @@ func New(users users.Service) api.Handler {
 	return &handler{users: users}
 }
 
+// @Description Получить пользователя с ID 1
+// @Summary Получить пользователя
+// @Param id path int true "ID пользователя" minimum(1) example(33)
+// @Produce json
+// @Success 200 {object} entity.User
+// @Failure 400 {object} echo.HTTPError
+// @Failure 500 {object} echo.HTTPError
+// @Router /users [get]
 func (h *handler) Handle(c echo.Context) error {
-	return c.String(http.StatusOK, h.users.GetUser(0))
+	return c.String(http.StatusOK, h.users.GetUser(1))
 }
 ```
 
