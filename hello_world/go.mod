@@ -1,6 +1,6 @@
-module github.com/moevm/nosql1h25-writer
+module github.com/moevm/nosql1h25-writer/hello_world
 
-go 1.23.0
+go 1.24.0
 
 require go.mongodb.org/mongo-driver/v2 v2.0.0
 
