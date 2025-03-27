@@ -6,6 +6,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	log "github.com/sirupsen/logrus"
+	echoSwagger "github.com/swaggo/echo-swagger"
+
+	_ "github.com/moevm/nosql1h25-writer/backend/docs"
 )
 
 func (app *App) EchoHandler() *echo.Echo {
@@ -19,6 +22,8 @@ func (app *App) EchoHandler() *echo.Echo {
 		Output: setLogsFile(),
 	}))
 	handler.Use(middleware.Recover())
+	handler.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	app.configureRouter(handler)
 
 	app.echoHandler = handler
