@@ -1,0 +1,37 @@
+basePath: /api
+definitions:
+  echo.HTTPError:
+    properties:
+      message: {}
+    type: object
+host: localhost:80
+info:
+  contact: {}
+  description: API for freelancer's site
+  title: Writer
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      description: Whether REST-API alive or not
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Check health
+      tags:
+      - health
+securityDefinitions:
+  JWT:
+    description: JSON Web Token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

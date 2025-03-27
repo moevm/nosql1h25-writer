@@ -8,5 +8,5 @@ http:
 logger:
   level: 'debug'
 
-jwt:
-  token_ttl: 2h
+mongo:
+  shutdown_timeout: 3s
