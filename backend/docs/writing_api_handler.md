@@ -3,6 +3,8 @@
 1. Создайте в [`/internal/api`](../internal/api) каталог и назовите его в формате "метод_путь_до_страницы". Например: `GET /admin/export` → `get_admin_export`, `PATCH /orders/:id` → `patch_orders_id`.
 2. Создайте в этом каталоге файл `handler.go`.
 3. Не забудьте заполнить документацию для **Swagger** (комментарии перед функцией `Handle`).
+4. Добавить инициализацию обработчика в файл [`/app/handler.go`](../internal/app/handler.go) (пример есть в файле).
+5. Добавить маршрут в файл [`/app/router.go`](../internal/app/router.go) (пример есть в файле).
 
 * Документация по заполнению Swagger: [ссылка](https://github.com/swaggo/swag/blob/master/README.md).
 
