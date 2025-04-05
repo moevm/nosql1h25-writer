@@ -34,7 +34,9 @@ type App struct {
 	ordersCollection mongoifc.Collection
 
 	// handlers
-	getHealthHandler api.Handler
+	getHealthHandler   api.Handler
+	getOrdersHandler   api.Handler
+	getOrdersIDHandler api.Handler
 }
 
 // New initiate logger and config in App struct for future Start call
