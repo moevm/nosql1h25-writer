@@ -63,13 +63,13 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 	}
 
 	c.SetCookie(&http.Cookie{
-		Name:     "refreshToken",
+		Name:     api.RefreshToken,
 		Value:    authData.Session.RefreshToken.String(),
 		Expires:  authData.Session.ExpiresAt,
-		Path:     "/api/auth",
+		Path:     api.AuthCookiePath,
 		HttpOnly: true,
 	})
-
+	c.Path()
 	return c.JSON(http.StatusOK, Response{
 		AccessToken:  authData.AccessToken,
 		RefreshToken: authData.Session.RefreshToken,

@@ -9,11 +9,14 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jonboulle/clockwork v0.5.0
 	github.com/labstack/echo/v4 v4.13.3
+	github.com/samber/lo v1.49.1
 	github.com/sirupsen/logrus v1.9.3
+	github.com/stretchr/testify v1.10.0
 	github.com/sv-tools/mongoifc v1.17.3
 	github.com/swaggo/echo-swagger v1.4.1
 	github.com/swaggo/swag v1.16.4
 	go.mongodb.org/mongo-driver v1.17.3
+	go.uber.org/mock v0.5.0
 	golang.org/x/crypto v0.36.0
 )
 
@@ -21,6 +24,7 @@ require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.1 // indirect
@@ -39,6 +43,7 @@ require (
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/swaggo/files/v2 v2.0.2 // indirect
@@ -49,7 +54,6 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
-	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/sync v0.12.0 // indirect

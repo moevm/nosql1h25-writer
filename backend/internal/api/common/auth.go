@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
 )
 
@@ -50,7 +51,7 @@ func (m *AuthMW) UserIdentity() echo.MiddlewareFunc {
 }
 
 func ExtractRefreshTokenFromCookie(c echo.Context) *uuid.UUID {
-	cookie, err := c.Cookie("refreshToken")
+	cookie, err := c.Cookie(api.RefreshToken)
 	if err != nil {
 		return nil
 	}

@@ -14,3 +14,7 @@ lint:
 .PHONY: generate-mocks ### run mock generate
 generate-mocks:
 	go generate ./...
+
+.PHONY: test ### start unit tests
+test:
+	go test -v ./...

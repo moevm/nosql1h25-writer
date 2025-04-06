@@ -2,6 +2,7 @@ package hasher
 
 import "golang.org/x/crypto/bcrypt"
 
+//go:generate go tool mockgen -destination mock_$GOFILE -package=$GOPACKAGE . PasswordHasher
 type PasswordHasher interface {
 	Hash(password string) (string, error)
 	Match(password, hashedPassword string) bool
