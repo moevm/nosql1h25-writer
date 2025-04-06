@@ -2,6 +2,8 @@ package auth_test
 
 import (
 	"context"
+	"errors"
+	"io"
 	"testing"
 	"time"
 
@@ -9,20 +11,25 @@ import (
 	"github.com/google/uuid"
 	"github.com/jonboulle/clockwork"
 	"github.com/samber/lo"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/mock/gomock"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	auth_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/auth/mocks"
+	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	users_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/users/mocks"
-	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 )
 
 func TestService_Login(t *testing.T) {
+	logrus.SetOutput(io.Discard)
 	var (
 		startTime       = lo.Must(time.Parse(time.RFC3339, "2025-04-06T15:00:00Z"))
+		arbitraryErr    = errors.New("arbitrary error")
 		ctx             = context.TODO()
 		email           = "test@email.ru"
 		password        = "qwerty12345"
@@ -50,7 +57,7 @@ func TestService_Login(t *testing.T) {
 
 	type MockBehavior func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher)
 
-	testCases := []struct {
+	for _, tc := range []struct {
 		name         string
 		mockBehavior MockBehavior
 		want         entity.AuthData
@@ -68,9 +75,38 @@ func TestService_Login(t *testing.T) {
 				Session:     session,
 			},
 		},
-	}
-
-	for _, tc := range testCases {
+		{
+			name: "user not found",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				u.EXPECT().GetByEmail(ctx, email).Return(entity.User{}, users_repo.ErrUserNotFound)
+			},
+			wantErr: users_service.ErrUserNotFound,
+		},
+		{
+			name: "cannot get user",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				u.EXPECT().GetByEmail(ctx, email).Return(entity.User{}, arbitraryErr)
+			},
+			wantErr: users_service.ErrCannotGetUser,
+		},
+		{
+			name: "wrong password",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				u.EXPECT().GetByEmail(ctx, email).Return(user, nil)
+				h.EXPECT().Match(password, user.Password).Return(false)
+			},
+			wantErr: auth_service.ErrWrongPassword,
+		},
+		{
+			name: "cannot create session",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				u.EXPECT().GetByEmail(ctx, email).Return(user, nil)
+				h.EXPECT().Match(password, user.Password).Return(true)
+				a.EXPECT().CreateSession(ctx, user.ID, refreshTokenTTL).Return(entity.RefreshSession{}, arbitraryErr)
+			},
+			wantErr: auth_service.ErrCannotCreateSession,
+		},
+	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
@@ -82,7 +118,7 @@ func TestService_Login(t *testing.T) {
 
 			tc.mockBehavior(mockUsersRepo, mockAuthRepo, mockPasswordHasher)
 
-			s := auth.New(
+			s := auth_service.New(
 				mockUsersRepo,
 				mockAuthRepo,
 				mockPasswordHasher,
