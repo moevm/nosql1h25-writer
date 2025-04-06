@@ -4,6 +4,51 @@ definitions:
     properties:
       message: {}
     type: object
+  internal_api_post_auth_login.Request:
+    properties:
+      email:
+        example: test@gmail.com
+        format: email
+        type: string
+      password:
+        example: Password123
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_api_post_auth_login.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - refreshToken
+    type: object
+  internal_api_post_auth_refresh.Request:
+    properties:
+      refreshToken:
+        example: 0e8f711e-b713-4869-b528-059a74311482
+        type: string
+    type: object
+  internal_api_post_auth_refresh.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - refreshToken
+    type: object
 host: localhost:80
 info:
   contact: {}
@@ -11,6 +56,75 @@ info:
   title: Writer
   version: 1.0.0
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Generate `access` and `refresh` token pair. `refreshToken` sets
+        in httpOnly cookie also.
+      parameters:
+      - description: existing user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_login.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_login.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Login by email and password
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh `access` and `refresh` token pair. `refreshToken` can be
+        passed in cookie
+      parameters:
+      - description: active refresh token in UUID RFC4122 format
+        in: body
+        name: refreshToken
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_refresh.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_refresh.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Refresh tokens
+      tags:
+      - auth
   /health:
     get:
       description: Whether REST-API alive or not
