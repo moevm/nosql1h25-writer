@@ -9,6 +9,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/moevm/nosql1h25-writer/backend/docs"
+	"github.com/moevm/nosql1h25-writer/backend/pkg/validator"
 )
 
 func (app *App) EchoHandler() *echo.Echo {
@@ -17,6 +18,7 @@ func (app *App) EchoHandler() *echo.Echo {
 	}
 
 	handler := echo.New()
+	handler.Validator = validator.NewCustomValidator()
 	handler.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: `{"time":"${time_rfc3339_nano}", "method":"${method}","uri":"${uri}", "status":${status},"error":"${error}"}` + "\n",
 		Output: setLogsFile(),
