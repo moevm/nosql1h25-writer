@@ -34,6 +34,8 @@ func (app *App) EchoHandler() *echo.Echo {
 
 func (app *App) configureRouter(handler *echo.Echo) {
 	handler.GET("/health", app.GetHealthHandler().Handle)
+	handler.GET("/orders", app.GetOrdersHandler().Handle)
+	handler.GET("/orders/:id", app.GetOrdersIDHandler().Handle)
 }
 
 func setLogsFile() *os.File {
