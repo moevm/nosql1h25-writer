@@ -10,6 +10,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 )
 
+//go:generate go tool mockgen -destination mocks/mock_$GOFILE -package=mocks . Repo
 type Repo interface {
 	CreateSession(ctx context.Context, userID primitive.ObjectID, ttl time.Duration) (entity.RefreshSession, error)
 	GetAndDeleteByToken(ctx context.Context, token uuid.UUID) (entity.RefreshSession, error)

@@ -10,3 +10,7 @@ bin-deps:
 .PHONY: lint ### check by golangci linter
 lint: 
 	golangci-lint run
+
+.PHONY: generate-mocks ### run mock generate
+generate-mocks:
+	go generate ./...
