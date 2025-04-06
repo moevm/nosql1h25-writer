@@ -11,5 +11,6 @@ import (
 type Service interface {
 	Login(ctx context.Context, email, password string) (entity.AuthData, error)
 	Refresh(ctx context.Context, refreshToken uuid.UUID) (entity.AuthData, error)
+	Logout(ctx context.Context, refreshToken uuid.UUID) error
 	ParseToken(tokenString string) (*entity.AccessTokenClaims, error)
 }

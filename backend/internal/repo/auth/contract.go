@@ -13,4 +13,5 @@ import (
 type Repo interface {
 	CreateSession(ctx context.Context, userID primitive.ObjectID, ttl time.Duration) (entity.RefreshSession, error)
 	GetAndDeleteByToken(ctx context.Context, token uuid.UUID) (entity.RefreshSession, error)
+	DeleteByToken(ctx context.Context, token uuid.UUID) error
 }

@@ -55,7 +55,7 @@ func ExtractRefreshTokenFromCookie(c echo.Context) *uuid.UUID {
 		return nil
 	}
 
-	token, err := uuid.FromBytes([]byte(cookie.Value))
+	token, err := uuid.Parse(cookie.Value)
 	if err != nil {
 		return nil
 	}

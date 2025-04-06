@@ -45,7 +45,7 @@ type Response struct {
 func (h *handler) Handle(c echo.Context, in Request) error {
 	authData, err := h.authService.Login(c.Request().Context(), in.Email, in.Password)
 	if err != nil {
-		if errors.Is(err, users.ErrCannotGetUser) {
+		if errors.Is(err, users.ErrUserNotFound) {
 			return echo.NewHTTPError(http.StatusNotFound, err.Error())
 		} else if errors.Is(err, auth.ErrWrongPassword) {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())

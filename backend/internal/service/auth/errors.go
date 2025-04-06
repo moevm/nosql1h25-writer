@@ -12,4 +12,5 @@ var (
 	ErrSessionExpired      = errors.New("session expired")
 	ErrCannotGetSession    = errors.New("cannot get session")
 	ErrCannotCreateSession = errors.New("cannot create session")
+	ErrCannotDeleteSession = errors.New("cannot delete session")
 )

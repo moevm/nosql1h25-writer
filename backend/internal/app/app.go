@@ -45,6 +45,7 @@ type App struct {
 
 	postAuthLoginHandler   api.Handler
 	postAuthRefreshHandler api.Handler
+	postAuthLogoutHandler  api.Handler
 
 	// services
 	authService auth_service.Service

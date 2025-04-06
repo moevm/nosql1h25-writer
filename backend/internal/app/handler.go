@@ -4,6 +4,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
 )
 
@@ -32,4 +33,13 @@ func (app *App) PostAuthRefreshHandler() api.Handler {
 
 	app.postAuthRefreshHandler = post_auth_refresh.New(app.AuthService())
 	return app.postAuthRefreshHandler
+}
+
+func (app *App) PostAuthLogoutHandler() api.Handler {
+	if app.postAuthLogoutHandler != nil {
+		return app.postAuthLogoutHandler
+	}
+
+	app.postAuthLogoutHandler = post_auth_logout.New(app.AuthService())
+	return app.postAuthLogoutHandler
 }

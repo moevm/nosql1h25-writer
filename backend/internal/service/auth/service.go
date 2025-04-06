@@ -121,3 +121,16 @@ func (s *service) Refresh(ctx context.Context, refreshToken uuid.UUID) (entity.A
 		Session:     newSession,
 	}, nil
 }
+
+func (s *service) Logout(ctx context.Context, refreshToken uuid.UUID) error {
+	if err := s.authRepo.DeleteByToken(ctx, refreshToken); err != nil {
+		if errors.Is(err, auth.ErrSessionNotFound) {
+			return ErrSessionNotFound
+		}
+
+		log.Errorf("auth.service.Logout - s.authRepo.DeleteByToken: %v", err)
+		return ErrCannotDeleteSession
+	}
+
+	return nil
+}

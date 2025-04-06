@@ -1,6 +1,8 @@
 package app
 
-import "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+import (
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+)
 
 func (app *App) AuthService() auth.Service {
 	if app.authService != nil {

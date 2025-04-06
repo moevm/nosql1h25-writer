@@ -39,6 +39,7 @@ func (app *App) configureRouter(handler *echo.Echo) {
 	{
 		authGroup.POST("/login", app.PostAuthLoginHandler().Handle)
 		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
+		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
 	}
 }
 

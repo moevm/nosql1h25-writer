@@ -20,8 +20,11 @@ type repository struct {
 	clock        clockwork.Clock
 }
 
-func New(sessionsColl mongoifc.Collection) Repo {
-	return &repository{sessionsColl: sessionsColl}
+func New(sessionsColl mongoifc.Collection, clock clockwork.Clock) Repo {
+	return &repository{
+		sessionsColl: sessionsColl,
+		clock:        clock,
+	}
 }
 
 func (r *repository) CreateSession(
@@ -56,4 +59,17 @@ func (r *repository) GetAndDeleteByToken(ctx context.Context, token uuid.UUID) (
 	}
 
 	return s, nil
+}
+
+func (r *repository) DeleteByToken(ctx context.Context, token uuid.UUID) error {
+	res, err := r.sessionsColl.DeleteOne(ctx, bson.M{"refreshToken": token})
+	if err != nil {
+		return err
+	}
+
+	if res.DeletedCount == 0 {
+		return ErrSessionNotFound
+	}
+
+	return nil
 }

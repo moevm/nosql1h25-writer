@@ -67,6 +67,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/logout": {
+            "post": {
+                "description": "Remove ` + "`" + `refreshSession` + "`" + ` attached to ` + "`" + `refreshToken` + "`" + `. ` + "`" + `refreshToken` + "`" + ` can be passed in cookie",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout",
+                "parameters": [
+                    {
+                        "description": "active refresh token in UUID RFC4122 format",
+                        "name": "refreshToken",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_auth_logout.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/refresh": {
             "post": {
                 "description": "Refresh ` + "`" + `access` + "`" + ` and ` + "`" + `refresh` + "`" + ` token pair. ` + "`" + `refreshToken` + "`" + ` can be passed in cookie",
@@ -186,6 +234,15 @@ const docTemplate = `{
                 "refreshToken": {
                     "type": "string",
                     "example": "289abe45-5920-4366-a12a-875ddb422ace"
+                }
+            }
+        },
+        "internal_api_post_auth_logout.Request": {
+            "type": "object",
+            "properties": {
+                "refreshToken": {
+                    "type": "string",
+                    "example": "0e8f711e-b713-4869-b528-059a74311482"
                 }
             }
         },

@@ -31,6 +31,12 @@ definitions:
     - accessToken
     - refreshToken
     type: object
+  internal_api_post_auth_logout.Request:
+    properties:
+      refreshToken:
+        example: 0e8f711e-b713-4869-b528-059a74311482
+        type: string
+    type: object
   internal_api_post_auth_refresh.Request:
     properties:
       refreshToken:
@@ -89,6 +95,38 @@ paths:
           schema:
             $ref: '#/definitions/echo.HTTPError'
       summary: Login by email and password
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Remove `refreshSession` attached to `refreshToken`. `refreshToken`
+        can be passed in cookie
+      parameters:
+      - description: active refresh token in UUID RFC4122 format
+        in: body
+        name: refreshToken
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_logout.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Logout
       tags:
       - auth
   /auth/refresh:

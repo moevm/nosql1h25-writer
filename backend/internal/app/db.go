@@ -57,6 +57,6 @@ func (app *App) AuthRepo() auth.Repo {
 		return app.authRepo
 	}
 
-	app.authRepo = auth.New(app.SessionsCollection())
+	app.authRepo = auth.New(app.SessionsCollection(), app.Clock())
 	return app.authRepo
 }

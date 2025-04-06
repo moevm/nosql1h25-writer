@@ -13,4 +13,4 @@ mongo:
 
 auth:
   access_token_ttl: 30m
-  refresh_token_ttl: 30d
+  refresh_token_ttl: 720h
