@@ -29,6 +29,8 @@ type Response struct {
 	RefreshToken uuid.UUID `json:"refreshToken" validate:"required" example:"289abe45-5920-4366-a12a-875ddb422ace"`
 }
 
+// Handle - Refresh tokens handler
+//
 // @Summary		Refresh tokens
 // @Description	Refresh `access` and `refresh` token pair. `refreshToken` can be passed in cookie
 // @Tags			auth
