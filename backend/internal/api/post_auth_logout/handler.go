@@ -24,17 +24,17 @@ type Request struct {
 	RefreshToken *uuid.UUID `json:"refreshToken" example:"0e8f711e-b713-4869-b528-059a74311482"`
 }
 
-// @Summary		Logout
-// @Description	Remove `refreshSession` attached to `refreshToken`. `refreshToken` can be passed in cookie
-// @Tags		auth
-// @Param		refreshToken	body	Request	false	"active refresh token in UUID RFC4122 format"
-// @Accept			json
-// @Produce		json
-// @Success		200
-// @Failure		400	{object}	echo.HTTPError
-// @Failure		401	{object}	echo.HTTPError
-// @Failure		500	{object}	echo.HTTPError
-// @Router			/auth/logout [post]
+//	@Summary		Logout
+//	@Description	Remove `refreshSession` attached to `refreshToken`. `refreshToken` can be passed in cookie
+//	@Tags			auth
+//	@Param			refreshToken	body	Request	false	"active refresh token in UUID RFC4122 format"
+//	@Accept			json
+//	@Produce		json
+//	@Success		200
+//	@Failure		400	{object}	echo.HTTPError
+//	@Failure		401	{object}	echo.HTTPError
+//	@Failure		500	{object}	echo.HTTPError
+//	@Router			/auth/logout [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	refreshToken := in.RefreshToken
 

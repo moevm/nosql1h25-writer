@@ -4,9 +4,6 @@ on:
   push:
     branches: [ "main" ]
     paths: [ "backend/internal/api/**", "backend/internal/app/app.go" ]
-  pull_request:
-    branches: [ "main" ]
-    paths: [ "backend/internal/api/**", "backend/internal/app/app.go" ]
 
 jobs:
   generate-docs:
