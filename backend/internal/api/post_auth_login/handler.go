@@ -39,7 +39,7 @@ type Response struct {
 // @Produce		json
 // @Success		200	{object}	Response
 // @Failure		400	{object}	echo.HTTPError
-// @Failure		404	{object}	echo.HTTPError
+// @Failure	404	{object}	echo.HTTPError
 // @Failure		500	{object}	echo.HTTPError
 // @Router			/auth/login [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
