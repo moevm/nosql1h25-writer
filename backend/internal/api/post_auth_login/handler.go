@@ -33,8 +33,8 @@ type Response struct {
 
 // @Summary		Login by email and password
 // @Description	Generate `access` and `refresh` token pair. `refreshToken` sets in httpOnly cookie also.
-// @Tags			auth
-// @Param			request	body	Request	true	"existing user credentials"
+// @Tags auth
+// @Param		request	body	Request	true	"existing user credentials"
 // @Accept			json
 // @Produce		json
 // @Success		200	{object}	Response
