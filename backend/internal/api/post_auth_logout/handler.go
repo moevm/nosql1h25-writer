@@ -26,8 +26,8 @@ type Request struct {
 
 // @Summary		Logout
 // @Description	Remove `refreshSession` attached to `refreshToken`. `refreshToken` can be passed in cookie
-// @Tags			auth
-// @Param			refreshToken	body	Request	false	"active refresh token in UUID RFC4122 format"
+// @Tags		auth
+// @Param		refreshToken	body	Request	false	"active refresh token in UUID RFC4122 format"
 // @Accept			json
 // @Produce		json
 // @Success		200

@@ -3,10 +3,10 @@ name: Generate Swagger Docs
 on:
   push:
     branches: [ "main" ]
-    paths: [ "internal/api/**", "internal/app/app.go" ]
+    paths: [ "backend/internal/api/**", "backend/internal/app/app.go" ]
   pull_request:
     branches: [ "main" ]
-    paths: [ "internal/api/**", "internal/app/app.go" ]
+    paths: [ "backend/internal/api/**", "backend/internal/app/app.go" ]
 
 jobs:
   generate-docs:
