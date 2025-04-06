@@ -104,7 +104,7 @@ func (s *service) Refresh(ctx context.Context, refreshToken uuid.UUID) (entity.A
 		return entity.AuthData{}, users_service.ErrCannotGetUser
 	}
 
-	accessToken, err := s.generateToken(curSession.UserID, user.SystemRole)
+	accessToken, err := s.generateToken(user.ID, user.SystemRole)
 	if err != nil {
 		log.Errorf("auth.service.Refresh - s.generateToken: %v", err)
 		return entity.AuthData{}, ErrCannotGenerateToken
