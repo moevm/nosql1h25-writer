@@ -5,3 +5,11 @@ swag:
 .PHONY: swag-fmt ### fmt swagger annotations
 swag-fmt:
 	go tool swag fmt
+
+.PHONY: bin-deps ### install binary dependencies
+bin-deps: 
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.0.2
+
+.PHONY: lint ### check by golangci linter
+lint: 
+	golangci-lint run

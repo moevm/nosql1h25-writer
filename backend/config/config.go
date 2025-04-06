@@ -9,11 +9,11 @@ import (
 
 type (
 	Config struct {
-		App   `yaml:"app"`
-		HTTP  `yaml:"http"`
-		Log   `yaml:"logger"`
-		Mongo `yaml:"mongo"`
-		Auth  `yaml:"auth"`
+		App   App   `yaml:"app"`
+		HTTP  HTTP  `yaml:"http"`
+		Log   Log   `yaml:"logger"`
+		Mongo Mongo `yaml:"mongo"`
+		Auth  Auth  `yaml:"auth"`
 	}
 
 	App struct {

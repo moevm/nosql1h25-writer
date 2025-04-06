@@ -10,5 +10,5 @@ import (
 
 type Repo interface {
 	GetByEmail(ctx context.Context, email string) (entity.User, error)
-	GetById(ctx context.Context, ID primitive.ObjectID) (entity.User, error)
+	GetByID(ctx context.Context, id primitive.ObjectID) (entity.User, error)
 }

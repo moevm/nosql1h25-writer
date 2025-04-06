@@ -94,7 +94,7 @@ func (s *service) Refresh(ctx context.Context, refreshToken uuid.UUID) (entity.A
 		return entity.AuthData{}, ErrSessionExpired
 	}
 
-	user, err := s.usersRepo.GetById(ctx, curSession.UserID)
+	user, err := s.usersRepo.GetByID(ctx, curSession.UserID)
 	if err != nil {
 		if errors.Is(err, users_repo.ErrUserNotFound) {
 			return entity.AuthData{}, users_service.ErrUserNotFound

@@ -32,8 +32,8 @@ func (r *repository) GetByEmail(ctx context.Context, email string) (u entity.Use
 	return u, nil
 }
 
-func (r *repository) GetById(ctx context.Context, ID primitive.ObjectID) (u entity.User, _ error) {
-	if err := r.usersColl.FindOne(ctx, bson.M{"_id": ID, "active": true}).Decode(&u); err != nil {
+func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u entity.User, _ error) {
+	if err := r.usersColl.FindOne(ctx, bson.M{"_id": id, "active": true}).Decode(&u); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return u, ErrUserNotFound
 		}
