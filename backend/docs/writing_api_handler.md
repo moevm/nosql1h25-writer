@@ -34,6 +34,8 @@ type handler struct {
 
 // Не забудьте указать нужный сервис здесь (а этот комментарий стереть).
 func New(exampleService example.Service) api.Handler {
+    // Если валидация и бинд в структуру не требуется, можете не использовать декоратор:
+    // return &handler{exampleService: exampleService}
 	return decorator.NewBindAndValidate(&handler{exampleService: exampleService})
 }
 
