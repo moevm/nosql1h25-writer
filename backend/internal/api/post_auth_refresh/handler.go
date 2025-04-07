@@ -32,17 +32,17 @@ type Response struct {
 
 // Handle - Refresh tokens handler
 //
-// @Summary		Refresh tokens
-// @Description	Refresh `access` and `refresh` token pair. `refreshToken` can be passed in cookie
-// @Tags			auth
-// @Param			refreshToken	body	Request	false	"active refresh token in UUID RFC4122 format"
-// @Accept			json
-// @Produce		json
-// @Success		200	{object}	Response
-// @Failure		400	{object}	echo.HTTPError
-// @Failure		401	{object}	echo.HTTPError
-// @Failure		500	{object}	echo.HTTPError
-// @Router			/auth/refresh [post]
+//	@Summary		Refresh tokens
+//	@Description	Refresh `access` and `refresh` token pair. `refreshToken` can be passed in cookie
+//	@Tags			auth
+//	@Param			refreshToken	body	Request	false	"active refresh token in UUID RFC4122 format"
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Response
+//	@Failure		400	{object}	echo.HTTPError
+//	@Failure		401	{object}	echo.HTTPError
+//	@Failure		500	{object}	echo.HTTPError
+//	@Router			/auth/refresh [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	refreshToken := in.RefreshToken
 

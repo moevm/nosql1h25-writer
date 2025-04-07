@@ -14,7 +14,7 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
       CONFIG_PATH: ${BACKEND_CONFIG_PATH}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      AUTH_JWT_SECRET_KEY: ${AUTH_JWT_SECRET_KEY}
     depends_on:
       - mongodb
     volumes:

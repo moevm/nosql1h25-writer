@@ -19,13 +19,13 @@ func New(orders mongoifc.Collection) api.Handler {
 
 // Handle - Check health handler
 //
-// @Summary		Check health
-// @Description	Whether REST-API alive or not
-// @Tags			health
-// @Produce		plain
-// @Success		200	{string}	string
-// @Failure		500	{object}	echo.HTTPError
-// @Router			/health [get]
+//	@Summary		Check health
+//	@Description	Whether REST-API alive or not
+//	@Tags			health
+//	@Produce		plain
+//	@Success		200	{string}	string
+//	@Failure		500	{object}	echo.HTTPError
+//	@Router			/health [get]
 func (h *handler) Handle(c echo.Context) error {
 	return c.String(http.StatusOK, h.orders.Name())
 }

@@ -34,17 +34,17 @@ type Response struct {
 
 // Handle - Login handler
 //
-// @Summary		Login by email and password
-// @Description	Generate `access` and `refresh` token pair. `refreshToken` sets in httpOnly cookie also.
-// @Tags			auth
-// @Param			request	body	Request	true	"existing user credentials"
-// @Accept			json
-// @Produce		json
-// @Success		200	{object}	Response
-// @Failure		400	{object}	echo.HTTPError
-// @Failure		404	{object}	echo.HTTPError
-// @Failure		500	{object}	echo.HTTPError
-// @Router			/auth/login [post]
+//	@Summary		Login by email and password
+//	@Description	Generate `access` and `refresh` token pair. `refreshToken` sets in httpOnly cookie also.
+//	@Tags			auth
+//	@Param			request	body	Request	true	"existing user credentials"
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Response
+//	@Failure		400	{object}	echo.HTTPError
+//	@Failure		404	{object}	echo.HTTPError
+//	@Failure		500	{object}	echo.HTTPError
+//	@Router			/auth/login [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	authData, err := h.authService.Login(c.Request().Context(), in.Email, in.Password)
 	if err != nil {

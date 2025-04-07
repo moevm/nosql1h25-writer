@@ -15,6 +15,37 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Whether user has admin rights",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Check admin rights available",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_admin.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Generate ` + "`" + `access` + "`" + ` and ` + "`" + `refresh` + "`" + ` token pair. ` + "`" + `refreshToken` + "`" + ` sets in httpOnly cookie also.",
@@ -198,6 +229,38 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {}
+            }
+        },
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "user"
+            ],
+            "x-enum-varnames": [
+                "SystemRoleTypeAdmin",
+                "SystemRoleTypeUser"
+            ]
+        },
+        "internal_api_get_admin.Response": {
+            "type": "object",
+            "required": [
+                "systemRole",
+                "userId"
+            ],
+            "properties": {
+                "systemRole": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
+                        }
+                    ],
+                    "example": "admin"
+                },
+                "userId": {
+                    "type": "string",
+                    "example": "5a2493c33c95a1281836eb6a"
+                }
             }
         },
         "internal_api_post_auth_login.Request": {

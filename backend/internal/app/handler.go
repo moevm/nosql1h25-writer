@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
@@ -42,4 +43,13 @@ func (app *App) PostAuthLogoutHandler() api.Handler {
 
 	app.postAuthLogoutHandler = post_auth_logout.New(app.AuthService())
 	return app.postAuthLogoutHandler
+}
+
+func (app *App) GetAdminHandler() api.Handler {
+	if app.getAdminHandler != nil {
+		return app.getAdminHandler
+	}
+
+	app.getAdminHandler = get_admin.New()
+	return app.getAdminHandler
 }
