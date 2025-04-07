@@ -1,99 +1,135 @@
 # Написание обработчика
-## Инструкция
-1. Создайте в [`/internal/api`](../internal/api) каталог и назовите его в формате "метод_путь_до_страницы". Например: `GET /admin/export` → `get_admin_export`, `PATCH /orders/:id` → `patch_orders_id`.
-2. Создайте в этом каталоге файл `handler.go`.
-3. Не забудьте заполнить документацию для **Swagger** (комментарии перед функцией `Handle`).
-4. Добавить инициализацию обработчика в файл [`/app/handler.go`](../internal/app/handler.go) (пример есть в файле).
-5. Добавить маршрут в файл [`/app/router.go`](../internal/app/router.go) (пример есть в файле).
+## Обзор архитектуры проекта
+Проект организован по принципам чистой архитектуры, где разделены слои:
+* API (ручки): принимают входящие HTTP-запросы, валидируют данные, вызывает соответствующие сервисы и формируют ответ. Их код находится в папке [`internal/api`](../internal/api).
+* Слой сервисов: содержит бизнес-логику (аутентификация, работа с заказами, пользователями). Располагается в папке [`internal/service`](../internal/service).
+* Репозиторий: отвечает за взаимодействие с базой данных или другими источниками данных. Располагается в папке [`internal/repo`](../internal/repo).
+* Общие компоненты: папка [`internal/api/common`](../internal/api/common) содержит общие элементы (декораторы, middleware, работа с refresh-токенами).
 
-* Документация по заполнению Swagger: [ссылка](https://github.com/swaggo/swag/blob/master/README.md).
-
-## Валидация входных данных
-* Объявите структуру в файле `handler.go`, например (*string используется, чтобы указать, что поле является необязательным):
+## Создание нового обработчика
+При разработке нового эндпоинта следуйте по этому алгоритму:
+1. Создайте новую папку в [`internal/api`](../internal/api) с именем, соответствующим функциональности (название метода + маршрут, например: `PATCH /orders/:id` → `patch_orders_id`).
+   * Как давать названия маршрутам, лучшие практики: [ссылка](https://restfulapi.net/resource-naming/).
+2. Создайте в этой папке файл `handler.go` и вставьте следующий код (обратите внимание на **комментарии**):
 ```go
-type updateSongInput struct {
-	Id          int     `param:"id" validate:"number,gt=0"`
-	Title       *string `json:"group" validate:"omitempty,max=128" example:"Promo for vegetables"`
-	Song        *string `json:"song" validate:"omitempty,max=128" example:"Best Compilation"`
-	Link        *string `json:"link" validate:"omitempty,max=128,uri" example:"https://www.youtube.com/watch?v=Xsp3_a-PMTw"`
-	ReleaseDate *string `json:"releaseDate" validate:"omitempty,date" example:"2006-06-22"`
-}
-```
-
-* Документация по валидатору: [ссылка](https://github.com/go-playground/validator/blob/master/README.md).
-
-* Далее внутри метода `Handle` используйте следующий код:
-```go
-	var input updateSongInput
-
-	if err := c.Bind(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, "invalid request")
-		return err
-	}
-
-	if err := c.Validate(input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
-		return err
-	}
-```
-
-## Образец `handler.go`
-```go
-package get_users
+package post_example
 
 import (
+	"errors"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/sv-tools/mongoifc"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/example"
 )
 
 type handler struct {
-	users users.Service
+    // Здесь перечислите все сервисы, которые вам нужны (обычно нужен лишь один сервис и один вызов метода).
+    // Например: authService auth.Service.
+    exampleService example.Service
 }
 
-func New(users users.Service) api.Handler {
-	return &handler{users: users}
+// Не забудьте указать нужный сервис здесь (а этот комментарий стереть).
+func New(exampleService example.Service) api.Handler {
+	return decorator.NewBindAndValidate(&handler{exampleService: exampleService})
 }
 
-// @Description Получить пользователя с ID 1
-// @Summary Получить пользователя
-// @Param id path int true "ID пользователя" minimum(1) example(33)
-// @Produce json
-// @Success 200 {object} entity.User
-// @Failure 400 {object} echo.HTTPError
-// @Failure 500 {object} echo.HTTPError
-// @Router /users [get]
-func (h *handler) Handle(c echo.Context) error {
-	return c.String(http.StatusOK, h.users.GetUser(1))
+// Что должно быть в запросе.
+// Для каждого поля нужно заполнить примеры для документации и инструкции для валидатора.
+type Request struct {
+    // Пример заполнения.
+    // Ссылки на дополнительные ресурсы:
+    // validate: https://github.com/go-playground/validator/blob/master/README.md
+    // format, example, ...: https://github.com/swaggo/swag/blob/master/README.md 
+	ID       string `param:"id" validate:"required,alnum" example:"m19lfjDkdffm"` // Это path-параметр (/users/:id/).
+	Email    string `json:"email" validate:"required,email" format:"email" example:"test@gmail.com"`
+	Password string `json:"password" validate:"required,min=8,max=72" minLength:"8" maxLength:"72" example:"Password123"`
+}
+
+// Что должно быть в ответе.
+// Для каждого поля нужно заполнить примеры для документации.
+type Response struct {
+    // Пример заполнения.
+    // format, example, ...: https://github.com/swaggo/swag/blob/master/README.md
+	AccessToken  string    `json:"accessToken" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"`
+	RefreshToken uuid.UUID `json:"refreshToken" example:"289abe45-5920-4366-a12a-875ddb422ace"`
+}
+
+// Handle -.
+//
+// @Summary		Краткое название вашего обработчика (желательно на английском).
+// @Description	Полное описание обработчика.
+// @Tags			Тэги. Можете ставить на своё усмотрение. Можно ставить названия используемых сервисов (без приписки Service): auth/orders/users.
+// @Param			request	body	Request	true	"Описание"
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	Response
+// @Failure		400	{object}	echo.HTTPError
+// @Failure		404	{object}	echo.HTTPError
+// @Failure		500	{object}	echo.HTTPError
+// @Router			/example [post]
+func (h *handler) Handle(c echo.Context, in Request) error {
+    // Здесь вместо образца напишите свой код для обработки запроса.
+	exampleData, err := h.exampleService.Login(c.Request().Context(), in.Email, in.Password)
+	if err != nil {
+        // Здесь обрабатываются ошибки, возвращаемые сервисом (обратите внимание на разные коды ответа).
+		if errors.Is(err, example.ErrUserNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, err.Error())
+		} else if errors.Is(err, example.ErrWrongPassword) {
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		}
+
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+    // Обратите особое внимание на то, какой код ответа должен возвращать ваш обработчик.
+	return c.JSON(http.StatusOK, Response{
+		AccessToken:  authData.AccessToken,
+		RefreshToken: authData.Session.RefreshToken,
+	})
 }
 ```
 
-## Пример документации
+3. Посмотрите на комментарии в коде, не забудьте их стереть. Чеклист (убедитесь, что вы просмотрели следующие участки кода и заполнили их по инструкции):
+   * `type handler struct {...}`
+   * `type Request struct {...}`
+   * `type Response struct {...}`
+   * `func (h *handler) Handle(c echo.Context, in Request) error {...}`
+   * документация (комментарии) перед `func (h *handler) Handle`
+   * название пакета (первая строчка в файле), импорты
+4. Интеграция обработчика в приложение
+   * Добавьте в [`internal/app/handler.go`](../internal/app/handler.go) фабричный метод для создания вашего обработчика. Пример:
 ```go
-// @Description Поиск пользователей с сортировкой и пагинацией
-// @Summary Поиск пользователей
-// @Param order_by query string false "Список критериев для сортировки. Если не указан порядок, то по возрастанию." example(id:asc,name:desc,created_at)
-// @Param offset query int false "Offset" default(0) minimum(0) example(10)
-// @Param limit query int false "Limit" default(10) minimum(1) maximum(20) example(10)
-// @Produce json
-// @Success 200 {array} entity.User
-// @Failure 400 {object} echo.HTTPError
-// @Failure 500 {object} echo.HTTPError
-// @Router /users [get]
-```
+func (app *App) PostExampleHandler() api.Handler {
+    if app.postExampleHandler != nil {
+        return app.postExampleHandler
+    }
 
+    // Предполагается, что у вас есть метод для получения нужного сервиса, например, app.ExampleService()
+    app.postExampleHandler = post_example.New(app.ExampleService())
+    return app.postExampleHandler
+}
+```
+   * Зарегистрируйте маршрут в [`internal/app/router.go`](../internal/app/router.go). Добавьте новый маршрут в функцию `configureRouter` (если нужно, добавьте проверку прав).
+   * Добавьте ручку как поле в структуру `App` в файле [`internal/app/app.go`](../internal/app/app.go).
 ```go
-// @Description Удалить пользователя по ID
-// @Summary Удалить пользователя
-// @Param id path int true "ID пользователя" minimum(1) example(33)
-// @Success 204
-// @Failure 400 {object} echo.HTTPError
-// @Failure 500 {object} echo.HTTPError
-// @Router /users/{id} [delete]
+    postExampleHandler  api.Handler
 ```
 
-## Название маршрутов
-Гайд как давать названия маршрутам: [ссылка](https://restfulapi.net/resource-naming/).
+## Организация сервисного слоя и репозиториев
+Каждая функциональность (например, аутентификация, заказы, пользователи) реализуется в собственном пакете:
+* [`internal/service`](../internal/service): содержит бизнес-логику.
+* [`internal/repo`](../internal/repo): содержит доступ к данным и работу с БД.
+
+При написании ручки обращайтесь к сервису, а не к репозиторию напрямую.
+
+## Интеграция новых сервисов и репозиториев
+Добавьте новые сервисы и репозитории как поля структуры `App` в файле [`internal/app/app.go`](../internal/app/app.go).
+Не забудьте добавить для них конструкторы в файлы [`internal/app/db.go`](../internal/app/db.go) (для репозиториев), [`internal/app/service.go`](../internal/app/service.go) (для сервисов).
+
+## Дополнительные ссылки
+* Документация по валидатору: [ссылка](https://github.com/go-playground/validator/blob/master/README.md).
+* Документация по заполнению Swagger: [ссылка](https://github.com/swaggo/swag/blob/master/README.md).
