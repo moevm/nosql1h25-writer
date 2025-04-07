@@ -17,27 +17,21 @@ import (
 )
 
 type App struct {
-	// exists after call [App.New]
 	cfg       *config.Config
 	interrupt <-chan os.Signal
 
-	// appears after call [App.Start]
 	mongoClient mongoifc.Client
 
-	// Echo stuff
 	echoHandler *echo.Echo
 
-	// dbs
 	mainDb mongoifc.Database
 
-	// collections
 	ordersCollection mongoifc.Collection
 
-	// handlers
 	getHealthHandler api.Handler
+	getUsersHandler  api.Handler
 }
 
-// New initiate logger and config in App struct for future Start call
 func New(configPath string) *App {
 	cfg, err := config.New(configPath)
 	if err != nil {
@@ -58,16 +52,13 @@ func New(configPath string) *App {
 //	@title			Writer
 //	@version		1.0.0
 //	@description	API for freelancer's site
-
 //	@host		localhost:80
 //	@BasePath	/api
-
 //	@securityDefinitions.apikey	JWT
 //	@in							header
 //	@name						Authorization
 //	@description				JSON Web Token
 
-// Start connect to Mongo and start http server
 func (app *App) Start() {
 	log.Info("Connecting to mongo...")
 	mongoClient, err := mongodb.New(app.cfg.Mongo.Uri)

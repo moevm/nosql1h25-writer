@@ -4,6 +4,40 @@ definitions:
     properties:
       message: {}
     type: object
+  get_users.output:
+    properties:
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/get_users.userOutput'
+        type: array
+    type: object
+  get_users.profileOutput:
+    properties:
+      description:
+        description: Используем omitempty, если поле необязательное
+        type: string
+      rating:
+        type: number
+      role:
+        type: string
+    type: object
+  get_users.userOutput:
+    properties:
+      createdAt:
+        type: string
+      displayName:
+        type: string
+      id:
+        type: string
+      profiles:
+        items:
+          $ref: '#/definitions/get_users.profileOutput'
+        type: array
+      updatedAt:
+        type: string
+    type: object
 host: localhost:80
 info:
   contact: {}
@@ -28,6 +62,55 @@ paths:
       summary: Check health
       tags:
       - health
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список пользователей с пагинацией и возможностью фильтрации
+        по типу профиля.
+      parameters:
+      - default: 0
+        description: Смещение для пагинации (сколько записей пропустить)
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - default: 10
+        description: Количество записей на страницу
+        in: query
+        maximum: 50
+        minimum: 1
+        name: limit
+        type: integer
+      - collectionFormat: multi
+        description: Фильтр по типу профиля ('client', 'freelancer'). Можно указать
+          несколько раз.
+        in: query
+        items:
+          enum:
+          - client
+          - freelancer
+          type: string
+        name: profile
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ со списком пользователей и общим количеством
+          schema:
+            $ref: '#/definitions/get_users.output'
+        "400":
+          description: Ошибка валидации входных данных
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить список пользователей
+      tags:
+      - Users
 securityDefinitions:
   JWT:
     description: JSON Web Token
