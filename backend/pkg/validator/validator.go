@@ -49,6 +49,12 @@ func (cv *CustomValidator) newValidationError(field string, tag string, param st
 		return fmt.Errorf("field %s must be %s characters length", field, param)
 	case "uri":
 		return fmt.Errorf("field %s must be a valid URI", field)
+	case "email":
+		return fmt.Errorf("field %s must be a valid email address", field)
+	case "min":
+		return fmt.Errorf("field %s must be at least %s characters", field, param)
+	case "max":
+		return fmt.Errorf("field %s must be at most %s characters", field, param)
 	default:
 		return fmt.Errorf("field %s is invalid", field)
 	}

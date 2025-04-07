@@ -1,6 +1,8 @@
 volumes:
   mongo_data:
     driver: local
+  backend_logs:
+    driver: local
 
 networks:
   net:
@@ -12,10 +14,11 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
       CONFIG_PATH: ${BACKEND_CONFIG_PATH}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     depends_on:
       - mongodb
     volumes:
-      - ./backend/logs:/logs
+      - backend_logs:/logs
     networks:
       - net
 

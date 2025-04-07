@@ -1,25 +1,30 @@
-run:
-  timeout: 3m
-  tests: true
+version: '2'
 
 linters:
   enable:
-    - gosimple
     - gocritic
-    - gofmt
-    - errcheck
     - govet
     - staticcheck
+    - errcheck
+    - errorlint
+    - misspell
     - unused
+    - whitespace
+    - unparam
+    - ineffassign
+    - goconst
+    - intrange
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck
 
-linters-settings:
-  gofmt:
-    rewrite-rules:
-      - pattern: 'interface{}'
-        replacement: 'any'
+formatters:
+  enable:
+    - goimports
+    - gofmt
 
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
+run:
+  timeout: 3m
+  tests: true

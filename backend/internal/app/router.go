@@ -34,6 +34,13 @@ func (app *App) EchoHandler() *echo.Echo {
 
 func (app *App) configureRouter(handler *echo.Echo) {
 	handler.GET("/health", app.GetHealthHandler().Handle)
+
+	authGroup := handler.Group("/auth")
+	{
+		authGroup.POST("/login", app.PostAuthLoginHandler().Handle)
+		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
+		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
+	}
 }
 
 func setLogsFile() *os.File {
