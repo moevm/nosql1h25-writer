@@ -1,15 +1,13 @@
-package common
+package mw
 
 import (
 	"errors"
 	"net/http"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
 )
 
@@ -33,7 +31,7 @@ func (m *AuthMW) UserIdentity() echo.MiddlewareFunc {
 		return func(c echo.Context) error {
 			token, err := bearerToken(c.Request())
 			if err != nil {
-				log.Errorf("AuthMW.UserIdentity - bearerToken: %v", ErrInvalidAuthHeader)
+				log.Errorf("AuthMW.UserIdentity - bearerToken: %v", err)
 				return echo.NewHTTPError(http.StatusUnauthorized, ErrInvalidAuthHeader.Error())
 			}
 
@@ -48,20 +46,6 @@ func (m *AuthMW) UserIdentity() echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
-}
-
-func ExtractRefreshTokenFromCookie(c echo.Context) *uuid.UUID {
-	cookie, err := c.Cookie(api.RefreshToken)
-	if err != nil {
-		return nil
-	}
-
-	token, err := uuid.Parse(cookie.Value)
-	if err != nil {
-		return nil
-	}
-
-	return &token
 }
 
 func bearerToken(req *http.Request) (string, error) {

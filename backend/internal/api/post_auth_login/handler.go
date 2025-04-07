@@ -8,7 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
-	"github.com/moevm/nosql1h25-writer/backend/internal/api/common"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/refresh"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
@@ -18,7 +19,7 @@ type handler struct {
 }
 
 func New(authService auth.Service) api.Handler {
-	return common.NewBindAndValidate(&handler{authService: authService})
+	return decorator.NewBindAndValidate(&handler{authService: authService})
 }
 
 type Request struct {
@@ -57,7 +58,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 	}
 
 	c.SetCookie(&http.Cookie{
-		Name:     api.RefreshToken,
+		Name:     refresh.RefreshToken,
 		Value:    authData.Session.RefreshToken.String(),
 		Expires:  authData.Session.ExpiresAt,
 		Path:     api.AuthCookiePath,

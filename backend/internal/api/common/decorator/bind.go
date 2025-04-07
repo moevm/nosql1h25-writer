@@ -1,4 +1,4 @@
-package common
+package decorator
 
 import (
 	"net/http"
