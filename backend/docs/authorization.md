@@ -50,3 +50,7 @@ func (h *handler) Handle(c echo.Context) error {
 ```
 
 Это довольно примитивная ручка, которая вытаскивает из контекста запроса `c echo.Context` проставленные UserIdentity мидлвейром параметры и возвращает их в ответе. Ну и до самой ручки допускаются только админы.
+Ниже пример, как в сваггере, который после запуска доступен по [http://localhost/api/swagger/index.html](http://localhost/api/swagger/index.html), был получен ответ из ручки `GET /admin`. Предварительно была проведена авторизация через `auth/login` и `accessToken` был записан в авторизационное поле в формате `Bearer <accessToken>`, скриншот поля тоже приложил
+![image](https://github.com/user-attachments/assets/5f67bc2b-59a8-41bd-829e-2f13fcb08053)
+![swag](https://github.com/user-attachments/assets/35195b9f-3af2-417d-9aa1-b5e606fa4ba8)
+
