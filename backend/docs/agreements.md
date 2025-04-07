@@ -6,7 +6,7 @@
 
 Структуры называть так же, как и метод, добавляя в конце `In` или `Out`. Например:
 ```go
-func (s *service) FindUsers(ctx context.Context, input FindUsersIn) (FindUsersOut, error)
+func (s *service) FindUsers(ctx context.Context, in FindUsersIn) (FindUsersOut, error)
 ```
 
 ## Соглашение №2. Тестирование
@@ -19,3 +19,20 @@ func (s *service) FindUsers(ctx context.Context, input FindUsersIn) (FindUsersOu
 
 ## Соглашение №3. Язык комментариев и документации
 Комментарии в коде и документацию к Swagger заполняется на **английском** языке.
+
+## Соглашение №4. Именование аббревиатур
+Несмотря на то, что в Go принят camelCase, MixedCaps, аббревиатуры и акронимы должны быть записаны в одном регистре.
+```go
+// Неправильно
+var userId string
+
+// Правильно
+var id, userID string
+
+type User struct {
+    ID string
+    ReviewURL string
+}
+```
+
+Ссылка: [Code Review Comments#Initialisms](https://go.dev/wiki/CodeReviewComments).
