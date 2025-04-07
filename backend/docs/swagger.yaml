@@ -4,6 +4,27 @@ definitions:
     properties:
       message: {}
     type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
+    enum:
+    - admin
+    - user
+    type: string
+    x-enum-varnames:
+    - SystemRoleTypeAdmin
+    - SystemRoleTypeUser
+  internal_api_get_admin.Response:
+    properties:
+      systemRole:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+        example: admin
+      userId:
+        example: 5a2493c33c95a1281836eb6a
+        type: string
+    required:
+    - systemRole
+    - userId
+    type: object
   internal_api_post_auth_login.Request:
     properties:
       email:
@@ -62,6 +83,25 @@ info:
   title: Writer
   version: 1.0.0
 paths:
+  /admin:
+    get:
+      description: Whether user has admin rights
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_admin.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Check admin rights available
+      tags:
+      - admin
   /auth/login:
     post:
       consumes:

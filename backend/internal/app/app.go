@@ -13,6 +13,7 @@ import (
 
 	"github.com/moevm/nosql1h25-writer/backend/config"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/mw"
 	auth_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
@@ -46,6 +47,11 @@ type App struct {
 	postAuthLoginHandler   api.Handler
 	postAuthRefreshHandler api.Handler
 	postAuthLogoutHandler  api.Handler
+
+	getAdminHandler api.Handler
+
+	// middlewares
+	authMW *mw.AuthMW
 
 	// services
 	authService auth_service.Service

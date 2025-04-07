@@ -41,6 +41,11 @@ func (app *App) configureRouter(handler *echo.Echo) {
 		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
 		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
 	}
+
+	adminGroup := handler.Group("/admin", app.AuthMW().UserIdentity())
+	{
+		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().AdminRole())
+	}
 }
 
 func setLogsFile() *os.File {
