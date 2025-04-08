@@ -29,7 +29,7 @@ type Profile struct {
 	UpdatedAt   time.Time `bson:"updatedAt"`
 }
 
-type User struct {
+type UserExt struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty"`
 	DisplayName string             `bson:"displayName"`
 	Email       string             `bson:"email"`

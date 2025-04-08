@@ -1,51 +1,50 @@
 package get_users
 
 import (
-	"context"
 	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
-type userService interface {
-	FindUsers(ctx context.Context, params entity.UserSearchParams) ([]entity.User, int64, error)
-}
+const defaultLimit = 10
 
 type handler struct {
-	users userService
+	users users.Service
 }
 
-func New(users userService) api.Handler {
+func New(users users.Service) api.Handler {
 	return &handler{users: users}
 }
 
-type input struct {
+type Request struct {
 	Offset  int64    `query:"offset" validate:"omitempty,number,min=0" default:"0"`
 	Limit   int64    `query:"limit" validate:"omitempty,number,min=1,max=50" default:"10"`
 	Profile []string `query:"profile" validate:"omitempty,dive,oneof=client freelancer"`
 }
 
-type profileOutput struct {
+type profileOut struct {
 	Role        string  `json:"role"`
 	Description *string `json:"description,omitempty"`
 	Rating      float64 `json:"rating"`
 }
 
-type userOutput struct {
-	ID          string          `json:"id"`
-	DisplayName string          `json:"displayName"`
-	Profiles    []profileOutput `json:"profiles"`
-	CreatedAt   string          `json:"createdAt"`
-	UpdatedAt   string          `json:"updatedAt"`
+type userOut struct {
+	ID          primitive.ObjectID `json:"id"`
+	DisplayName string             `json:"displayName"`
+	Profiles    []profileOut    `json:"profiles"`
+	CreatedAt   time.Time          `json:"createdAt"`
+	UpdatedAt   time.Time          `json:"updatedAt"`
 }
 
-type output struct {
+type Response struct {
 	Total int64        `json:"total"`
-	Users []userOutput `json:"users"`
+	Users []userOut `json:"users"`
 }
 
 // Handle - основной метод обработчика, который вызывается при получении запроса GET /users.
@@ -63,7 +62,7 @@ type output struct {
 // @Router       /users [get]
 
 func (h *handler) Handle(c echo.Context) error {
-	var inp input
+	var inp Request
 
 	if err := c.Bind(&inp); err != nil {
 
@@ -71,7 +70,6 @@ func (h *handler) Handle(c echo.Context) error {
 	}
 
 	if err := c.Validate(inp); err != nil {
-
 		return err
 	}
 
@@ -79,7 +77,7 @@ func (h *handler) Handle(c echo.Context) error {
 		inp.Offset = 0
 	}
 	if c.QueryParam("limit") == "" {
-		inp.Limit = 10
+		inp.Limit = defaultLimit
 	}
 
 	searchParams := entity.UserSearchParams{
@@ -95,27 +93,27 @@ func (h *handler) Handle(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to fetch users")
 	}
 
-	usersOutput := make([]userOutput, 0, len(users))
+	usersOutput := make([]userOut, 0, len(users))
 	for _, u := range users {
-		profilesOut := make([]profileOutput, 0, len(u.Profiles))
+		profilesOut := make([]profileOut, 0, len(u.Profiles))
 		for _, p := range u.Profiles {
-			profilesOut = append(profilesOut, profileOutput{
+			profilesOut = append(profilesOut, profileOut{
 				Role:        p.Role,
 				Description: p.Description,
 				Rating:      p.Rating,
 			})
 		}
 
-		usersOutput = append(usersOutput, userOutput{
-			ID:          u.ID.Hex(),
+		usersOutput = append(usersOutput, userOut{
+			ID:          u.ID,
 			DisplayName: u.DisplayName,
 			Profiles:    profilesOut,
-			CreatedAt:   u.CreatedAt.Format(time.RFC3339),
-			UpdatedAt:   u.UpdatedAt.Format(time.RFC3339),
+			CreatedAt:   u.CreatedAt,
+			UpdatedAt:   u.UpdatedAt,
 		})
 	}
 
-	response := output{
+	response := Response{
 		Total: total,
 		Users: usersOutput,
 	}

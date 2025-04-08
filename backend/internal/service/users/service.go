@@ -15,12 +15,12 @@ func New( /* repo repository.Repository */ ) Service {
 	return &service{}
 }
 
-func (s *service) FindUsers(ctx context.Context, params entity.UserSearchParams) ([]entity.User, int64, error) {
+func (s *service) FindUsers(ctx context.Context, params entity.UserSearchParams) ([]entity.UserExt, int64, error) {
 	log.WithFields(log.Fields{
 		"offset":  params.Offset,
 		"limit":   params.Limit,
 		"profile": params.ProfileFilter,
 	}).Info("Service: FindUsers called (stub)")
 
-	return []entity.User{}, 0, nil
+	return []entity.UserExt{}, 0, nil
 }

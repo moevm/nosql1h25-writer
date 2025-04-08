@@ -22,9 +22,7 @@ func (app *App) GetUsersHandler() api.Handler {
 		return app.getUsersHandler
 	}
 
-	userService := usersService.New()
-
-	app.getUsersHandler = get_users.New(userService)
+	app.getUsersHandler = get_users.New(usersService.New())
 
 	return app.getUsersHandler
 }

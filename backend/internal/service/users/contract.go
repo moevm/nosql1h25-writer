@@ -7,5 +7,5 @@ import (
 )
 
 type Service interface {
-	FindUsers(ctx context.Context, params entity.UserSearchParams) ([]entity.User, int64, error)
+	FindUsers(ctx context.Context, params entity.UserSearchParams) ([]entity.UserExt, int64, error)
 }
