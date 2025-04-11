@@ -43,3 +43,35 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u enti
 
 	return u, nil
 }
+
+func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) error {
+	update := bson.M{
+		"$inc": bson.M{"balance": amount},
+	}
+	_, err := r.usersColl.UpdateOne(ctx, bson.M{"_id": userID, "active": true}, update)
+	if err != nil {
+		return ErrCannotDeposit
+	}
+	return nil
+}
+
+func (r *repository) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) error {
+	filter := bson.M{
+		"_id":    userID,
+		"active": true,
+		"balance": bson.M{
+			"$gte": amount,
+		},
+	}
+	update := bson.M{
+		"$inc": bson.M{"balance": -amount},
+	}
+	res, err := r.usersColl.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return ErrCannotWithdraw
+	}
+	if res.ModifiedCount == 0 {
+		return ErrInsufficientFunds
+	}
+	return nil
+}
