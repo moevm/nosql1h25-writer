@@ -28,37 +28,41 @@ func TestService_UpdateBalance_Deposit(t *testing.T) {
 
 	type MockBehavior func(r *users_repo_mocks.MockRepo)
 
-	tests := []struct {
+	for _, tc := range []struct {
 		name         string
 		mockBehavior MockBehavior
+		want         int
 		wantErr      error
 	}{
 		{
 			name: "successful deposit",
 			mockBehavior: func(r *users_repo_mocks.MockRepo) {
-				r.EXPECT().Deposit(ctx, userID, amount).Return(nil)
+				r.EXPECT().Deposit(ctx, userID, amount).Return(amount, nil)
 			},
+			want: amount,
 		},
 		{
 			name: "deposit failure",
 			mockBehavior: func(r *users_repo_mocks.MockRepo) {
-				r.EXPECT().Deposit(ctx, userID, amount).Return(users_repo.ErrCannotDeposit)
+				r.EXPECT().Deposit(ctx, userID, amount).Return(0, assert.AnError)
 			},
-			wantErr: users_service.ErrCannotDeposit,
+			wantErr: users_service.ErrUpdateBalance,
 		},
-	}
-
-	for _, tc := range tests {
+	} {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
 
 			mockRepo := users_repo_mocks.NewMockRepo(ctrl)
+
 			tc.mockBehavior(mockRepo)
 
 			svc := users_service.New(mockRepo)
-			err := svc.UpdateBalance(ctx, userID, operation, amount)
+
+			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
+
 			assert.ErrorIs(t, err, tc.wantErr)
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }
@@ -67,48 +71,58 @@ func TestService_UpdateBalance_Withdraw(t *testing.T) {
 	log.SetOutput(io.Discard)
 
 	var (
-		ctx         = context.TODO()
-		userID      = primitive.NewObjectID()
-		validAmount = 50
-		failAmount  = 100
+		ctx       = context.TODO()
+		userID    = primitive.NewObjectID()
+		amount    = 900
+		operation = users_service.OperationTypeWithdraw
 	)
 
 	type MockBehavior func(r *users_repo_mocks.MockRepo)
 
-	tests := []struct {
+	for _, tc := range []struct {
 		name         string
-		amount       int
 		mockBehavior MockBehavior
+		want         int
 		wantErr      error
 	}{
 		{
-			name:   "successful withdraw",
-			amount: validAmount,
+			name: "successful withdraw",
 			mockBehavior: func(r *users_repo_mocks.MockRepo) {
-				r.EXPECT().Withdraw(ctx, userID, validAmount).Return(nil)
+				r.EXPECT().Withdraw(ctx, userID, amount).Return(amount, nil)
 			},
+			want: amount,
 		},
 		{
-			name:   "insufficient funds",
-			amount: failAmount,
+			name: "insufficient funds",
 			mockBehavior: func(r *users_repo_mocks.MockRepo) {
-				r.EXPECT().Withdraw(ctx, userID, failAmount).Return(users_repo.ErrInsufficientFunds)
+				r.EXPECT().Withdraw(ctx, userID, amount).Return(0, users_repo.ErrInsufficientFunds)
 			},
 			wantErr: users_service.ErrInsufficientFunds,
 		},
-	}
-
-	for _, tc := range tests {
+		{
+			name: "unexpected error",
+			mockBehavior: func(r *users_repo_mocks.MockRepo) {
+				r.EXPECT().Withdraw(ctx, userID, amount).Return(0, assert.AnError)
+			},
+			wantErr: users_service.ErrUpdateBalance,
+		},
+	} {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
 
 			mockRepo := users_repo_mocks.NewMockRepo(ctrl)
+
 			tc.mockBehavior(mockRepo)
 
 			svc := users_service.New(mockRepo)
-			err := svc.UpdateBalance(ctx, userID, users_service.OperationTypeWithdraw, tc.amount)
+
+			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
+
 			assert.ErrorIs(t, err, tc.wantErr)
+			if err == nil {
+				assert.Equal(t, tc.want, got)
+			}
 		})
 	}
 }
