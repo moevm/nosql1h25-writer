@@ -46,6 +46,12 @@ func (app *App) configureRouter(handler *echo.Echo) {
 	{
 		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().AdminRole())
 	}
+
+	balanceGroup := handler.Group("/balance", app.AuthMW().UserIdentity())
+	{
+		balanceGroup.POST("/deposit", app.PostBalanceDepositHandler().Handle)
+		balanceGroup.POST("/withdraw", app.PostBalanceWithdrawHandler().Handle)
+	}
 }
 
 func setLogsFile() *os.File {
