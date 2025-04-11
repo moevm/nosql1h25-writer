@@ -26,7 +26,7 @@ type Request struct {
 }
 
 type Response struct {
-	Message string `json:"message" example:"Withdrawal successful"`
+	NewBalance int `json:"new_balance" example:"111"`
 }
 
 // Handle - Withdraw funds from user's balance
@@ -41,22 +41,21 @@ type Response struct {
 //	@Success		200	{object}	Response
 //	@Failure		400	{object}	echo.HTTPError
 //	@Failure		401	{object}	echo.HTTPError
-//	@Failure		403	{object}	echo.HTTPError
 //	@Failure		500	{object}	echo.HTTPError
 //	@Router			/balance/withdraw [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
-	userID := c.Get(mw.UserIDKey).(primitive.ObjectID) //nolint:forcetypeassert
+	userID, ok := c.Get(mw.UserIDKey).(primitive.ObjectID)
+	if !ok {
+		return echo.NewHTTPError(http.StatusUnauthorized, "invalid user ID in context")
+	}
 
-	err := h.usersService.UpdateBalance(c.Request().Context(), userID, users.OperationTypeWithdraw, in.Amount)
+	newBalance, err := h.usersService.UpdateBalance(c.Request().Context(), userID, users.OperationTypeWithdraw, in.Amount)
 	if err != nil {
-		if errors.Is(err, users.ErrInvalidAmount) {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		}
 		if errors.Is(err, users.ErrInsufficientFunds) {
-			return echo.NewHTTPError(http.StatusForbidden, err.Error())
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, Response{Message: "Withdrawal successful"})
+	return c.JSON(http.StatusOK, Response{NewBalance: newBalance})
 }

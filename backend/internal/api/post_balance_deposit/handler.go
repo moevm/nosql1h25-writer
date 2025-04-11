@@ -1,7 +1,6 @@
 package post_balance_deposit
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -26,7 +25,7 @@ type Request struct {
 }
 
 type Response struct {
-	Message string `json:"message" example:"Balance updated successfully"`
+	NewBalance int `json:"new_balance" example:"777"`
 }
 
 // Handle - Deposit funds to user's balance
@@ -46,13 +45,10 @@ type Response struct {
 func (h *handler) Handle(c echo.Context, in Request) error {
 	userID := c.Get(mw.UserIDKey).(primitive.ObjectID) //nolint:forcetypeassert
 
-	err := h.usersService.UpdateBalance(c.Request().Context(), userID, users.OperationTypeDeposit, in.Amount)
+	newBalance, err := h.usersService.UpdateBalance(c.Request().Context(), userID, users.OperationTypeDeposit, in.Amount)
 	if err != nil {
-		if errors.Is(err, users.ErrInvalidAmount) {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, Response{Message: "Balance updated successfully"})
+	return c.JSON(http.StatusOK, Response{NewBalance: newBalance})
 }
