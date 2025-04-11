@@ -20,10 +20,10 @@ func TestService_UpdateBalance_Deposit(t *testing.T) {
 	log.SetOutput(io.Discard)
 
 	var (
-		ctx         = context.TODO()
-		userID      = primitive.NewObjectID()
-		amount      = 100
-		operation   = users_service.OperationTypeDeposit
+		ctx       = context.TODO()
+		userID    = primitive.NewObjectID()
+		amount    = 100
+		operation = users_service.OperationTypeDeposit
 	)
 
 	type MockBehavior func(r *users_repo_mocks.MockRepo)

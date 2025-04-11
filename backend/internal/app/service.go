@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
-	"github.com/moevm/nosql1h25-writer/backend/internal/service/users" 
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
 func (app *App) AuthService() auth.Service {

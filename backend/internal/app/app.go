@@ -52,13 +52,13 @@ type App struct {
 	getAdminHandler api.Handler
 
 	postBalanceDepositHandler  api.Handler
-    postBalanceWithdrawHandler api.Handler
+	postBalanceWithdrawHandler api.Handler
 
 	// middlewares
 	authMW *mw.AuthMW
 
 	// services
-	authService auth_service.Service
+	authService  auth_service.Service
 	usersService users_service.Service
 
 	// repositories

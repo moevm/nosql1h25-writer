@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type service struct {

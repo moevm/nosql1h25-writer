@@ -45,7 +45,7 @@ type Response struct {
 //	@Failure		500	{object}	echo.HTTPError
 //	@Router			/balance/withdraw [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
-	userID := c.Get(mw.UserIDKey).(primitive.ObjectID)
+	userID := c.Get(mw.UserIDKey).(primitive.ObjectID) //nolint:forcetypeassert
 
 	err := h.usersService.UpdateBalance(c.Request().Context(), userID, users.OperationTypeWithdraw, in.Amount)
 	if err != nil {
