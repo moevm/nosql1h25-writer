@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 )
@@ -44,34 +45,55 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u enti
 	return u, nil
 }
 
-func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) error {
-	update := bson.M{
-		"$inc": bson.M{"balance": amount},
+func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
+	upsert := false
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
 	}
-	_, err := r.usersColl.UpdateOne(ctx, bson.M{"_id": userID, "active": true}, update)
+	var u entity.User
+	err := r.usersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": userID, "active": true},
+		bson.M{"$inc": bson.M{"balance": amount}},
+		&opt,
+	).Decode(&u)
 	if err != nil {
-		return ErrCannotDeposit
+		return 0, err
 	}
-	return nil
+
+	return u.Balance, nil
 }
 
-func (r *repository) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) error {
-	filter := bson.M{
-		"_id":    userID,
-		"active": true,
-		"balance": bson.M{
-			"$gte": amount,
+func (r *repository) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
+	upsert := false
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	var u entity.User
+	err := r.usersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{
+			"_id":    userID,
+			"active": true,
+			"balance": bson.M{
+				"$gte": amount,
+			},
 		},
-	}
-	update := bson.M{
-		"$inc": bson.M{"balance": -amount},
-	}
-	res, err := r.usersColl.UpdateOne(ctx, filter, update)
+		bson.M{"$inc": bson.M{"balance": -amount}},
+		&opt,
+	).Decode(&u)
+
 	if err != nil {
-		return ErrCannotWithdraw
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return 0, ErrInsufficientFunds
+		}
+
+		return 0, err
 	}
-	if res.ModifiedCount == 0 {
-		return ErrInsufficientFunds
-	}
-	return nil
+
+	return u.Balance, nil
 }

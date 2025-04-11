@@ -43,11 +43,12 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 }
 
 // Deposit mocks base method.
-func (m *MockRepo) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) error {
+func (m *MockRepo) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Deposit", ctx, userID, amount)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Deposit indicates an expected call of Deposit.
@@ -87,11 +88,12 @@ func (mr *MockRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 }
 
 // Withdraw mocks base method.
-func (m *MockRepo) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) error {
+func (m *MockRepo) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Withdraw", ctx, userID, amount)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Withdraw indicates an expected call of Withdraw.
