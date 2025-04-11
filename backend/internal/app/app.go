@@ -17,6 +17,7 @@ import (
 	auth_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
@@ -50,11 +51,15 @@ type App struct {
 
 	getAdminHandler api.Handler
 
+	postBalanceDepositHandler  api.Handler
+    postBalanceWithdrawHandler api.Handler
+
 	// middlewares
 	authMW *mw.AuthMW
 
 	// services
 	authService auth_service.Service
+	usersService users_service.Service
 
 	// repositories
 	usersRepo users_repo.Repo
