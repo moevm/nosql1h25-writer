@@ -302,12 +302,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/echo.HTTPError"
                         }
                     },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -471,9 +465,9 @@ const docTemplate = `{
         "internal_api_post_balance_deposit.Response": {
             "type": "object",
             "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "Balance updated successfully"
+                "new_balance": {
+                    "type": "integer",
+                    "example": 777
                 }
             }
         },
@@ -493,9 +487,9 @@ const docTemplate = `{
         "internal_api_post_balance_withdraw.Response": {
             "type": "object",
             "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "Withdrawal successful"
+                "new_balance": {
+                    "type": "integer",
+                    "example": 111
                 }
             }
         }

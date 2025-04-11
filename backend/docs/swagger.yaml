@@ -87,9 +87,9 @@ definitions:
     type: object
   internal_api_post_balance_deposit.Response:
     properties:
-      message:
-        example: Balance updated successfully
-        type: string
+      new_balance:
+        example: 777
+        type: integer
     type: object
   internal_api_post_balance_withdraw.Request:
     properties:
@@ -102,9 +102,9 @@ definitions:
     type: object
   internal_api_post_balance_withdraw.Response:
     properties:
-      message:
-        example: Withdrawal successful
-        type: string
+      new_balance:
+        example: 111
+        type: integer
     type: object
 host: localhost:80
 info:
@@ -294,10 +294,6 @@ paths:
             $ref: '#/definitions/echo.HTTPError'
         "401":
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/echo.HTTPError'
-        "403":
-          description: Forbidden
           schema:
             $ref: '#/definitions/echo.HTTPError'
         "500":
