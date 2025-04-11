@@ -10,6 +10,10 @@
 package mocks
 
 import (
+	context "context"
+	reflect "reflect"
+
+	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -35,4 +39,32 @@ func NewMockService(ctrl *gomock.Controller) *MockService {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
+}
+
+// Deposit mocks base method.
+func (m *MockService) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Deposit", ctx, userID, amount)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Deposit indicates an expected call of Deposit.
+func (mr *MockServiceMockRecorder) Deposit(ctx, userID, amount any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Deposit", reflect.TypeOf((*MockService)(nil).Deposit), ctx, userID, amount)
+}
+
+// Withdraw mocks base method.
+func (m *MockService) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Withdraw", ctx, userID, amount)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Withdraw indicates an expected call of Withdraw.
+func (mr *MockServiceMockRecorder) Withdraw(ctx, userID, amount any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Withdraw", reflect.TypeOf((*MockService)(nil).Withdraw), ctx, userID, amount)
 }
