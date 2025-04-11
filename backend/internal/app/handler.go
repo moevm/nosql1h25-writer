@@ -7,6 +7,8 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_deposit"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_withdraw"
 )
 
 func (app *App) GetHealthHandler() api.Handler {
@@ -52,4 +54,22 @@ func (app *App) GetAdminHandler() api.Handler {
 
 	app.getAdminHandler = get_admin.New()
 	return app.getAdminHandler
+}
+
+func (app *App) PostBalanceDepositHandler() api.Handler {
+	if app.postBalanceDepositHandler != nil {
+		return app.postBalanceDepositHandler
+	}
+
+	app.postBalanceDepositHandler = post_balance_deposit.New(app.UsersService())
+	return app.postBalanceDepositHandler
+}
+
+func (app *App) PostBalanceWithdrawHandler() api.Handler {
+	if app.postBalanceWithdrawHandler != nil {
+		return app.postBalanceWithdrawHandler
+	}
+
+	app.postBalanceWithdrawHandler = post_balance_withdraw.New(app.UsersService())
+	return app.postBalanceWithdrawHandler
 }
