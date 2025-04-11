@@ -76,6 +76,36 @@ definitions:
     - accessToken
     - refreshToken
     type: object
+  internal_api_post_balance_deposit.Request:
+    properties:
+      amount:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - amount
+    type: object
+  internal_api_post_balance_deposit.Response:
+    properties:
+      message:
+        example: Balance updated successfully
+        type: string
+    type: object
+  internal_api_post_balance_withdraw.Request:
+    properties:
+      amount:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - amount
+    type: object
+  internal_api_post_balance_withdraw.Response:
+    properties:
+      message:
+        example: Withdrawal successful
+        type: string
+    type: object
 host: localhost:80
 info:
   contact: {}
@@ -203,6 +233,82 @@ paths:
       summary: Refresh tokens
       tags:
       - auth
+  /balance/deposit:
+    post:
+      consumes:
+      - application/json
+      description: Add specified amount to authenticated user's balance
+      parameters:
+      - description: Deposit amount
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_balance_deposit.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_balance_deposit.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Deposit funds
+      tags:
+      - balance
+  /balance/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: Subtract specified amount from authenticated user's balance
+      parameters:
+      - description: Withdrawal amount
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_balance_withdraw.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_balance_withdraw.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Withdraw funds
+      tags:
+      - balance
   /health:
     get:
       description: Whether REST-API alive or not
