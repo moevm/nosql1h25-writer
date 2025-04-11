@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	users "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -41,30 +42,17 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// Deposit mocks base method.
-func (m *MockService) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) error {
+// UpdateBalance mocks base method.
+func (m *MockService) UpdateBalance(ctx context.Context, userID primitive.ObjectID, op users.OperationType, amount int) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Deposit", ctx, userID, amount)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "UpdateBalance", ctx, userID, op, amount)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Deposit indicates an expected call of Deposit.
-func (mr *MockServiceMockRecorder) Deposit(ctx, userID, amount any) *gomock.Call {
+// UpdateBalance indicates an expected call of UpdateBalance.
+func (mr *MockServiceMockRecorder) UpdateBalance(ctx, userID, op, amount any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Deposit", reflect.TypeOf((*MockService)(nil).Deposit), ctx, userID, amount)
-}
-
-// Withdraw mocks base method.
-func (m *MockService) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Withdraw", ctx, userID, amount)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Withdraw indicates an expected call of Withdraw.
-func (mr *MockServiceMockRecorder) Withdraw(ctx, userID, amount any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Withdraw", reflect.TypeOf((*MockService)(nil).Withdraw), ctx, userID, amount)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBalance", reflect.TypeOf((*MockService)(nil).UpdateBalance), ctx, userID, op, amount)
 }

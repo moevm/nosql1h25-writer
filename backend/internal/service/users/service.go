@@ -10,33 +10,33 @@ import (
 )
 
 type service struct {
-	repo users.Repo
+	usersRepo users.Repo
 }
 
 func New(repo users.Repo) Service {
-	return &service{repo: repo}
+	return &service{usersRepo: repo}
 }
 
-func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, op OperationType, amount int) error {
+func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, op OperationType, amount int) (int, error) {
+	var (
+		newBalance int
+		err        error
+	)
+
 	switch op {
 	case OperationTypeDeposit:
-		if err := s.repo.Deposit(ctx, userID, amount); err != nil {
-			if errors.Is(err, users.ErrCannotDeposit) {
-				return ErrCannotDeposit
-			}
-			log.Errorf("Service.UpdateBalance (deposit) - s.repo.Deposit: %v", err)
-			return ErrCannotDeposit
-		}
+		newBalance, err = s.usersRepo.Deposit(ctx, userID, amount)
 	case OperationTypeWithdraw:
-		if err := s.repo.Withdraw(ctx, userID, amount); err != nil {
-			if errors.Is(err, users.ErrInsufficientFunds) {
-				return ErrInsufficientFunds
-			}
-			log.Errorf("Service.UpdateBalance (withdraw) - s.repo.Withdraw: %v", err)
-			return ErrCannotWithdraw
-		}
-	default:
-		return errors.New("invalid operation type")
+		newBalance, err = s.usersRepo.Withdraw(ctx, userID, amount)
 	}
-	return nil
+
+	if err != nil {
+		log.Errorf("Service.UpdateBalance - s.repo.%s: %v", op, err)
+		if errors.Is(err, users.ErrInsufficientFunds) {
+			return 0, ErrInsufficientFunds
+		}
+		return 0, ErrUpdateBalance
+	}
+
+	return newBalance, nil
 }
