@@ -465,7 +465,7 @@ const docTemplate = `{
         "internal_api_post_balance_deposit.Response": {
             "type": "object",
             "properties": {
-                "new_balance": {
+                "newBalance": {
                     "type": "integer",
                     "example": 777
                 }
@@ -487,7 +487,7 @@ const docTemplate = `{
         "internal_api_post_balance_withdraw.Response": {
             "type": "object",
             "properties": {
-                "new_balance": {
+                "newBalance": {
                     "type": "integer",
                     "example": 111
                 }

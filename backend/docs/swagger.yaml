@@ -87,7 +87,7 @@ definitions:
     type: object
   internal_api_post_balance_deposit.Response:
     properties:
-      new_balance:
+      newBalance:
         example: 777
         type: integer
     type: object
@@ -102,7 +102,7 @@ definitions:
     type: object
   internal_api_post_balance_withdraw.Response:
     properties:
-      new_balance:
+      newBalance:
         example: 111
         type: integer
     type: object
