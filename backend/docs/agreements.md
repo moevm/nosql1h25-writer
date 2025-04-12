@@ -35,4 +35,18 @@ type User struct {
 }
 ```
 
+## Соглашение №5. camelCase в JSON-объектах
+Названия JSON-полей пишите в _camelCase_. Пример:
+```go
+// Неправильно
+type Response struct {
+    AccessToken string `json:"access_token"`
+}
+
+// Правильно
+type Response struct {
+    AccessToken string `json:"accessToken"`
+}
+```
+
 Ссылка: [Code Review Comments#Initialisms](https://go.dev/wiki/CodeReviewComments).
