@@ -1,65 +1,86 @@
 package get_orders
 
 import (
+	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
+
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
-	"github.com/sv-tools/mongoifc"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
+	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
 )
 
 type handler struct {
-	orders mongoifc.Collection
+	orderService orders.Service
 }
 
-func New(orders mongoifc.Collection) api.Handler {
-	return &handler{orders: orders}
+func New(orderService orders.Service) api.Handler {
+	return decorator.NewBindAndValidate(&handler{orderService: orderService})
 }
 
-// @Description	Получить список заказов с пагинацией и общее кол-во заказов
-// @Summary	Получить список заказов
+type Request struct {
+	Offset int64 `query:"offset" validate:"gte=0" example:"0"`
+	Limit  int64 `query:"limit" validate:"gte=1,lte=100" example:"10"`
+}
+
+type Response struct {
+	Orders []orders_repo.FindOrdersOut `json:"orders"`
+	Total  int64                       `json:"total" example:"250"`
+}
+
+func (h *handler) ApplyDefaults(req *Request) {
+	if req.Limit == 0 {
+		req.Limit = 10
+	}
+	if req.Offset < 0 {
+		req.Offset = 0
+	}
+}
+
+// @Description	Get a paginated list of orders and total count
+// @Summary	Get orders list
 // @Tags orders
 // @Param offset query int false "Offset" default(0) minimum(0) example(0)
 // @Param limit query int false	"Limit" default(10) minimum(1) maximum(100) example(10)
+// @Accept json
 // @Produce	json
-// @Success	200	{object} map[string]interface{}
+// @Success	200	{object} Response
+// @Failure 400 {object} echo.HTTPError
 // @Failure	500	{object} echo.HTTPError
 // @Router /orders [get]
-func (h *handler) Handle(c echo.Context) error {
-	offset, _ := strconv.Atoi(c.QueryParam("offset"))
-	limit, _ := strconv.Atoi(c.QueryParam("limit"))
-	if limit == 0 {
-		limit = 10
-	}
+func (h *handler) Handle(c echo.Context, in Request) error {
+	ctx := c.Request().Context()
+	h.ApplyDefaults(&in)
 
-	count, err := h.orders.CountDocuments(c.Request().Context(), bson.M{})
+	result, total, err := h.orderService.FindOrders(ctx, in.Offset, in.Limit)
 	if err != nil {
+		if errors.Is(err, orders.ErrOrdersNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, err.Error())
+		} else if errors.Is(err, orders.ErrInvalidPagination) {
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		}
+
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	cursor, err := h.orders.Find(c.Request().Context(), bson.M{}, &options.FindOptions{
-		Skip:  int64Ptr(int64(offset)),
-		Limit: int64Ptr(int64(limit)),
+	orders := make([]orders_repo.FindOrdersOut, len(result))
+	for i, o := range result {
+		orders[i] = orders_repo.FindOrdersOut{
+			ID:           o.ID,
+			Title:        o.Title,
+			Description:  o.Description,
+			Budget:       o.Budget,
+			Active:       o.Active,
+			CreatedAt:    o.CreatedAt,
+			ClientID:     o.ClientID,
+			FreelancerID: o.FreelancerID,
+		}
+	}
+
+	return c.JSON(http.StatusOK, Response{
+		Orders: orders,
+		Total:  total,
 	})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-	defer cursor.Close(c.Request().Context())
-
-	var results []map[string]interface{}
-	if err := cursor.All(c.Request().Context(), &results); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"total":  count,
-		"orders": results,
-	})
-}
-
-func int64Ptr(i int64) *int64 {
-	return &i
 }

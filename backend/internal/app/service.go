@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
@@ -31,4 +32,15 @@ func (app *App) UsersService() users.Service {
 		app.UsersRepo(),
 	)
 	return app.usersService
+}
+
+func (app *App) OrdersService() orders.Service {
+	if app.ordersService != nil {
+		return app.ordersService
+	}
+
+	app.ordersService = orders.New(
+		app.OrdersRepo(),
+	)
+	return app.ordersService
 }

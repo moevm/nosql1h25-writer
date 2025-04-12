@@ -1,45 +1,41 @@
 package get_orders_id
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
-	"github.com/sv-tools/mongoifc"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
 )
 
 type handler struct {
-	orders mongoifc.Collection
+	orderService orders.Service
 }
 
-func New(orders mongoifc.Collection) api.Handler {
-	return &handler{orders: orders}
+func New(orderService orders.Service) api.Handler {
+	return &handler{orderService: orderService}
 }
 
-// @Description	Возвращает один заказ по его MongoDB ObjectID
-// @Summary Получить информацию о заказе
+// @Description	Return order by MongoDB ObjectID
+// @Summary Get info about order
 // @Tags orders
 // @Param id path string true "Order ID"
 // @Produce	json
 // @Success	200	{object} map[string]interface{}
-// @Failure	400	{object} echo.HTTPError "Неверный формат ID"
-// @Failure	404	{object} echo.HTTPError "Заказ не найден"
+// @Failure	400	{object} echo.HTTPError "Incorrect ID"
+// @Failure	404	{object} echo.HTTPError "Order not found"
 // @Failure	500	{object} echo.HTTPError
 // @Router /orders/{id} [get]
 func (h *handler) Handle(c echo.Context) error {
-	idStr := c.Param("id")
-	id, err := primitive.ObjectIDFromHex(idStr)
+	id := c.Param("id")
+	order, err := h.orderService.GetByID(c.Request().Context(), id)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid ID format")
+		if errors.Is(err, orders.ErrOrdersNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, err.Error)
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-
-	var order map[string]interface{}
-	err = h.orders.FindOne(c.Request().Context(), bson.M{"_id": id}).Decode(&order)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Order not found")
-	}
-
 	return c.JSON(http.StatusOK, order)
 }
