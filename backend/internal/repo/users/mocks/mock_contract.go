@@ -42,6 +42,21 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
 }
 
+// Deposit mocks base method.
+func (m *MockRepo) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Deposit", ctx, userID, amount)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Deposit indicates an expected call of Deposit.
+func (mr *MockRepoMockRecorder) Deposit(ctx, userID, amount any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Deposit", reflect.TypeOf((*MockRepo)(nil).Deposit), ctx, userID, amount)
+}
+
 // GetByEmail mocks base method.
 func (m *MockRepo) GetByEmail(ctx context.Context, email string) (entity.User, error) {
 	m.ctrl.T.Helper()
@@ -70,4 +85,19 @@ func (m *MockRepo) GetByID(ctx context.Context, id primitive.ObjectID) (entity.U
 func (mr *MockRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockRepo)(nil).GetByID), ctx, id)
+}
+
+// Withdraw mocks base method.
+func (m *MockRepo) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Withdraw", ctx, userID, amount)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Withdraw indicates an expected call of Withdraw.
+func (mr *MockRepoMockRecorder) Withdraw(ctx, userID, amount any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Withdraw", reflect.TypeOf((*MockRepo)(nil).Withdraw), ctx, userID, amount)
 }

@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 )
@@ -42,4 +43,48 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u enti
 	}
 
 	return u, nil
+}
+
+func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
+	var u entity.User
+	err := r.usersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": userID, "active": true},
+		bson.M{"$inc": bson.M{"balance": amount}},
+		options.FindOneAndUpdate().
+			SetReturnDocument(options.After).
+			SetProjection(bson.M{"_id": 0, "balance": 1}),
+	).Decode(&u)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return u.Balance, nil
+}
+
+func (r *repository) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
+	var u entity.User
+	err := r.usersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{
+			"_id":     userID,
+			"active":  true,
+			"balance": bson.M{"$gte": amount},
+		},
+		bson.M{"$inc": bson.M{"balance": -amount}},
+		options.FindOneAndUpdate().
+			SetReturnDocument(options.After).
+			SetProjection(bson.M{"_id": 0, "balance": 1}),
+	).Decode(&u)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return 0, ErrInsufficientFunds
+		}
+
+		return 0, err
+	}
+
+	return u.Balance, nil
 }

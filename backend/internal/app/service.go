@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
 func (app *App) AuthService() auth.Service {
@@ -19,4 +20,15 @@ func (app *App) AuthService() auth.Service {
 		app.cfg.Auth.RefreshTokenTTL,
 	)
 	return app.authService
+}
+
+func (app *App) UsersService() users.Service {
+	if app.usersService != nil {
+		return app.usersService
+	}
+
+	app.usersService = users.New(
+		app.UsersRepo(),
+	)
+	return app.usersService
 }

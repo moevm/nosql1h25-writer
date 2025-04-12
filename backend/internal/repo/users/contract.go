@@ -12,4 +12,6 @@ import (
 type Repo interface {
 	GetByEmail(ctx context.Context, email string) (entity.User, error)
 	GetByID(ctx context.Context, id primitive.ObjectID) (entity.User, error)
+	Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error)
+	Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error)
 }
