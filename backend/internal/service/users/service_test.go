@@ -120,9 +120,7 @@ func TestService_UpdateBalance_Withdraw(t *testing.T) {
 			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
 
 			assert.ErrorIs(t, err, tc.wantErr)
-			if err == nil {
-				assert.Equal(t, tc.want, got)
-			}
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }
