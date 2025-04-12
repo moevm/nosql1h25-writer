@@ -2,25 +2,42 @@ package users
 
 import (
 	"context"
+	"errors"
 
+	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	log "github.com/sirupsen/logrus"
-
-	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type service struct {
+	usersRepo users.Repo
 }
 
-func New( /* repo repository.Repository */ ) Service {
-	return &service{}
+func New(repo users.Repo) Service {
+	return &service{usersRepo: repo}
 }
 
-func (s *service) FindUsers(ctx context.Context, params entity.UserSearchParams) ([]entity.UserExt, int64, error) {
-	log.WithFields(log.Fields{
-		"offset":  params.Offset,
-		"limit":   params.Limit,
-		"profile": params.ProfileFilter,
-	}).Info("Service: FindUsers called (stub)")
+func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, op OperationType, amount int) (int, error) {
+	var (
+		newBalance int
+		err        error
+	)
 
-	return []entity.UserExt{}, 0, nil
+	switch op {
+	case OperationTypeDeposit:
+		newBalance, err = s.usersRepo.Deposit(ctx, userID, amount)
+	case OperationTypeWithdraw:
+		newBalance, err = s.usersRepo.Withdraw(ctx, userID, amount)
+	}
+
+	if err != nil {
+		if errors.Is(err, users.ErrInsufficientFunds) {
+			return 0, ErrInsufficientFunds
+		}
+
+		log.Errorf("Service.UpdateBalance - s.usersRepo.%s: %v", op, err)
+		return 0, ErrUpdateBalance
+	}
+
+	return newBalance, nil
 }

@@ -51,8 +51,25 @@ func (app *App) EchoHandler() *echo.Echo {
 
 func (app *App) configureRouter(handler *echo.Echo) {
 	handler.GET("/health", app.GetHealthHandler().Handle)
-
 	handler.GET("/users", app.GetUsersHandler().Handle)
+
+	authGroup := handler.Group("/auth")
+	{
+		authGroup.POST("/login", app.PostAuthLoginHandler().Handle)
+		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
+		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
+	}
+
+	adminGroup := handler.Group("/admin", app.AuthMW().UserIdentity())
+	{
+		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().AdminRole())
+	}
+
+	balanceGroup := handler.Group("/balance", app.AuthMW().UserIdentity())
+	{
+		balanceGroup.POST("/deposit", app.PostBalanceDepositHandler().Handle)
+		balanceGroup.POST("/withdraw", app.PostBalanceWithdrawHandler().Handle)
+	}
 }
 
 func setLogsFile() *os.File {
