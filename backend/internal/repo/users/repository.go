@@ -46,19 +46,16 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u enti
 }
 
 func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
-	upsert := false
-	after := options.After
-	opt := options.FindOneAndUpdateOptions{
-		ReturnDocument: &after,
-		Upsert:         &upsert,
-	}
 	var u entity.User
 	err := r.usersColl.FindOneAndUpdate(
 		ctx,
 		bson.M{"_id": userID, "active": true},
 		bson.M{"$inc": bson.M{"balance": amount}},
-		&opt,
+		options.FindOneAndUpdate().
+			SetReturnDocument(options.After).
+			SetProjection(bson.M{"_id": 0, "balance": 1}),
 	).Decode(&u)
+
 	if err != nil {
 		return 0, err
 	}
@@ -67,24 +64,18 @@ func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amo
 }
 
 func (r *repository) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
-	upsert := false
-	after := options.After
-	opt := options.FindOneAndUpdateOptions{
-		ReturnDocument: &after,
-		Upsert:         &upsert,
-	}
 	var u entity.User
 	err := r.usersColl.FindOneAndUpdate(
 		ctx,
 		bson.M{
-			"_id":    userID,
-			"active": true,
-			"balance": bson.M{
-				"$gte": amount,
-			},
+			"_id":     userID,
+			"active":  true,
+			"balance": bson.M{"$gte": amount},
 		},
 		bson.M{"$inc": bson.M{"balance": -amount}},
-		&opt,
+		options.FindOneAndUpdate().
+			SetReturnDocument(options.After).
+			SetProjection(bson.M{"_id": 0, "balance": 1}),
 	).Decode(&u)
 
 	if err != nil {
