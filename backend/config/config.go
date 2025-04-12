@@ -9,10 +9,11 @@ import (
 
 type (
 	Config struct {
-		App   `yaml:"app"`
-		HTTP  `yaml:"http"`
-		Log   `yaml:"logger"`
-		Mongo `yaml:"mongo"`
+		App   App   `yaml:"app"`
+		HTTP  HTTP  `yaml:"http"`
+		Log   Log   `yaml:"logger"`
+		Mongo Mongo `yaml:"mongo"`
+		Auth  Auth  `yaml:"auth"`
 	}
 
 	App struct {
@@ -31,6 +32,12 @@ type (
 
 	Log struct {
 		Level string `env-required:"true" yaml:"level" env:"LOG_LEVEL"`
+	}
+
+	Auth struct {
+		JWTSecretKey    string        `env-required:"true" yaml:"jwt_secret_key" env:"AUTH_JWT_SECRET_KEY"`
+		AccessTokenTTL  time.Duration `env_required:"true" yaml:"access_token_ttl" env:"AUTH_ACCESS_TOKEN_TTL"`
+		RefreshTokenTTL time.Duration `env_required:"true" yaml:"refresh_token_ttl" env:"AUTH_REFRESH_TOKEN_TTL"`
 	}
 )
 

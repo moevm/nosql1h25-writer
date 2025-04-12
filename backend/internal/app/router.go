@@ -9,6 +9,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/moevm/nosql1h25-writer/backend/docs"
+	"github.com/moevm/nosql1h25-writer/backend/pkg/validator"
 )
 
 func (app *App) EchoHandler() *echo.Echo {
@@ -17,6 +18,7 @@ func (app *App) EchoHandler() *echo.Echo {
 	}
 
 	handler := echo.New()
+	handler.Validator = validator.NewCustomValidator()
 	handler.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: `{"time":"${time_rfc3339_nano}", "method":"${method}","uri":"${uri}", "status":${status},"error":"${error}"}` + "\n",
 		Output: setLogsFile(),
@@ -32,8 +34,24 @@ func (app *App) EchoHandler() *echo.Echo {
 
 func (app *App) configureRouter(handler *echo.Echo) {
 	handler.GET("/health", app.GetHealthHandler().Handle)
-	handler.GET("/orders", app.GetOrdersHandler().Handle)
-	handler.GET("/orders/:id", app.GetOrdersIDHandler().Handle)
+
+	authGroup := handler.Group("/auth")
+	{
+		authGroup.POST("/login", app.PostAuthLoginHandler().Handle)
+		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
+		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
+	}
+
+	adminGroup := handler.Group("/admin", app.AuthMW().UserIdentity())
+	{
+		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().AdminRole())
+	}
+
+	balanceGroup := handler.Group("/balance", app.AuthMW().UserIdentity())
+	{
+		balanceGroup.POST("/deposit", app.PostBalanceDepositHandler().Handle)
+		balanceGroup.POST("/withdraw", app.PostBalanceWithdrawHandler().Handle)
+	}
 }
 
 func setLogsFile() *os.File {

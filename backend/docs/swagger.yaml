@@ -4,6 +4,108 @@ definitions:
     properties:
       message: {}
     type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
+    enum:
+    - admin
+    - user
+    type: string
+    x-enum-varnames:
+    - SystemRoleTypeAdmin
+    - SystemRoleTypeUser
+  internal_api_get_admin.Response:
+    properties:
+      systemRole:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+        example: admin
+      userId:
+        example: 5a2493c33c95a1281836eb6a
+        type: string
+    required:
+    - systemRole
+    - userId
+    type: object
+  internal_api_post_auth_login.Request:
+    properties:
+      email:
+        example: test@gmail.com
+        format: email
+        type: string
+      password:
+        example: Password123
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_api_post_auth_login.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - refreshToken
+    type: object
+  internal_api_post_auth_logout.Request:
+    properties:
+      refreshToken:
+        example: 0e8f711e-b713-4869-b528-059a74311482
+        type: string
+    type: object
+  internal_api_post_auth_refresh.Request:
+    properties:
+      refreshToken:
+        example: 0e8f711e-b713-4869-b528-059a74311482
+        type: string
+    type: object
+  internal_api_post_auth_refresh.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - refreshToken
+    type: object
+  internal_api_post_balance_deposit.Request:
+    properties:
+      amount:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - amount
+    type: object
+  internal_api_post_balance_deposit.Response:
+    properties:
+      newBalance:
+        example: 777
+        type: integer
+    type: object
+  internal_api_post_balance_withdraw.Request:
+    properties:
+      amount:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - amount
+    type: object
+  internal_api_post_balance_withdraw.Response:
+    properties:
+      newBalance:
+        example: 111
+        type: integer
+    type: object
 host: localhost:80
 info:
   contact: {}
@@ -11,6 +113,198 @@ info:
   title: Writer
   version: 1.0.0
 paths:
+  /admin:
+    get:
+      description: Whether user has admin rights
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_admin.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Check admin rights available
+      tags:
+      - admin
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Generate `access` and `refresh` token pair. `refreshToken` sets
+        in httpOnly cookie also.
+      parameters:
+      - description: existing user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_login.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_login.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Login by email and password
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Remove `refreshSession` attached to `refreshToken`. `refreshToken`
+        can be passed in cookie
+      parameters:
+      - description: active refresh token in UUID RFC4122 format
+        in: body
+        name: refreshToken
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_logout.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Logout
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh `access` and `refresh` token pair. `refreshToken` can be
+        passed in cookie
+      parameters:
+      - description: active refresh token in UUID RFC4122 format
+        in: body
+        name: refreshToken
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_refresh.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_refresh.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Refresh tokens
+      tags:
+      - auth
+  /balance/deposit:
+    post:
+      consumes:
+      - application/json
+      description: Add specified amount to authenticated user's balance
+      parameters:
+      - description: Deposit amount
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_balance_deposit.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_balance_deposit.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Deposit funds
+      tags:
+      - balance
+  /balance/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: Subtract specified amount from authenticated user's balance
+      parameters:
+      - description: Withdrawal amount
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_balance_withdraw.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_balance_withdraw.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Withdraw funds
+      tags:
+      - balance
   /health:
     get:
       description: Whether REST-API alive or not

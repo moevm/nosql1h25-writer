@@ -17,6 +17,8 @@ func New(orders mongoifc.Collection) api.Handler {
 	return &handler{orders: orders}
 }
 
+// Handle - Check health handler
+//
 //	@Summary		Check health
 //	@Description	Whether REST-API alive or not
 //	@Tags			health
