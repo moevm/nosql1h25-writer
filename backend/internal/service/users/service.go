@@ -31,10 +31,11 @@ func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, 
 	}
 
 	if err != nil {
-		log.Errorf("Service.UpdateBalance - s.repo.%s: %v", op, err)
 		if errors.Is(err, users.ErrInsufficientFunds) {
 			return 0, ErrInsufficientFunds
 		}
+
+		log.Errorf("Service.UpdateBalance - s.usersRepo.%s: %v", op, err)
 		return 0, ErrUpdateBalance
 	}
 

@@ -25,7 +25,7 @@ type Request struct {
 }
 
 type Response struct {
-	NewBalance int `json:"new_balance" example:"777"`
+	NewBalance int `json:"newBalance" example:"777"`
 }
 
 // Handle - Deposit funds to user's balance

@@ -26,7 +26,7 @@ type Request struct {
 }
 
 type Response struct {
-	NewBalance int `json:"new_balance" example:"111"`
+	NewBalance int `json:"newBalance" example:"111"`
 }
 
 // Handle - Withdraw funds from user's balance
@@ -44,16 +44,14 @@ type Response struct {
 //	@Failure		500	{object}	echo.HTTPError
 //	@Router			/balance/withdraw [post]
 func (h *handler) Handle(c echo.Context, in Request) error {
-	userID, ok := c.Get(mw.UserIDKey).(primitive.ObjectID)
-	if !ok {
-		return echo.NewHTTPError(http.StatusUnauthorized, "invalid user ID in context")
-	}
+	userID := c.Get(mw.UserIDKey).(primitive.ObjectID) //nolint:forcetypeassert
 
 	newBalance, err := h.usersService.UpdateBalance(c.Request().Context(), userID, users.OperationTypeWithdraw, in.Amount)
 	if err != nil {
 		if errors.Is(err, users.ErrInsufficientFunds) {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
+
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
