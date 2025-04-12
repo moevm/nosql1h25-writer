@@ -44,6 +44,7 @@ type App struct {
 
 	// handlers
 	getHealthHandler api.Handler
+	getUsersHandler  api.Handler
 
 	postAuthLoginHandler   api.Handler
 	postAuthRefreshHandler api.Handler
@@ -91,10 +92,8 @@ func New(configPath string) *App {
 //	@title			Writer
 //	@version		1.0.0
 //	@description	API for freelancer's site
-
 //	@host		localhost:80
 //	@BasePath	/api
-
 //	@securityDefinitions.apikey	JWT
 //	@in							header
 //	@name						Authorization
