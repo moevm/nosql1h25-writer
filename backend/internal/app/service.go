@@ -2,7 +2,8 @@ package app
 
 import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
-	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	users "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	users_ext_service "github.com/moevm/nosql1h25-writer/backend/internal/service/usersExt"
 )
 
 func (app *App) AuthService() auth.Service {
@@ -22,6 +23,7 @@ func (app *App) AuthService() auth.Service {
 	return app.authService
 }
 
+// UsersService возвращает синглтон сервиса users.
 func (app *App) UsersService() users.Service {
 	if app.usersService != nil {
 		return app.usersService
@@ -31,4 +33,14 @@ func (app *App) UsersService() users.Service {
 		app.UsersRepo(),
 	)
 	return app.usersService
+}
+
+// UsersExtService возвращает синглтон сервиса usersExt.
+func (app *App) UsersExtService() users_ext_service.Service {
+	if app.usersExtService != nil {
+		return app.usersExtService
+	}
+	app.usersExtService = users_ext_service.New()
+
+	return app.usersExtService
 }

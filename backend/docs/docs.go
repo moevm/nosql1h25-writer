@@ -336,6 +336,74 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users": {
+            "get": {
+                "description": "Возвращает список пользователей с пагинацией и возможностью фильтрации по типу профиля.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получить список пользователей",
+                "parameters": [
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Смещение для пагинации (сколько записей пропустить)",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 50,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Количество записей на страницу",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "client",
+                                "freelancer"
+                            ],
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Фильтр по типу профиля ('client', 'freelancer'). Можно указать несколько раз.",
+                        "name": "profile",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ со списком пользователей и общим количеством",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_users.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации входных данных",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -374,6 +442,57 @@ const docTemplate = `{
                 "userId": {
                     "type": "string",
                     "example": "5a2493c33c95a1281836eb6a"
+                }
+            }
+        },
+        "internal_api_get_users.Response": {
+            "type": "object",
+            "properties": {
+                "total": {
+                    "type": "integer"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_users.userOut"
+                    }
+                }
+            }
+        },
+        "internal_api_get_users.profileOut": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users.userOut": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "profiles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_users.profileOut"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },

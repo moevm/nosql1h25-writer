@@ -4,6 +4,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
@@ -72,4 +73,15 @@ func (app *App) PostBalanceWithdrawHandler() api.Handler {
 
 	app.postBalanceWithdrawHandler = post_balance_withdraw.New(app.UsersService())
 	return app.postBalanceWithdrawHandler
+}
+
+// GetUsersHandler возвращает синглтон обработчика для GET /users.
+func (app *App) GetUsersHandler() api.Handler {
+	if app.getUsersHandler != nil {
+		return app.getUsersHandler
+	}
+
+	app.getUsersHandler = get_users.New(app.UsersExtService())
+
+	return app.getUsersHandler
 }

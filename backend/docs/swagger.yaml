@@ -25,6 +25,39 @@ definitions:
     - systemRole
     - userId
     type: object
+  internal_api_get_users.Response:
+    properties:
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/internal_api_get_users.userOut'
+        type: array
+    type: object
+  internal_api_get_users.profileOut:
+    properties:
+      description:
+        type: string
+      rating:
+        type: number
+      role:
+        type: string
+    type: object
+  internal_api_get_users.userOut:
+    properties:
+      createdAt:
+        type: string
+      displayName:
+        type: string
+      id:
+        type: string
+      profiles:
+        items:
+          $ref: '#/definitions/internal_api_get_users.profileOut'
+        type: array
+      updatedAt:
+        type: string
+    type: object
   internal_api_post_auth_login.Request:
     properties:
       email:
@@ -322,6 +355,55 @@ paths:
       summary: Check health
       tags:
       - health
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список пользователей с пагинацией и возможностью фильтрации
+        по типу профиля.
+      parameters:
+      - default: 0
+        description: Смещение для пагинации (сколько записей пропустить)
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - default: 10
+        description: Количество записей на страницу
+        in: query
+        maximum: 50
+        minimum: 1
+        name: limit
+        type: integer
+      - collectionFormat: multi
+        description: Фильтр по типу профиля ('client', 'freelancer'). Можно указать
+          несколько раз.
+        in: query
+        items:
+          enum:
+          - client
+          - freelancer
+          type: string
+        name: profile
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ со списком пользователей и общим количеством
+          schema:
+            $ref: '#/definitions/internal_api_get_users.Response'
+        "400":
+          description: Ошибка валидации входных данных
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить список пользователей
+      tags:
+      - Users
 securityDefinitions:
   JWT:
     description: JSON Web Token
