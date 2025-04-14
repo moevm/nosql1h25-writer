@@ -1,14 +1,12 @@
 package get_orders
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
-	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
 )
 
@@ -21,66 +19,65 @@ func New(orderService orders.Service) api.Handler {
 }
 
 type Request struct {
-	Offset int64 `query:"offset" validate:"gte=0" example:"0"`
-	Limit  int64 `query:"limit" validate:"gte=1,lte=100" example:"10"`
+	Offset *int `query:"offset" validate:"gte=0" example:"0"`
+	Limit  *int `query:"limit" validate:"gte=1,lte=200" example:"10"`
 }
 
 type Response struct {
-	Orders []orders_repo.FindOrdersOut `json:"orders"`
-	Total  int64                       `json:"total" example:"250"`
+	Orders []Order `json:"orders"`
+	Total  int     `json:"total" example:"250"`
 }
 
-func (h *handler) ApplyDefaults(req *Request) {
-	if req.Limit == 0 {
-		req.Limit = 10
-	}
-	if req.Offset < 0 {
-		req.Offset = 0
-	}
+type Order struct {
+	Title          string
+	Description    string
+	CompletionTime int
+	Cost           *int
+	ClientName     string
+	Rating         float64
 }
 
 // @Description	Get a paginated list of orders and total count
 // @Summary	Get orders list
 // @Tags orders
 // @Param offset query int false "Offset" default(0) minimum(0) example(0)
-// @Param limit query int false	"Limit" default(10) minimum(1) maximum(100) example(10)
+// @Param limit query int false	"Limit" default(10) minimum(1) maximum(200) example(10)
 // @Accept json
 // @Produce	json
 // @Success	200	{object} Response
-// @Failure 400 {object} echo.HTTPError
 // @Failure	500	{object} echo.HTTPError
 // @Router /orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
-	ctx := c.Request().Context()
-	h.ApplyDefaults(&in)
-
-	result, total, err := h.orderService.FindOrders(ctx, in.Offset, in.Limit)
+	offset, limit := applyDefaults(in)
+	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit)
 	if err != nil {
-		if errors.Is(err, orders.ErrOrdersNotFound) {
-			return echo.NewHTTPError(http.StatusNotFound, err.Error())
-		} else if errors.Is(err, orders.ErrInvalidPagination) {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		}
-
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-
-	orders := make([]orders_repo.FindOrdersOut, len(result))
-	for i, o := range result {
-		orders[i] = orders_repo.FindOrdersOut{
-			ID:           o.ID,
-			Title:        o.Title,
-			Description:  o.Description,
-			Budget:       o.Budget,
-			Active:       o.Active,
-			CreatedAt:    o.CreatedAt,
-			ClientID:     o.ClientID,
-			FreelancerID: o.FreelancerID,
-		}
+	orderList := make([]Order, 0, len(findOut.Orders))
+	for _, order := range findOut.Orders {
+		cost := order.Cost
+		orderList = append(orderList, Order{
+			Title:          order.Title,
+			Description:    order.Description,
+			CompletionTime: order.CompletionTime,
+			Cost:           &cost,
+			ClientName:     order.ClientName,
+			Rating:         order.Rating,
+		})
 	}
+	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: len(orderList)})
+}
 
-	return c.JSON(http.StatusOK, Response{
-		Orders: orders,
-		Total:  total,
-	})
+func applyDefaults(in Request) (offset int, limit int) {
+	if in.Offset != nil {
+		offset = *in.Offset
+	} else {
+		offset = 0
+	}
+	if in.Limit != nil {
+		limit = *in.Limit
+	} else {
+		limit = 10
+	}
+	return
 }

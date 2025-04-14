@@ -1,19 +1,17 @@
 package orders
 
-import (
-	"time"
+type FindOut struct {
+	/// тут короче надо будет завести поля, которые получатся после запроса с lookup, где ты сможешь получить имя
+	/// и рейтинг заказчика. и сюда запишется как инфа о заказе, так и вот эти дополнительные поля.
+	/// предполагаю что будет выглядеть так, но не уверен
+	Orders []OrderWithClientData
+}
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
-type FindOrdersOut struct {
-	Name         string
-	ID           primitive.ObjectID `json:"id" example:"64a1b2c3d4e5f6a7b8c9d0e2"`
-	Title        string             `json:"title" example:"Разработка сайта"`
-	Description  string             `json:"description" example:"Создание лендинга"`
-	Budget       float64            `json:"budget" example:"1000"`
-	Active       bool               `json:"active" example:"true"`
-	CreatedAt    time.Time          `json:"createdAt" example:"2023-10-01T10:00:00Z"`
-	FreelancerID string             `json:"freelancerId,omitempty" example:"64a1b2c3d4e5f6a7b8c9d0e3"`
-	ClientID     string             `json:"clientId,omitempty" example:"64a1b2c3d4e5f6a7b8c9d0e1"`
+type OrderWithClientData struct {
+	Title          string
+	Description    string
+	CompletionTime int
+	Cost           int
+	ClientName     string
+	Rating         float64
 }
