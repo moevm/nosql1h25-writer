@@ -26,15 +26,10 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 	if err != nil {
 		return FindOut{}, err
 	}
-	defer cursor.Close(ctx)
 
 	var ordersExt []entity.OrderExt
-	for cursor.Next(ctx) {
-		var orderExt entity.OrderExt
-		if err := cursor.Decode(&orderExt); err != nil {
-			return FindOut{}, err
-		}
-		ordersExt = append(ordersExt, orderExt)
+	if err := cursor.All(ctx, &ordersExt); err != nil {
+		return FindOut{}, err
 	}
 
 	var dto FindOut
@@ -51,8 +46,8 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 			Description:    order.Description,
 			CompletionTime: int(order.CompletionTime),
 			Cost:           order.Cost,
-			ClientName:     "",  //пока без объединения с юзерами
-			Rating:         0.0, //пока без объединения с юзерами
+			ClientName:     "",  // пока без объединения с юзерами
+			Rating:         0.0, // пока без объединения с юзерами
 		})
 	}
 	return dto, nil
@@ -72,7 +67,7 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderW
 		Description:    order.Description,
 		CompletionTime: int(order.CompletionTime),
 		Cost:           order.Cost,
-		ClientName:     "",  //пока без объединения с юзерами
-		Rating:         0.0, //пока без объединения с юзерами
+		ClientName:     "",  // пока без объединения с юзерами
+		Rating:         0.0, // пока без объединения с юзерами
 	}, nil
 }
