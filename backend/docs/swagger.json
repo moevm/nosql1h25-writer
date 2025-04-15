@@ -398,6 +398,88 @@
                     }
                 }
             }
+        },
+        "/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Retrieves user details by their ObjectID. Requires authentication. Access restricted to the user themselves or administrators. Optionally filters profiles.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "507f1f77bcf86cd799439011",
+                        "description": "User ObjectID (Hex)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "client",
+                                "freelancer"
+                            ],
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Profile types to include ('client', 'freelancer').",
+                        "name": "profile",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved user details",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_users_id.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request format or ObjectID",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (invalid or missing JWT)",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden (access denied)",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -484,6 +566,52 @@
                     "items": {
                         "$ref": "#/definitions/internal_api_get_users.profileOut"
                     }
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users_id.Profile": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users_id.Response": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "integer"
+                },
+                "client": {
+                    "$ref": "#/definitions/internal_api_get_users_id.Profile"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "freelancer": {
+                    "$ref": "#/definitions/internal_api_get_users_id.Profile"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "systemRole": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
                 },
                 "updatedAt": {
                     "type": "string"

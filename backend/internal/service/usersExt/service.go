@@ -2,11 +2,13 @@ package usersExt
 
 import (
 	"context"
+	"errors"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/usersExt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type service struct {
@@ -36,4 +38,19 @@ func (s *service) FindUsers(ctx context.Context, params entity.UserSearchParams)
 	}).Debug("Service: Found users in repo")
 
 	return users, total, nil
+}
+
+func (s *service) FindUserByID(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
+	log.WithField("userID", userID.Hex()).Debug("Service: Calling repo.FindUserByID")
+
+	user, err := s.repo.FindUserByID(ctx, userID)
+	if err != nil {
+		if !errors.Is(err, usersExt.ErrUserNotFound) {
+			log.WithError(err).WithField("userID", userID.Hex()).Error("Service: Error finding user by ID in repo")
+		}
+		return entity.UserExt{}, err
+	}
+
+	log.WithField("userID", userID.Hex()).Debug("Service: Found user by ID in repo")
+	return user, nil
 }
