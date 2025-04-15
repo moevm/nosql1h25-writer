@@ -35,8 +35,11 @@ func (app *App) EchoHandler() *echo.Echo {
 func (app *App) configureRouter(handler *echo.Echo) {
 	handler.GET("/health", app.GetHealthHandler().Handle)
 
-	handler.GET("/orders", app.GetOrdersHandler().Handle)
-	handler.GET("/orders/:id", app.GetOrdersIDHandler().Handle)
+	ordersGroup := handler.Group("/orders", app.AuthMW().UserIdentity())
+	{
+		ordersGroup.GET("", app.GetOrdersHandler().Handle)
+		ordersGroup.GET("/:id", app.GetOrdersIDHandler().Handle)
+	}
 
 	authGroup := handler.Group("/auth")
 	{
