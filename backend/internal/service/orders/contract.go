@@ -2,11 +2,12 @@ package orders
 
 import (
 	"context"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 //go:generate go tool mockgen -destination mocks/mock_$GOFILE -package=mocks . Service
 type Service interface {
 	Find(ctx context.Context, offset, limit int) (FindOut, error)
-	// FindOrders(ctx context.Context, offset, limit int64) ([]orders.FindOrdersOut, int64, error)
-	// GetByID(ctx context.Context, id string) (orders.FindOrdersOut, error)
+	GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error)
 }

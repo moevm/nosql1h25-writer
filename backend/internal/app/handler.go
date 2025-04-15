@@ -5,6 +5,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
@@ -84,11 +85,11 @@ func (app *App) GetOrdersHandler() api.Handler {
 	return app.getOrdersHandler
 }
 
-// func (app *App) GetOrdersIDHandler() api.Handler {
-// 	if app.getOrdersIDHandler != nil {
-// 		return app.getOrdersIDHandler
-// 	}
+func (app *App) GetOrdersIDHandler() api.Handler {
+	if app.getOrdersIDHandler != nil {
+		return app.getOrdersIDHandler
+	}
 
-// 	app.getOrdersIDHandler = get_orders_id.New(app.OrdersService())
-// 	return app.getOrdersIDHandler
-// }
+	app.getOrdersIDHandler = get_orders_id.New(app.OrdersService())
+	return app.getOrdersIDHandler
+}

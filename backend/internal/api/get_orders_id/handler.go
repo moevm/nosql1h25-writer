@@ -1,22 +1,37 @@
 package get_orders_id
 
-// import (
-// 	"errors"
-// 	"net/http"
+import (
+	"errors"
+	"net/http"
 
-// 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4"
 
-// 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
-// 	"github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
-// )
+	"github.com/moevm/nosql1h25-writer/backend/internal/api"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
-// type handler struct {
-// 	orderService orders.Service
-// }
+type handler struct {
+	orderService orders.Service
+}
 
-// func New(orderService orders.Service) api.Handler {
-// 	return &handler{orderService: orderService}
-// }
+func New(orderService orders.Service) api.Handler {
+	return decorator.NewBindAndValidate(&handler{orderService: orderService})
+}
+
+type Request struct {
+	ID primitive.ObjectID `param:"id" validate:"required"`
+}
+
+type Response struct {
+	Title          string  `json:"title"`
+	Description    string  `json:"description"`
+	CompletionTime int     `json:"completionTime"`
+	Cost           *int    `json:"cost"`
+	ClientName     string  `json:"clientName"`
+	Rating         float64 `json:"rating"`
+}
 
 // // @Description	Return order by MongoDB ObjectID
 // // @Summary Get info about order
@@ -27,15 +42,22 @@ package get_orders_id
 // // @Failure	400	{object} echo.HTTPError "Incorrect ID"
 // // @Failure	404	{object} echo.HTTPError "Order not found"
 // // @Failure	500	{object} echo.HTTPError
-// // @Router /orders/{id} [get]
-// func (h *handler) Handle(c echo.Context) error {
-// 	id := c.Param("id")
-// 	order, err := h.orderService.GetByID(c.Request().Context(), id)
-// 	if err != nil {
-// 		if errors.Is(err, orders.ErrOrdersNotFound) {
-// 			return echo.NewHTTPError(http.StatusNotFound, err.Error)
-// 		}
-// 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-// 	}
-// 	return c.JSON(http.StatusOK, order)
-// }
+// // @Router /orders/:id [get]
+func (h *handler) Handle(c echo.Context, in Request) error {
+	order, err := h.orderService.GetByID(c.Request().Context(), in.ID)
+	if err != nil {
+		if errors.Is(err, orders.ErrOrderNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, err.Error())
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	cost := order.Cost
+	return c.JSON(http.StatusOK, Response{
+		Title:          order.Title,
+		Description:    order.Description,
+		CompletionTime: order.CompletionTime,
+		Cost:           &cost,
+		ClientName:     order.ClientName,
+		Rating:         order.Rating,
+	})
+}
