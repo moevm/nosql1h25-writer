@@ -1,8 +1,10 @@
 package app
 
 import (
+	users_ext_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/usersExt"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
-	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	users "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	users_ext_service "github.com/moevm/nosql1h25-writer/backend/internal/service/usersExt"
 )
 
 func (app *App) AuthService() auth.Service {
@@ -31,4 +33,16 @@ func (app *App) UsersService() users.Service {
 		app.UsersRepo(),
 	)
 	return app.usersService
+}
+
+func (app *App) UsersExtService() users_ext_service.Service {
+	if app.usersExtService != nil {
+		return app.usersExtService
+	}
+
+	repo := users_ext_repo.New(app.MainDb())
+
+	app.usersExtService = users_ext_service.New(repo)
+
+	return app.usersExtService
 }

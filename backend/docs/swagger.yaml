@@ -25,6 +25,69 @@ definitions:
     - systemRole
     - userId
     type: object
+  internal_api_get_users.Response:
+    properties:
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/internal_api_get_users.userOut'
+        type: array
+    type: object
+  internal_api_get_users.profileOut:
+    properties:
+      description:
+        type: string
+      rating:
+        type: number
+      role:
+        type: string
+    type: object
+  internal_api_get_users.userOut:
+    properties:
+      createdAt:
+        type: string
+      displayName:
+        type: string
+      id:
+        type: string
+      profiles:
+        items:
+          $ref: '#/definitions/internal_api_get_users.profileOut'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  internal_api_get_users_id.Profile:
+    properties:
+      description:
+        type: string
+      rating:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+  internal_api_get_users_id.Response:
+    properties:
+      balance:
+        type: integer
+      client:
+        $ref: '#/definitions/internal_api_get_users_id.Profile'
+      createdAt:
+        type: string
+      displayName:
+        type: string
+      email:
+        type: string
+      freelancer:
+        $ref: '#/definitions/internal_api_get_users_id.Profile'
+      id:
+        type: string
+      systemRole:
+        $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+      updatedAt:
+        type: string
+    type: object
   internal_api_post_auth_login.Request:
     properties:
       email:
@@ -322,6 +385,111 @@ paths:
       summary: Check health
       tags:
       - health
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список пользователей с пагинацией и возможностью фильтрации
+        по типу профиля.
+      parameters:
+      - default: 0
+        description: Смещение для пагинации (сколько записей пропустить)
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - default: 10
+        description: Количество записей на страницу
+        in: query
+        maximum: 50
+        minimum: 1
+        name: limit
+        type: integer
+      - collectionFormat: multi
+        description: Фильтр по типу профиля ('client', 'freelancer'). Можно указать
+          несколько раз.
+        in: query
+        items:
+          enum:
+          - client
+          - freelancer
+          type: string
+        name: profile
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ со списком пользователей и общим количеством
+          schema:
+            $ref: '#/definitions/internal_api_get_users.Response'
+        "400":
+          description: Ошибка валидации входных данных
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить список пользователей
+      tags:
+      - Users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves user details by their ObjectID. Requires authentication.
+        Access restricted to the user themselves or administrators. Optionally filters
+        profiles.
+      parameters:
+      - description: User ObjectID (Hex)
+        example: 507f1f77bcf86cd799439011
+        in: path
+        name: id
+        required: true
+        type: string
+      - collectionFormat: multi
+        description: Profile types to include ('client', 'freelancer').
+        in: query
+        items:
+          enum:
+          - client
+          - freelancer
+          type: string
+        name: profile
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved user details
+          schema:
+            $ref: '#/definitions/internal_api_get_users_id.Response'
+        "400":
+          description: Invalid request format or ObjectID
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized (invalid or missing JWT)
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden (access denied)
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Get user by ID
+      tags:
+      - Users
 securityDefinitions:
   JWT:
     description: JSON Web Token

@@ -18,6 +18,7 @@ import (
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	users_ext_service "github.com/moevm/nosql1h25-writer/backend/internal/service/usersExt"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
@@ -44,6 +45,7 @@ type App struct {
 
 	// handlers
 	getHealthHandler api.Handler
+	getUsersHandler  api.Handler
 
 	postAuthLoginHandler   api.Handler
 	postAuthRefreshHandler api.Handler
@@ -58,8 +60,9 @@ type App struct {
 	authMW *mw.AuthMW
 
 	// services
-	authService  auth_service.Service
-	usersService users_service.Service
+	authService     auth_service.Service
+	usersService    users_service.Service
+	usersExtService users_ext_service.Service
 
 	// repositories
 	usersRepo users_repo.Repo
