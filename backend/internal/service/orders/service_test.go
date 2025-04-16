@@ -59,7 +59,7 @@ func TestService_Find(t *testing.T) {
 				r.EXPECT().Find(ctx, offset, limit).Return(orders_repo.FindOut{}, assert.AnError)
 			},
 			want:    orders_service.FindOut{},
-			wantErr: assert.AnError,
+			wantErr: orders_service.ErrCannotFindOrders,
 		},
 	}
 

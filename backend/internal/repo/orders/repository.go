@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	//"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type repository struct {
@@ -21,8 +21,22 @@ func New(ordersColl mongoifc.Collection) Repo {
 }
 
 func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, error) {
-	findOpts := options.Find().SetSkip(int64(offset)).SetLimit(int64(limit))
-	cursor, err := r.ordersColl.Find(ctx, bson.M{"active": true}, findOpts)
+	pipeline := mongo.Pipeline{
+		{{Key: "$match", Value: bson.M{
+			"active": true,
+		}}},
+		{{Key: "$match", Value: bson.M{
+			"$expr": bson.M{
+				"$eq": bson.A{
+					bson.M{"$arrayElemAt": bson.A{"$statuses.title", -1}},
+					entity.StatusTypeBeginning,
+				},
+			},
+		}}},
+		{{Key: "$skip", Value: int64(offset)}},
+		{{Key: "$limit", Value: int64(limit)}},
+	}
+	cursor, err := r.ordersColl.Aggregate(ctx, pipeline)
 	if err != nil {
 		return FindOut{}, err
 	}
@@ -34,13 +48,6 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 
 	var out FindOut
 	for _, order := range orders {
-		if len(order.Statuses) == 0 {
-			continue
-		}
-		lastStatus := order.Statuses[len(order.Statuses)-1]
-		if lastStatus.Type != entity.StatusTypeBeginning {
-			continue
-		}
 		out.Orders = append(out.Orders, OrderWithClientData{
 			Title:          order.Title,
 			Description:    order.Description,
