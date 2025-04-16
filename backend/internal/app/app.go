@@ -15,8 +15,10 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/mw"
 	auth_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
+	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	orders_service "github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
@@ -54,16 +56,20 @@ type App struct {
 	postBalanceDepositHandler  api.Handler
 	postBalanceWithdrawHandler api.Handler
 
+	postOrdersHandler api.Handler
+
 	// middlewares
 	authMW *mw.AuthMW
 
 	// services
-	authService  auth_service.Service
-	usersService users_service.Service
+	authService   auth_service.Service
+	usersService  users_service.Service
+	ordersService orders_service.Service
 
 	// repositories
-	usersRepo users_repo.Repo
-	authRepo  auth_repo.Repo
+	usersRepo  users_repo.Repo
+	authRepo   auth_repo.Repo
+	ordersRepo orders_repo.Repo
 
 	// infra
 	passwordHasher hasher.PasswordHasher
