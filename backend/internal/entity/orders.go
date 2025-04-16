@@ -21,7 +21,7 @@ type Order struct {
 }
 
 type OrderExt struct {
-	Order
+	Order     `bson:",inline"`
 	Responses []Response `bson:"responses"`
 	Statuses  []Status   `bson:"statuses"`
 }
