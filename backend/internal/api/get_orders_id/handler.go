@@ -28,7 +28,7 @@ type Response struct {
 	Title          string  `json:"title"`
 	Description    string  `json:"description"`
 	CompletionTime int     `json:"completionTime"`
-	Cost           *int    `json:"cost"`
+	Cost           int     `json:"cost,omitempty"`
 	ClientName     string  `json:"clientName"`
 	Rating         float64 `json:"rating"`
 }
@@ -51,12 +51,12 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	cost := order.Cost
+
 	return c.JSON(http.StatusOK, Response{
 		Title:          order.Title,
 		Description:    order.Description,
 		CompletionTime: order.CompletionTime,
-		Cost:           &cost,
+		Cost:           order.Cost,
 		ClientName:     order.ClientName,
 		Rating:         order.Rating,
 	})

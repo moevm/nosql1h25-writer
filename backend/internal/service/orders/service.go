@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -17,12 +18,13 @@ func New(ordersRepo orders.Repo) Service {
 }
 
 func (s *service) Find(ctx context.Context, offset, limit int) (FindOut, error) {
-	repoFindOut, err := s.ordersRepo.Find(ctx, offset, limit)
+	out, err := s.ordersRepo.Find(ctx, offset, limit)
 	if err != nil {
-		return FindOut{}, err
+		log.Errorf("OrderService.Find - s.ordersRepo: %v", err)
+		return FindOut{}, ErrCannotFindOrders
 	}
 	var serviceFindOut FindOut
-	for _, order := range repoFindOut.Orders {
+	for _, order := range out.Orders {
 		serviceFindOut.Orders = append(serviceFindOut.Orders, OrderWithClientData{
 			Title:          order.Title,
 			Description:    order.Description,
@@ -36,12 +38,13 @@ func (s *service) Find(ctx context.Context, offset, limit int) (FindOut, error) 
 }
 
 func (s *service) GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error) {
-	getByIDOut, err := s.ordersRepo.GetByID(ctx, id)
+	out, err := s.ordersRepo.GetByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, orders.ErrOrderNotFound) {
 			return OrderWithClientData{}, ErrOrderNotFound
 		}
+		log.Errorf("OrderService.Get - s.ordersRepo: %v", err)
 		return OrderWithClientData{}, ErrCannotGetOrder
 	}
-	return OrderWithClientData(getByIDOut), nil
+	return OrderWithClientData(out), nil
 }

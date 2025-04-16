@@ -27,13 +27,13 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 		return FindOut{}, err
 	}
 
-	var ordersExt []entity.OrderExt
-	if err := cursor.All(ctx, &ordersExt); err != nil {
+	var orders []entity.OrderExt
+	if err := cursor.All(ctx, &orders); err != nil {
 		return FindOut{}, err
 	}
 
-	var dto FindOut
-	for _, order := range ordersExt {
+	var out FindOut
+	for _, order := range orders {
 		if len(order.Statuses) == 0 {
 			continue
 		}
@@ -41,7 +41,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 		if lastStatus.Type != entity.StatusTypeBeginning {
 			continue
 		}
-		dto.Orders = append(dto.Orders, OrderWithClientData{
+		out.Orders = append(out.Orders, OrderWithClientData{
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: int(order.CompletionTime),
@@ -50,7 +50,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 			Rating:         0.0, // пока без объединения с юзерами
 		})
 	}
-	return dto, nil
+	return out, nil
 }
 
 func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error) {

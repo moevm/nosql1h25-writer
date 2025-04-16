@@ -29,12 +29,12 @@ type Response struct {
 }
 
 type Order struct {
-	Title          string
-	Description    string
-	CompletionTime int
-	Cost           *int
-	ClientName     string
-	Rating         float64
+	Title          string  `json:"title"`
+	Description    string  `json:"description"`
+	CompletionTime int     `json:"completionTime"`
+	Cost           int     `json:"cost,omitempty"`
+	ClientName     string  `json:"clientName"`
+	Rating         float64 `json:"rating"`
 }
 
 // @Description	Get a paginated list of orders and total count
@@ -55,12 +55,11 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 	}
 	orderList := make([]Order, 0, len(findOut.Orders))
 	for _, order := range findOut.Orders {
-		cost := order.Cost
 		orderList = append(orderList, Order{
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: order.CompletionTime,
-			Cost:           &cost,
+			Cost:           order.Cost,
 			ClientName:     order.ClientName,
 			Rating:         order.Rating,
 		})
