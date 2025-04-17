@@ -106,6 +106,39 @@ definitions:
         example: 111
         type: integer
     type: object
+  internal_api_post_orders.Request:
+    properties:
+      comletionTime:
+        example: 3600000000000
+        minimum: 3600000000000
+        type: integer
+      cost:
+        example: 500
+        minimum: 0
+        type: integer
+      description:
+        example: Написать сценарий вот такой и такой
+        maxLength: 8192
+        minLength: 16
+        type: string
+      title:
+        example: Сценарий
+        maxLength: 32
+        minLength: 3
+        type: string
+    required:
+    - comletionTime
+    - description
+    - title
+    type: object
+  internal_api_post_orders.Response:
+    properties:
+      id:
+        example: 522bb79455449d881b004d27
+        type: string
+    required:
+    - id
+    type: object
 host: localhost:80
 info:
   contact: {}
@@ -322,6 +355,42 @@ paths:
       summary: Check health
       tags:
       - health
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Create order on behalf of authenticated user
+      parameters:
+      - description: order parameters
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_orders.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_orders.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Create order
+      tags:
+      - orders
 securityDefinitions:
   JWT:
     description: JSON Web Token
