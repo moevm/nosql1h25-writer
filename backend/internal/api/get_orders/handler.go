@@ -37,16 +37,19 @@ type Order struct {
 	Rating         float64 `json:"rating"`
 }
 
-// @Description	Get a paginated list of orders and total count
-// @Summary	Get orders list
-// @Tags orders
-// @Param offset query int false "Offset" default(0) minimum(0) example(0)
-// @Param limit query int false	"Limit" default(10) minimum(1) maximum(200) example(10)
-// @Accept json
-// @Produce	json
-// @Success	200	{object} Response
-// @Failure	500	{object} echo.HTTPError
-// @Router /orders [get]
+// Handle - Get Orders
+//
+//	@Description	Get a paginated list of orders and total count
+//	@Summary		Get orders list
+//	@Tags			orders
+//	@Security		JWT
+//	@Param			offset	query	int	false	"Offset"	default(0)	minimum(0)	example(0)
+//	@Param			limit	query	int	false	"Limit"		default(10)	minimum(1)	maximum(200)	example(10)
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Response
+//	@Failure		500	{object}	echo.HTTPError
+//	@Router			/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	offset, limit := applyDefaults(in)
 	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit)

@@ -27,10 +27,23 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 		{{Key: "$match", Value: bson.M{
 			"$expr": bson.M{
 				"$eq": bson.A{
-					bson.M{"$arrayElemAt": bson.A{"$statuses.title", -1}},
+					bson.M{"$arrayElemAt": bson.A{"$statuses.type", -1}},
 					entity.StatusTypeBeginning,
 				},
 			},
+		}}},
+		{{Key: "$project", Value: bson.M{
+			"clientId":       1,
+			"title":          1,
+			"description":    1,
+			"completionTime": 1,
+			"cost":           1,
+			"freelancerId":   1,
+			"budget":         1,
+			"createdAt":      1,
+			"updatedAt":      1,
+			"responses":      1,
+			"statuses":       1,
 		}}},
 		{{Key: "$skip", Value: int64(offset)}},
 		{{Key: "$limit", Value: int64(limit)}},

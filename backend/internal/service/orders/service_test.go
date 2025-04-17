@@ -14,9 +14,8 @@ import (
 )
 
 func TestService_Find(t *testing.T) {
-	ctx := context.TODO()
-
-	const (
+	var (
+		ctx    = context.TODO()
 		offset = 0
 		limit  = 10
 	)

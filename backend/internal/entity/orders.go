@@ -8,7 +8,7 @@ import (
 
 type Order struct {
 	ID             primitive.ObjectID `bson:"_id,omitempty"`
-	ClientID       primitive.ObjectID `bson:"cliendId"`
+	ClientID       primitive.ObjectID `bson:"clientId"`
 	Title          string             `bson:"title"`
 	Description    string             `bson:"description"`
 	CompletionTime int64              `bson:"completionTime"`
@@ -21,7 +21,7 @@ type Order struct {
 }
 
 type OrderExt struct {
-	Order
+	Order     `bson:",inline"`
 	Responses []Response `bson:"responses"`
 	Statuses  []Status   `bson:"statuses"`
 }
@@ -31,7 +31,7 @@ type Response struct {
 	FreelancerID   primitive.ObjectID `bson:"freelancerId"`
 	ChatID         primitive.ObjectID `bson:"chatId"`
 	CoverLetter    string             `bson:"coverLetter"`
-	Active         bool               `bson:"acitve"`
+	Active         bool               `bson:"active"`
 	CreatedAt      time.Time          `bson:"createdAt"`
 }
 
