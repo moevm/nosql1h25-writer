@@ -10,6 +10,7 @@ import (
 
 //go:generate go tool mockgen -destination mocks/mock_$GOFILE -package=mocks . Service
 type Service interface {
+	Register(ctx context.Context, in RegisterIn) (entity.AuthData, error)
 	Login(ctx context.Context, email, password string) (entity.AuthData, error)
 	Refresh(ctx context.Context, refreshToken uuid.UUID) (entity.AuthData, error)
 	Logout(ctx context.Context, refreshToken uuid.UUID) error

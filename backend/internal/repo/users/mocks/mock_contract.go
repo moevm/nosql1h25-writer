@@ -14,6 +14,7 @@ import (
 	reflect "reflect"
 
 	entity "github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	users "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -40,6 +41,21 @@ func NewMockRepo(ctrl *gomock.Controller) *MockRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
+}
+
+// Create mocks base method.
+func (m *MockRepo) Create(ctx context.Context, in users.CreateIn) (primitive.ObjectID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", ctx, in)
+	ret0, _ := ret[0].(primitive.ObjectID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockRepoMockRecorder) Create(ctx, in any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepo)(nil).Create), ctx, in)
 }
 
 // Deposit mocks base method.
