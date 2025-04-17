@@ -52,3 +52,31 @@ const (
 	StatusTypeFinished    StatusType = "finished"
 	StatusTypeDispute     StatusType = "dispute"
 )
+
+func DefaultOrder(
+	clientID primitive.ObjectID,
+	title, description string,
+	completionTime int64,
+	cost int,
+	createdAt, updatedAt time.Time,
+) OrderExt {
+	return OrderExt{
+		Order: Order{
+			ClientID:       clientID,
+			Title:          title,
+			Description:    description,
+			Cost:           cost,
+			CompletionTime: completionTime,
+			Active:         true,
+			CreatedAt:      createdAt,
+			UpdatedAt:      updatedAt,
+		},
+		Responses: []Response{},
+		Statuses: []Status{
+			{
+				Type:      StatusTypeBeginning,
+				CreatedAt: createdAt,
+			},
+		},
+	}
+}

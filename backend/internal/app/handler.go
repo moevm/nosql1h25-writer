@@ -9,8 +9,10 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_register"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_deposit"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_withdraw"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_orders"
 )
 
 func (app *App) GetHealthHandler() api.Handler {
@@ -92,4 +94,22 @@ func (app *App) GetOrdersIDHandler() api.Handler {
 
 	app.getOrdersIDHandler = get_orders_id.New(app.OrdersService())
 	return app.getOrdersIDHandler
+}
+
+func (app *App) PostAuthRegisterHandler() api.Handler {
+	if app.postAuthRegisterHandler != nil {
+		return app.postAuthRegisterHandler
+	}
+
+	app.postAuthRegisterHandler = post_auth_register.New(app.AuthService())
+	return app.postAuthRegisterHandler
+}
+
+func (app *App) PostOrdersHandler() api.Handler {
+	if app.postOrdersHandler != nil {
+		return app.postOrdersHandler
+	}
+
+	app.postOrdersHandler = post_orders.New(app.OrdersService())
+	return app.postOrdersHandler
 }

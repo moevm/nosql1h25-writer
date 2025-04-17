@@ -50,14 +50,17 @@ type App struct {
 	getOrdersHandler   api.Handler
 	getOrdersIDHandler api.Handler
 
-	postAuthLoginHandler   api.Handler
-	postAuthRefreshHandler api.Handler
-	postAuthLogoutHandler  api.Handler
+	postAuthRegisterHandler api.Handler
+	postAuthLoginHandler    api.Handler
+	postAuthRefreshHandler  api.Handler
+	postAuthLogoutHandler   api.Handler
 
 	getAdminHandler api.Handler
 
 	postBalanceDepositHandler  api.Handler
 	postBalanceWithdrawHandler api.Handler
+
+	postOrdersHandler api.Handler
 
 	// middlewares
 	authMW *mw.AuthMW

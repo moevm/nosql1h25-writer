@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -27,7 +26,7 @@ const (
 )
 
 type UserExt struct {
-	User
+	User       `bson:",inline"`
 	Client     Profile `bson:"client"`
 	Freelancer Profile `bson:"freelancer"`
 }
@@ -47,10 +46,10 @@ type Review struct {
 	CreatedAt  time.Time          `bson:"createdAt"`
 }
 
-func DefaultUser(email, password string, createdAt, updatedAt time.Time) UserExt {
+func DefaultUser(email, password, displayName string, createdAt, updatedAt time.Time) UserExt {
 	return UserExt{
 		User: User{
-			DisplayName: fmt.Sprintf("Пользователь_%s", email),
+			DisplayName: displayName,
 			Email:       email,
 			Password:    password,
 			SystemRole:  SystemRoleTypeUser,

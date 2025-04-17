@@ -9,6 +9,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/moevm/nosql1h25-writer/backend/docs"
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/validator"
 )
 
@@ -35,14 +36,9 @@ func (app *App) EchoHandler() *echo.Echo {
 func (app *App) configureRouter(handler *echo.Echo) {
 	handler.GET("/health", app.GetHealthHandler().Handle)
 
-	ordersGroup := handler.Group("/orders", app.AuthMW().UserIdentity())
-	{
-		ordersGroup.GET("", app.GetOrdersHandler().Handle)
-		ordersGroup.GET("/:id", app.GetOrdersIDHandler().Handle)
-	}
-
 	authGroup := handler.Group("/auth")
 	{
+		authGroup.POST("/register", app.PostAuthRegisterHandler().Handle)
 		authGroup.POST("/login", app.PostAuthLoginHandler().Handle)
 		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
 		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
@@ -50,13 +46,20 @@ func (app *App) configureRouter(handler *echo.Echo) {
 
 	adminGroup := handler.Group("/admin", app.AuthMW().UserIdentity())
 	{
-		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().AdminRole())
+		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().Role(entity.SystemRoleTypeAdmin))
 	}
 
 	balanceGroup := handler.Group("/balance", app.AuthMW().UserIdentity())
 	{
 		balanceGroup.POST("/deposit", app.PostBalanceDepositHandler().Handle)
 		balanceGroup.POST("/withdraw", app.PostBalanceWithdrawHandler().Handle)
+	}
+
+	ordersGroup := handler.Group("/orders", app.authMW.UserIdentity())
+	{
+		ordersGroup.POST("", app.PostOrdersHandler().Handle)
+		ordersGroup.GET("", app.GetOrdersHandler().Handle)
+		ordersGroup.GET("/:id", app.GetOrdersIDHandler().Handle)
 	}
 }
 

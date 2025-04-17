@@ -101,6 +101,43 @@ definitions:
     - accessToken
     - refreshToken
     type: object
+  internal_api_post_auth_register.Request:
+    properties:
+      displayName:
+        example: username
+        maxLength: 64
+        minLength: 3
+        type: string
+      email:
+        example: test@gmail.com
+        format: email
+        type: string
+      password:
+        example: Password123
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - displayName
+    - email
+    - password
+    type: object
+  internal_api_post_auth_register.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      id:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - id
+    - refreshToken
+    type: object
   internal_api_post_balance_deposit.Request:
     properties:
       amount:
@@ -130,6 +167,39 @@ definitions:
       newBalance:
         example: 111
         type: integer
+    type: object
+  internal_api_post_orders.Request:
+    properties:
+      comletionTime:
+        example: 3600000000000
+        minimum: 3600000000000
+        type: integer
+      cost:
+        example: 500
+        minimum: 0
+        type: integer
+      description:
+        example: Написать сценарий вот такой и такой
+        maxLength: 8192
+        minLength: 16
+        type: string
+      title:
+        example: Сценарий
+        maxLength: 32
+        minLength: 3
+        type: string
+    required:
+    - comletionTime
+    - description
+    - title
+    type: object
+  internal_api_post_orders.Response:
+    properties:
+      id:
+        example: 522bb79455449d881b004d27
+        type: string
+    required:
+    - id
     type: object
 host: localhost:80
 info:
@@ -258,6 +328,40 @@ paths:
       summary: Refresh tokens
       tags:
       - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user and return ID with `refresh` and `access` tokens
+      parameters:
+      - description: user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_register.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_register.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Register user
+      tags:
+      - auth
   /balance/deposit:
     post:
       consumes:
@@ -382,6 +486,41 @@ paths:
       security:
       - JWT: []
       summary: Get orders list
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Create order on behalf of authenticated user
+      parameters:
+      - description: order parameters
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_orders.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_orders.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Create order
       tags:
       - orders
   /orders/{id}:

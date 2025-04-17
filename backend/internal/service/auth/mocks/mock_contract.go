@@ -15,6 +15,7 @@ import (
 
 	uuid "github.com/google/uuid"
 	entity "github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	auth "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -99,4 +100,19 @@ func (m *MockService) Refresh(ctx context.Context, refreshToken uuid.UUID) (enti
 func (mr *MockServiceMockRecorder) Refresh(ctx, refreshToken any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Refresh", reflect.TypeOf((*MockService)(nil).Refresh), ctx, refreshToken)
+}
+
+// Register mocks base method.
+func (m *MockService) Register(ctx context.Context, in auth.RegisterIn) (entity.AuthData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Register", ctx, in)
+	ret0, _ := ret[0].(entity.AuthData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Register indicates an expected call of Register.
+func (mr *MockServiceMockRecorder) Register(ctx, in any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockService)(nil).Register), ctx, in)
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jonboulle/clockwork"
+	"github.com/samber/lo"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
@@ -44,6 +45,24 @@ func New(
 		accessTokenTTL:  accessTokenTTL,
 		refreshTokenTTL: refreshTokenTTL,
 	}
+}
+
+func (s *service) Register(ctx context.Context, in RegisterIn) (entity.AuthData, error) {
+	_, err := s.usersRepo.Create(ctx, users_repo.CreateIn{
+		DisplayName: in.DisplayName,
+		Email:       in.Email,
+		Password:    lo.Must(s.hasher.Hash(in.Password)),
+	})
+	if err != nil {
+		if errors.Is(err, users_repo.ErrUserAlreadyExists) {
+			return entity.AuthData{}, users_service.ErrUserAlreadyExists
+		}
+
+		log.Errorf("auth.service.Register - s.usersRepo.Create: %v", err)
+		return entity.AuthData{}, users_service.ErrCannotCreateUser
+	}
+
+	return s.Login(ctx, in.Email, in.Password)
 }
 
 func (s *service) Login(ctx context.Context, email, password string) (entity.AuthData, error) {

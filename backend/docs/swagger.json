@@ -191,6 +191,58 @@
                 }
             }
         },
+        "/auth/register": {
+            "post": {
+                "description": "Create new user and return ID with `refresh` and `access` tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register user",
+                "parameters": [
+                    {
+                        "description": "user credentials",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_auth_register.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_auth_register.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/balance/deposit": {
             "post": {
                 "security": [
@@ -375,6 +427,61 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/internal_api_get_orders.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create order on behalf of authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Create order",
+                "parameters": [
+                    {
+                        "description": "order parameters",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_orders.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_orders.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
                         }
                     },
                     "500": {
@@ -589,6 +696,55 @@
                 }
             }
         },
+        "internal_api_post_auth_register.Request": {
+            "type": "object",
+            "required": [
+                "displayName",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 3,
+                    "example": "username"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "test@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 72,
+                    "minLength": 8,
+                    "example": "Password123"
+                }
+            }
+        },
+        "internal_api_post_auth_register.Response": {
+            "type": "object",
+            "required": [
+                "accessToken",
+                "id",
+                "refreshToken"
+            ],
+            "properties": {
+                "accessToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "refreshToken": {
+                    "type": "string",
+                    "example": "289abe45-5920-4366-a12a-875ddb422ace"
+                }
+            }
+        },
         "internal_api_post_balance_deposit.Request": {
             "type": "object",
             "required": [
@@ -630,6 +786,50 @@
                 "newBalance": {
                     "type": "integer",
                     "example": 111
+                }
+            }
+        },
+        "internal_api_post_orders.Request": {
+            "type": "object",
+            "required": [
+                "comletionTime",
+                "description",
+                "title"
+            ],
+            "properties": {
+                "comletionTime": {
+                    "type": "integer",
+                    "minimum": 3600000000000,
+                    "example": 3600000000000
+                },
+                "cost": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 500
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 8192,
+                    "minLength": 16,
+                    "example": "Написать сценарий вот такой и такой"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 3,
+                    "example": "Сценарий"
+                }
+            }
+        },
+        "internal_api_post_orders.Response": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "522bb79455449d881b004d27"
                 }
             }
         }

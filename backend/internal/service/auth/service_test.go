@@ -5,7 +5,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"errors"
 	"io"
 	"testing"
 	"time"
@@ -29,11 +28,116 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 )
 
+func TestService_Register(t *testing.T) {
+	log.SetOutput(io.Discard)
+	var (
+		ctx             = context.TODO()
+		startTime       = lo.Must(time.Parse(time.RFC3339, "2025-04-06T15:00:00Z"))
+		secretKey       = "secret"
+		accessTokenTTL  = time.Minute
+		refreshTokenTTL = time.Hour
+		email           = "test@email.ru"
+		password        = "qwerty12345"
+		userID          = primitive.NewObjectID()
+		hashedPassword  = "bombombini gusini"
+		serviceIn       = auth_service.RegisterIn{
+			DisplayName: "larili larila",
+			Email:       email,
+			Password:    password,
+		}
+		repoCreateIn = users_repo.CreateIn{
+			DisplayName: serviceIn.DisplayName,
+			Email:       email,
+			Password:    hashedPassword,
+		}
+		user = entity.User{
+			ID:         userID,
+			SystemRole: entity.SystemRoleTypeUser,
+			Password:   hashedPassword,
+		}
+		session = entity.RefreshSession{RefreshToken: uuid.New()}
+		token   = lo.Must(jwt.NewWithClaims(jwt.SigningMethodHS256, &entity.AccessTokenClaims{
+			UserID:     userID,
+			SystemRole: user.SystemRole,
+			RegisteredClaims: jwt.RegisteredClaims{
+				ExpiresAt: jwt.NewNumericDate(startTime.Add(accessTokenTTL)),
+				IssuedAt:  jwt.NewNumericDate(startTime),
+			},
+		}).SignedString([]byte(secretKey)))
+	)
+
+	type MockBehavior func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher)
+
+	for _, tc := range []struct {
+		name         string
+		mockBehavior MockBehavior
+		want         entity.AuthData
+		wantErr      error
+	}{
+		{
+			name: "successful",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				h.EXPECT().Hash(password).Return(hashedPassword, nil)
+				u.EXPECT().Create(ctx, repoCreateIn).Return(userID, nil)
+				u.EXPECT().GetByEmail(ctx, email).Return(user, nil)
+				h.EXPECT().Match(password, hashedPassword).Return(true)
+				a.EXPECT().CreateSession(ctx, userID, refreshTokenTTL).Return(session, nil)
+			},
+			want: entity.AuthData{
+				AccessToken: token,
+				Session:     session,
+			},
+		},
+		{
+			name: "user already exists",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				h.EXPECT().Hash(password).Return(hashedPassword, nil)
+				u.EXPECT().Create(ctx, repoCreateIn).Return(primitive.ObjectID{}, users_repo.ErrUserAlreadyExists)
+			},
+			wantErr: users_service.ErrUserAlreadyExists,
+		},
+		{
+			name: "cannot create user",
+			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
+				h.EXPECT().Hash(password).Return(hashedPassword, nil)
+				u.EXPECT().Create(ctx, repoCreateIn).Return(primitive.ObjectID{}, assert.AnError)
+			},
+			wantErr: users_service.ErrCannotCreateUser,
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			ctrl := gomock.NewController(t)
+
+			mockUsersRepo := users_repo_mocks.NewMockRepo(ctrl)
+			mockAuthRepo := auth_repo_mocks.NewMockRepo(ctrl)
+			mockPasswordHasher := hasher.NewMockPasswordHasher(ctrl)
+			mockClock := clockwork.NewFakeClockAt(startTime)
+
+			tc.mockBehavior(mockUsersRepo, mockAuthRepo, mockPasswordHasher)
+
+			s := auth_service.New(
+				mockUsersRepo,
+				mockAuthRepo,
+				mockPasswordHasher,
+				mockClock,
+				secretKey,
+				accessTokenTTL,
+				refreshTokenTTL,
+			)
+
+			got, err := s.Register(ctx, serviceIn)
+
+			assert.ErrorIs(t, err, tc.wantErr)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
 func TestService_Login(t *testing.T) {
 	log.SetOutput(io.Discard)
 	var (
 		startTime       = lo.Must(time.Parse(time.RFC3339, "2025-04-06T15:00:00Z"))
-		arbitraryErr    = errors.New("arbitrary error")
 		ctx             = context.TODO()
 		email           = "test@email.ru"
 		password        = "qwerty12345"
@@ -89,7 +193,7 @@ func TestService_Login(t *testing.T) {
 		{
 			name: "cannot get user",
 			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
-				u.EXPECT().GetByEmail(ctx, email).Return(entity.User{}, arbitraryErr)
+				u.EXPECT().GetByEmail(ctx, email).Return(entity.User{}, assert.AnError)
 			},
 			wantErr: users_service.ErrCannotGetUser,
 		},
@@ -106,7 +210,7 @@ func TestService_Login(t *testing.T) {
 			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo, h *hasher.MockPasswordHasher) {
 				u.EXPECT().GetByEmail(ctx, email).Return(user, nil)
 				h.EXPECT().Match(password, user.Password).Return(true)
-				a.EXPECT().CreateSession(ctx, user.ID, refreshTokenTTL).Return(entity.RefreshSession{}, arbitraryErr)
+				a.EXPECT().CreateSession(ctx, user.ID, refreshTokenTTL).Return(entity.RefreshSession{}, assert.AnError)
 			},
 			wantErr: auth_service.ErrCannotCreateSession,
 		},
@@ -144,7 +248,6 @@ func TestService_Refresh(t *testing.T) {
 	log.SetOutput(io.Discard)
 	var (
 		startTime       = lo.Must(time.Parse(time.RFC3339, "2025-04-06T15:00:00Z"))
-		arbitraryErr    = errors.New("arbitrary error")
 		ctx             = context.TODO()
 		refreshToken    = uuid.New()
 		secretKey       = "secret"
@@ -201,7 +304,7 @@ func TestService_Refresh(t *testing.T) {
 			name: "cannot get session",
 			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo) {
 				a.EXPECT().GetAndDeleteByToken(ctx, refreshToken).
-					Return(entity.RefreshSession{}, arbitraryErr)
+					Return(entity.RefreshSession{}, assert.AnError)
 			},
 			wantErr: auth_service.ErrCannotGetSession,
 		},
@@ -227,7 +330,7 @@ func TestService_Refresh(t *testing.T) {
 			mockBehavior: func(u *users_repo_mocks.MockRepo, a *auth_repo_mocks.MockRepo) {
 				a.EXPECT().GetAndDeleteByToken(ctx, refreshToken).
 					Return(entity.RefreshSession{ExpiresAt: startTime.Add(time.Hour), UserID: user.ID}, nil)
-				u.EXPECT().GetByID(ctx, user.ID).Return(entity.User{}, arbitraryErr)
+				u.EXPECT().GetByID(ctx, user.ID).Return(entity.User{}, assert.AnError)
 			},
 			wantErr: users_service.ErrCannotGetUser,
 		},
@@ -237,7 +340,7 @@ func TestService_Refresh(t *testing.T) {
 				a.EXPECT().GetAndDeleteByToken(ctx, refreshToken).
 					Return(entity.RefreshSession{ExpiresAt: startTime.Add(time.Hour), UserID: user.ID}, nil)
 				u.EXPECT().GetByID(ctx, user.ID).Return(user, nil)
-				a.EXPECT().CreateSession(ctx, user.ID, refreshTokenTTL).Return(entity.RefreshSession{}, arbitraryErr)
+				a.EXPECT().CreateSession(ctx, user.ID, refreshTokenTTL).Return(entity.RefreshSession{}, assert.AnError)
 			},
 			wantErr: auth_service.ErrCannotCreateSession,
 		},
@@ -275,7 +378,6 @@ func TestService_Logout(t *testing.T) {
 	log.SetOutput(io.Discard)
 	var (
 		startTime       = lo.Must(time.Parse(time.RFC3339, "2025-04-06T15:00:00Z"))
-		arbitraryErr    = errors.New("arbitrary error")
 		ctx             = context.TODO()
 		refreshToken    = uuid.New()
 		secretKey       = "secret"
@@ -306,7 +408,7 @@ func TestService_Logout(t *testing.T) {
 		{
 			name: "cannot delete session",
 			mockBehavior: func(a *auth_repo_mocks.MockRepo) {
-				a.EXPECT().DeleteByToken(ctx, refreshToken).Return(arbitraryErr)
+				a.EXPECT().DeleteByToken(ctx, refreshToken).Return(assert.AnError)
 			},
 			wantErr: auth_service.ErrCannotDeleteSession,
 		},

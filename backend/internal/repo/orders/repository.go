@@ -4,19 +4,37 @@ import (
 	"context"
 	"errors"
 
-	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	"github.com/jonboulle/clockwork"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 )
 
 type repository struct {
 	ordersColl mongoifc.Collection
+	clock      clockwork.Clock
 }
 
-func New(ordersColl mongoifc.Collection) Repo {
-	return &repository{ordersColl: ordersColl}
+func New(ordersColl mongoifc.Collection, clock clockwork.Clock) Repo {
+	return &repository{
+		ordersColl: ordersColl,
+		clock:      clock,
+	}
+}
+
+func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectID, error) {
+	now := r.clock.Now()
+	order := entity.DefaultOrder(in.ClientID, in.Title, in.Description, in.CompletionTime, in.Cost, now, now)
+
+	res, err := r.ordersColl.InsertOne(ctx, order)
+	if err != nil {
+		return primitive.ObjectID{}, err
+	}
+
+	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
 
 func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, error) {
