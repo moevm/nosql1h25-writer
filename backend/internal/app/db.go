@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
+	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 )
 
@@ -72,4 +73,13 @@ func (app *App) AuthRepo() auth.Repo {
 
 	app.authRepo = auth.New(app.SessionsCollection(), app.Clock())
 	return app.authRepo
+}
+
+func (app *App) OrdersRepo() orders.Repo {
+	if app.ordersRepo != nil {
+		return app.ordersRepo
+	}
+
+	app.ordersRepo = orders.New(app.OrdersCollection(), app.Clock())
+	return app.ordersRepo
 }

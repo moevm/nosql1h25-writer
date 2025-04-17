@@ -382,6 +382,63 @@
                     }
                 }
             }
+        },
+        "/orders": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create order on behalf of authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Create order",
+                "parameters": [
+                    {
+                        "description": "order parameters",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_orders.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_orders.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -585,6 +642,50 @@
                 "newBalance": {
                     "type": "integer",
                     "example": 111
+                }
+            }
+        },
+        "internal_api_post_orders.Request": {
+            "type": "object",
+            "required": [
+                "comletionTime",
+                "description",
+                "title"
+            ],
+            "properties": {
+                "comletionTime": {
+                    "type": "integer",
+                    "minimum": 3600000000000,
+                    "example": 3600000000000
+                },
+                "cost": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 500
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 8192,
+                    "minLength": 16,
+                    "example": "Написать сценарий вот такой и такой"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 3,
+                    "example": "Сценарий"
+                }
+            }
+        },
+        "internal_api_post_orders.Response": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "522bb79455449d881b004d27"
                 }
             }
         }

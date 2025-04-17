@@ -10,6 +10,11 @@
 package mocks
 
 import (
+	context "context"
+	reflect "reflect"
+
+	orders "github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
+	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -35,4 +40,19 @@ func NewMockService(ctrl *gomock.Controller) *MockService {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
+}
+
+// Create mocks base method.
+func (m *MockService) Create(ctx context.Context, in orders.CreateIn) (primitive.ObjectID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", ctx, in)
+	ret0, _ := ret[0].(primitive.ObjectID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockServiceMockRecorder) Create(ctx, in any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockService)(nil).Create), ctx, in)
 }
