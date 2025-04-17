@@ -61,7 +61,7 @@ func (app *App) UsersRepo() users.Repo {
 		return app.usersRepo
 	}
 
-	app.usersRepo = users.New(app.UsersCollection())
+	app.usersRepo = users.New(app.UsersCollection(), app.Clock())
 	return app.usersRepo
 }
 

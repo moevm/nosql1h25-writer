@@ -80,6 +80,6 @@ func (app *App) PostAuthRegisterHandler() api.Handler {
 		return app.postAuthRegisterHandler
 	}
 
-	app.postAuthRegisterHandler = post_auth_register.New(app.UsersService(), app.AuthService())
+	app.postAuthRegisterHandler = post_auth_register.New(app.AuthService())
 	return app.postAuthRegisterHandler
 }

@@ -222,8 +222,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/internal_api_post_auth_register.Response"
                         }
@@ -502,10 +502,53 @@ const docTemplate = `{
             }
         },
         "internal_api_post_auth_register.Request": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "displayName",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 3,
+                    "example": "username"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "test@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 72,
+                    "minLength": 8,
+                    "example": "Password123"
+                }
+            }
         },
         "internal_api_post_auth_register.Response": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "accessToken",
+                "id",
+                "refreshToken"
+            ],
+            "properties": {
+                "accessToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "refreshToken": {
+                    "type": "string",
+                    "example": "289abe45-5920-4366-a12a-875ddb422ace"
+                }
+            }
         },
         "internal_api_post_balance_deposit.Request": {
             "type": "object",

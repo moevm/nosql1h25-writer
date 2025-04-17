@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/jonboulle/clockwork"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,10 +16,14 @@ import (
 
 type repository struct {
 	usersColl mongoifc.Collection
+	clock     clockwork.Clock
 }
 
-func New(usersColl mongoifc.Collection) Repo {
-	return &repository{usersColl: usersColl}
+func New(usersColl mongoifc.Collection, clock clockwork.Clock) Repo {
+	return &repository{
+		usersColl: usersColl,
+		clock:     clock,
+	}
 }
 
 func (r *repository) GetByEmail(ctx context.Context, email string) (u entity.User, _ error) {
@@ -87,4 +92,20 @@ func (r *repository) Withdraw(ctx context.Context, userID primitive.ObjectID, am
 	}
 
 	return u.Balance, nil
+}
+
+func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectID, error) {
+	now := r.clock.Now()
+	user := entity.DefaultUser(in.Email, in.Password, in.DisplayName, now, now)
+
+	res, err := r.usersColl.InsertOne(ctx, user)
+	if err != nil {
+		if mongo.IsDuplicateKeyError(err) {
+			return primitive.ObjectID{}, ErrUserAlreadyExists
+		}
+
+		return primitive.ObjectID{}, err
+	}
+
+	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
