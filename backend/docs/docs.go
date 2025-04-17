@@ -197,6 +197,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/register": {
+            "post": {
+                "description": "Create new user and return ID with ` + "`" + `refresh` + "`" + ` and ` + "`" + `access` + "`" + ` tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register user",
+                "parameters": [
+                    {
+                        "description": "user credentials",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_auth_register.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_auth_register.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/balance/deposit": {
             "post": {
                 "security": [
@@ -448,6 +500,12 @@ const docTemplate = `{
                     "example": "289abe45-5920-4366-a12a-875ddb422ace"
                 }
             }
+        },
+        "internal_api_post_auth_register.Request": {
+            "type": "object"
+        },
+        "internal_api_post_auth_register.Response": {
+            "type": "object"
         },
         "internal_api_post_balance_deposit.Request": {
             "type": "object",

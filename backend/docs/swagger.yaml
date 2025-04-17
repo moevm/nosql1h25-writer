@@ -76,6 +76,10 @@ definitions:
     - accessToken
     - refreshToken
     type: object
+  internal_api_post_auth_register.Request:
+    type: object
+  internal_api_post_auth_register.Response:
+    type: object
   internal_api_post_balance_deposit.Request:
     properties:
       amount:
@@ -231,6 +235,40 @@ paths:
           schema:
             $ref: '#/definitions/echo.HTTPError'
       summary: Refresh tokens
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user and return ID with `refresh` and `access` tokens
+      parameters:
+      - description: user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_register.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_register.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Register user
       tags:
       - auth
   /balance/deposit:

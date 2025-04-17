@@ -1,7 +1,12 @@
 package app
 
 import (
+	"context"
+
 	"github.com/sv-tools/mongoifc"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
@@ -31,6 +36,14 @@ func (app *App) UsersCollection() mongoifc.Collection {
 	}
 
 	app.usersCollection = app.MainDb().Collection("users")
+	_, err := app.usersCollection.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys:    bson.M{"email": -1},
+		Options: options.Index().SetUnique(true),
+	})
+	if err != nil {
+		panic("invalid index setup")
+	}
+
 	return app.usersCollection
 }
 

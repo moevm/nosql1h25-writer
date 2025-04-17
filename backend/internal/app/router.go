@@ -9,6 +9,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/moevm/nosql1h25-writer/backend/docs"
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/validator"
 )
 
@@ -37,6 +38,7 @@ func (app *App) configureRouter(handler *echo.Echo) {
 
 	authGroup := handler.Group("/auth")
 	{
+		authGroup.POST("/register", app.PostAuthRegisterHandler().Handle)
 		authGroup.POST("/login", app.PostAuthLoginHandler().Handle)
 		authGroup.POST("/refresh", app.PostAuthRefreshHandler().Handle)
 		authGroup.POST("/logout", app.PostAuthLogoutHandler().Handle)
@@ -44,7 +46,7 @@ func (app *App) configureRouter(handler *echo.Echo) {
 
 	adminGroup := handler.Group("/admin", app.AuthMW().UserIdentity())
 	{
-		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().AdminRole())
+		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().Role(entity.SystemRoleTypeAdmin))
 	}
 
 	balanceGroup := handler.Group("/balance", app.AuthMW().UserIdentity())

@@ -7,6 +7,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_register"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_deposit"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_withdraw"
 )
@@ -72,4 +73,13 @@ func (app *App) PostBalanceWithdrawHandler() api.Handler {
 
 	app.postBalanceWithdrawHandler = post_balance_withdraw.New(app.UsersService())
 	return app.postBalanceWithdrawHandler
+}
+
+func (app *App) PostAuthRegisterHandler() api.Handler {
+	if app.postAuthRegisterHandler != nil {
+		return app.postAuthRegisterHandler
+	}
+
+	app.postAuthRegisterHandler = post_auth_register.New(app.UsersService(), app.AuthService())
+	return app.postAuthRegisterHandler
 }

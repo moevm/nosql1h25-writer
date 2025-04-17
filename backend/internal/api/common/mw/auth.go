@@ -60,11 +60,11 @@ func (m *AuthMW) UserIdentity() echo.MiddlewareFunc {
 // AdminRole - middleware to check user is admin
 //
 // Expect that value from `c echo.Context` by "systemRole" key is `entity.SystemRoleTypeAdmin`
-func (m *AuthMW) AdminRole() echo.MiddlewareFunc {
+func (m *AuthMW) Role(targetRole entity.SystemRoleType) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			role, ok := c.Get(SystemRoleKey).(entity.SystemRoleType)
-			if !ok || role != entity.SystemRoleTypeAdmin {
+			if !ok || role != targetRole {
 				return echo.NewHTTPError(http.StatusForbidden, ErrNotEnoughRights.Error())
 			}
 
