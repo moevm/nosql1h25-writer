@@ -47,6 +47,9 @@ type App struct {
 	// handlers
 	getHealthHandler api.Handler
 
+	getOrdersHandler   api.Handler
+	getOrdersIDHandler api.Handler
+
 	postAuthRegisterHandler api.Handler
 	postAuthLoginHandler    api.Handler
 	postAuthRefreshHandler  api.Handler

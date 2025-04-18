@@ -58,6 +58,8 @@ func (app *App) configureRouter(handler *echo.Echo) {
 	ordersGroup := handler.Group("/orders", app.authMW.UserIdentity())
 	{
 		ordersGroup.POST("", app.PostOrdersHandler().Handle)
+		ordersGroup.GET("", app.GetOrdersHandler().Handle)
+		ordersGroup.GET("/:id", app.GetOrdersIDHandler().Handle)
 	}
 }
 
