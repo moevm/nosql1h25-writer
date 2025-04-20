@@ -6,6 +6,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders_id"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
@@ -22,6 +23,10 @@ func (app *App) GetHealthHandler() api.Handler {
 
 	app.getHealthHandler = get_health.New(app.OrdersCollection())
 	return app.getHealthHandler
+}
+
+func (app *App) GetUsersIdHandler() api.Handler {
+	return get_users_id.New(app.UsersService())
 }
 
 func (app *App) PostAuthLoginHandler() api.Handler {
