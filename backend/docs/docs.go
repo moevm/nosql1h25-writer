@@ -598,7 +598,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Successfully retrieved user details",
                         "schema": {
-                            "$ref": "#/definitions/get_users_id.Response"
+                            "$ref": "#/definitions/internal_api_get_users_id.Response"
                         }
                     },
                     "400": {
@@ -640,52 +640,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {}
-            }
-        },
-        "get_users_id.Profile": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "get_users_id.Response": {
-            "type": "object",
-            "properties": {
-                "balance": {
-                    "type": "integer"
-                },
-                "client": {
-                    "$ref": "#/definitions/get_users_id.Profile"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "displayName": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "freelancer": {
-                    "$ref": "#/definitions/get_users_id.Profile"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "systemRole": {
-                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
             }
         },
         "github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType": {
@@ -755,6 +709,52 @@ const docTemplate = `{
                 "total": {
                     "type": "integer",
                     "example": 250
+                }
+            }
+        },
+        "internal_api_get_users_id.Profile": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users_id.Response": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "integer"
+                },
+                "client": {
+                    "$ref": "#/definitions/internal_api_get_users_id.Profile"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "freelancer": {
+                    "$ref": "#/definitions/internal_api_get_users_id.Profile"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "systemRole": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },

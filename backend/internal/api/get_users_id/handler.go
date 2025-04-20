@@ -35,7 +35,7 @@ type Response struct {
 	SystemRole  entity.SystemRoleType `json:"systemRole"`
 	CreatedAt   time.Time             `json:"createdAt"`
 	UpdatedAt   time.Time             `json:"updatedAt"`
-	Balance     int                 `json:"balance"`
+	Balance     int                   `json:"balance"`
 	Client      *Profile              `json:"client,omitempty"`
 	Freelancer  *Profile              `json:"freelancer,omitempty"`
 }
@@ -92,33 +92,33 @@ func (h *handler) Handle(c echo.Context, inp Request) error {
 	}
 
 	response := Response{
-        ID:          user.ID,
-        DisplayName: user.DisplayName,
-        Email:       user.Email,
-        SystemRole:  entity.SystemRoleType(user.SystemRole),
-        CreatedAt:   user.CreatedAt,
-        UpdatedAt:   user.UpdatedAt,
-        Balance:     user.Balance,
-    }
+		ID:          user.ID,
+		DisplayName: user.DisplayName,
+		Email:       user.Email,
+		SystemRole:  entity.SystemRoleType(user.SystemRole),
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
+		Balance:     user.Balance,
+	}
 
-    includeClient := lo.Contains(inp.Profiles, "client")
-    includeFreelancer := lo.Contains(inp.Profiles, "freelancer")
+	includeClient := lo.Contains(inp.Profiles, "client")
+	includeFreelancer := lo.Contains(inp.Profiles, "freelancer")
 
-    if includeClient {
-        response.Client = &Profile{
-            Rating:      user.Client.Rating,
-            Description: user.Client.Description,
-            UpdatedAt:   user.Client.UpdatedAt,
-        }
-    }
+	if includeClient {
+		response.Client = &Profile{
+			Rating:      user.Client.Rating,
+			Description: user.Client.Description,
+			UpdatedAt:   user.Client.UpdatedAt,
+		}
+	}
 
-    if includeFreelancer {
-        response.Freelancer = &Profile{
-            Rating:      user.Freelancer.Rating,
-            Description: user.Freelancer.Description,
-            UpdatedAt:   user.Freelancer.UpdatedAt,
-        }
-    }
+	if includeFreelancer {
+		response.Freelancer = &Profile{
+			Rating:      user.Freelancer.Rating,
+			Description: user.Freelancer.Description,
+			UpdatedAt:   user.Freelancer.UpdatedAt,
+		}
+	}
 
-    return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, response)
 }
