@@ -103,6 +103,21 @@ func (mr *MockRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockRepo)(nil).GetByID), ctx, id)
 }
 
+// GetByIDExt mocks base method.
+func (m *MockRepo) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByIDExt", ctx, userID)
+	ret0, _ := ret[0].(entity.UserExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByIDExt indicates an expected call of GetByIDExt.
+func (mr *MockRepoMockRecorder) GetByIDExt(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDExt", reflect.TypeOf((*MockRepo)(nil).GetByIDExt), ctx, userID)
+}
+
 // Withdraw mocks base method.
 func (m *MockRepo) Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
 	m.ctrl.T.Helper()

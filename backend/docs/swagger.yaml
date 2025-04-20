@@ -4,6 +4,36 @@ definitions:
     properties:
       message: {}
     type: object
+  get_users_id.Profile:
+    properties:
+      description:
+        type: string
+      rating:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+  get_users_id.Response:
+    properties:
+      balance:
+        type: integer
+      client:
+        $ref: '#/definitions/get_users_id.Profile'
+      createdAt:
+        type: string
+      displayName:
+        type: string
+      email:
+        type: string
+      freelancer:
+        $ref: '#/definitions/get_users_id.Profile'
+      id:
+        type: string
+      systemRole:
+        $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+      updatedAt:
+        type: string
+    type: object
   github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
     enum:
     - admin
@@ -557,6 +587,62 @@ paths:
       summary: Get info about order
       tags:
       - orders
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves user details by their ObjectID. Requires authentication.
+        Access restricted to the user themselves or administrators. Optionally filters
+        profiles.
+      parameters:
+      - description: User ObjectID (Hex)
+        example: 507f1f77bcf86cd799439011
+        in: path
+        name: id
+        required: true
+        type: string
+      - collectionFormat: multi
+        description: Profile types to include ('client', 'freelancer').
+        in: query
+        items:
+          enum:
+          - client
+          - freelancer
+          type: string
+        name: profile
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved user details
+          schema:
+            $ref: '#/definitions/get_users_id.Response'
+        "400":
+          description: Invalid request format or ObjectID
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized (invalid or missing JWT)
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden (access denied)
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Get user by ID
+      tags:
+      - Users
 securityDefinitions:
   JWT:
     description: JSON Web Token
