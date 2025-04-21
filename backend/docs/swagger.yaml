@@ -4,6 +4,203 @@ definitions:
     properties:
       message: {}
     type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
+    enum:
+    - admin
+    - user
+    type: string
+    x-enum-varnames:
+    - SystemRoleTypeAdmin
+    - SystemRoleTypeUser
+  internal_api_get_admin.Response:
+    properties:
+      systemRole:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+        example: admin
+      userId:
+        example: 5a2493c33c95a1281836eb6a
+        type: string
+    required:
+    - systemRole
+    - userId
+    type: object
+  internal_api_get_orders.Order:
+    properties:
+      clientName:
+        type: string
+      completionTime:
+        type: integer
+      cost:
+        type: integer
+      description:
+        type: string
+      rating:
+        type: number
+      title:
+        type: string
+    type: object
+  internal_api_get_orders.Response:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/internal_api_get_orders.Order'
+        type: array
+      total:
+        example: 250
+        type: integer
+    type: object
+  internal_api_post_auth_login.Request:
+    properties:
+      email:
+        example: test@gmail.com
+        format: email
+        type: string
+      password:
+        example: Password123
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_api_post_auth_login.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - refreshToken
+    type: object
+  internal_api_post_auth_logout.Request:
+    properties:
+      refreshToken:
+        example: 0e8f711e-b713-4869-b528-059a74311482
+        type: string
+    type: object
+  internal_api_post_auth_refresh.Request:
+    properties:
+      refreshToken:
+        example: 0e8f711e-b713-4869-b528-059a74311482
+        type: string
+    type: object
+  internal_api_post_auth_refresh.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - refreshToken
+    type: object
+  internal_api_post_auth_register.Request:
+    properties:
+      displayName:
+        example: username
+        maxLength: 64
+        minLength: 3
+        type: string
+      email:
+        example: test@gmail.com
+        format: email
+        type: string
+      password:
+        example: Password123
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - displayName
+    - email
+    - password
+    type: object
+  internal_api_post_auth_register.Response:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      id:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      refreshToken:
+        example: 289abe45-5920-4366-a12a-875ddb422ace
+        type: string
+    required:
+    - accessToken
+    - id
+    - refreshToken
+    type: object
+  internal_api_post_balance_deposit.Request:
+    properties:
+      amount:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - amount
+    type: object
+  internal_api_post_balance_deposit.Response:
+    properties:
+      newBalance:
+        example: 777
+        type: integer
+    type: object
+  internal_api_post_balance_withdraw.Request:
+    properties:
+      amount:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - amount
+    type: object
+  internal_api_post_balance_withdraw.Response:
+    properties:
+      newBalance:
+        example: 111
+        type: integer
+    type: object
+  internal_api_post_orders.Request:
+    properties:
+      comletionTime:
+        example: 3600000000000
+        minimum: 3600000000000
+        type: integer
+      cost:
+        example: 500
+        minimum: 0
+        type: integer
+      description:
+        example: Написать сценарий вот такой и такой
+        maxLength: 8192
+        minLength: 16
+        type: string
+      title:
+        example: Сценарий
+        maxLength: 32
+        minLength: 3
+        type: string
+    required:
+    - comletionTime
+    - description
+    - title
+    type: object
+  internal_api_post_orders.Response:
+    properties:
+      id:
+        example: 522bb79455449d881b004d27
+        type: string
+    required:
+    - id
+    type: object
 host: localhost:80
 info:
   contact: {}
@@ -11,6 +208,232 @@ info:
   title: Writer
   version: 1.0.0
 paths:
+  /admin:
+    get:
+      description: Whether user has admin rights
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_admin.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Check admin rights available
+      tags:
+      - admin
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Generate `access` and `refresh` token pair. `refreshToken` sets
+        in httpOnly cookie also.
+      parameters:
+      - description: existing user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_login.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_login.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Login by email and password
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Remove `refreshSession` attached to `refreshToken`. `refreshToken`
+        can be passed in cookie
+      parameters:
+      - description: active refresh token in UUID RFC4122 format
+        in: body
+        name: refreshToken
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_logout.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Logout
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh `access` and `refresh` token pair. `refreshToken` can be
+        passed in cookie
+      parameters:
+      - description: active refresh token in UUID RFC4122 format
+        in: body
+        name: refreshToken
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_refresh.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_refresh.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Refresh tokens
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user and return ID with `refresh` and `access` tokens
+      parameters:
+      - description: user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_auth_register.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_api_post_auth_register.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Register user
+      tags:
+      - auth
+  /balance/deposit:
+    post:
+      consumes:
+      - application/json
+      description: Add specified amount to authenticated user's balance
+      parameters:
+      - description: Deposit amount
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_balance_deposit.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_balance_deposit.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Deposit funds
+      tags:
+      - balance
+  /balance/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: Subtract specified amount from authenticated user's balance
+      parameters:
+      - description: Withdrawal amount
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_balance_withdraw.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_balance_withdraw.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Withdraw funds
+      tags:
+      - balance
   /health:
     get:
       description: Whether REST-API alive or not
@@ -28,6 +451,112 @@ paths:
       summary: Check health
       tags:
       - health
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of orders and total count
+      parameters:
+      - default: 0
+        description: Offset
+        example: 0
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - default: 10
+        description: Limit
+        example: 10
+        in: query
+        maximum: 200
+        minimum: 1
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_orders.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Get orders list
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Create order on behalf of authenticated user
+      parameters:
+      - description: order parameters
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_orders.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_orders.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Create order
+      tags:
+      - orders
+  /orders/{id}:
+    get:
+      description: Return order by MongoDB ObjectID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Incorrect ID
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Get info about order
+      tags:
+      - orders
 securityDefinitions:
   JWT:
     description: JSON Web Token

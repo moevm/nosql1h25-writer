@@ -6,12 +6,21 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/jonboulle/clockwork"
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
 	"github.com/sv-tools/mongoifc"
 
 	"github.com/moevm/nosql1h25-writer/backend/config"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/mw"
+	auth_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
+	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
+	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
+	orders_service "github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
+	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
 )
@@ -31,10 +40,44 @@ type App struct {
 	mainDb mongoifc.Database
 
 	// collections
-	ordersCollection mongoifc.Collection
+	ordersCollection   mongoifc.Collection
+	usersCollection    mongoifc.Collection
+	sessionsCollection mongoifc.Collection
 
 	// handlers
 	getHealthHandler api.Handler
+
+	getOrdersHandler   api.Handler
+	getOrdersIDHandler api.Handler
+
+	postAuthRegisterHandler api.Handler
+	postAuthLoginHandler    api.Handler
+	postAuthRefreshHandler  api.Handler
+	postAuthLogoutHandler   api.Handler
+
+	getAdminHandler api.Handler
+
+	postBalanceDepositHandler  api.Handler
+	postBalanceWithdrawHandler api.Handler
+
+	postOrdersHandler api.Handler
+
+	// middlewares
+	authMW *mw.AuthMW
+
+	// services
+	authService   auth_service.Service
+	usersService  users_service.Service
+	ordersService orders_service.Service
+
+	// repositories
+	usersRepo  users_repo.Repo
+	authRepo   auth_repo.Repo
+	ordersRepo orders_repo.Repo
+
+	// infra
+	passwordHasher hasher.PasswordHasher
+	clock          clockwork.Clock
 }
 
 // New initiate logger and config in App struct for future Start call
