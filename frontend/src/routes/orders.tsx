@@ -31,14 +31,14 @@ function Orders() {
                 <div>Error: {error.message}</div>
             ) : (
                 <div>
-                    {data.orders.map((order) => (
+                    {data.orders.map((order: Order) => (
                         <p key={order._id}>{order.name}</p>
-                    )}
+                    ))}
                 </div>
             )}
             <span>Current page: {page}</span>
             <button
-                onClick={() => setPage((old) => Math.max(old - 1, 0))}
+                onClick={() => setPage((old) => Math.max(old - 1, 1))}
                 disabled={page === 1}
             >
                 Previous Page

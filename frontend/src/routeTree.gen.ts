@@ -14,7 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as OrdersImport } from './routes/orders'
 import { Route as IndexImport } from './routes/index'
 import { Route as DemoTanstackQueryImport } from './routes/demo.tanstack-query'
-import { Route as AuthLoginImport } from './routes/auth.login'
+import { Route as AuthLoginImport } from './routes/login/route.tsx'
 
 // Create/Update Routes
 
@@ -147,7 +147,7 @@ export const routeTree = rootRoute
       "filePath": "orders.tsx"
     },
     "/auth/login": {
-      "filePath": "auth.login.tsx"
+      "filePath": "route.tsx"
     },
     "/demo/tanstack-query": {
       "filePath": "demo.tanstack-query.tsx"
