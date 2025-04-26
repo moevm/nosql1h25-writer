@@ -43,17 +43,16 @@ func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, 
 	return newBalance, nil
 }
 
-func (s *service) FindUserByID(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
-	log.WithField("userID", userID.Hex()).Debug("Service: Calling repo.FindUserByID")
-
+func (s *service) GetUserByID(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
 	user, err := s.usersRepo.GetByIDExt(ctx, userID)
-	if err != nil {
-		if !errors.Is(err, users.ErrUserNotFound) {
-			log.WithError(err).WithField("userID", userID.Hex()).Error("Service: Error finding user by ID in repo")
-		}
-		return entity.UserExt{}, err
-	}
 
-	log.WithField("userID", userID.Hex()).Debug("Service: Found user by ID in repo")
+	if err != nil {
+		if errors.Is(err, users.ErrUserNotFound) {
+			return entity.UserExt{}, ErrUserNotFound
+		}
+
+		log.Errorf("users.service.GetByIDExt - s.usersRepo.GetByIDExt: %v", err)
+		return entity.UserExt{}, ErrCannotGetUser
+	}
 	return user, nil
 }

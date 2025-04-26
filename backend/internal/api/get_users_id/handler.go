@@ -7,12 +7,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/samber/lo"
-	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
-	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/mw"
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
@@ -66,28 +64,13 @@ func New(usersService users.Service) api.Handler {
 //	@Failure		500		{object}	echo.HTTPError	"Internal server error"
 //	@Router			/users/{id} [get]
 func (h *handler) Handle(c echo.Context, inp Request) error {
-	authUserID, okUserID := c.Get(mw.UserIDKey).(primitive.ObjectID)
-	authUserRole, okUserRole := c.Get(mw.SystemRoleKey).(entity.SystemRoleType)
-
-	if !okUserID || !okUserRole {
-		log.Error("Handler: Failed to get user ID or role from context")
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to process authentication context")
-	}
-
-	if authUserRole != entity.SystemRoleTypeAdmin && authUserID != inp.ID {
-		log.Warnf("Handler: Access denied for user %s requesting user %s", authUserID.Hex(), inp.ID.Hex())
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied: You can only view your own profile or require admin privileges.")
-	}
-
-	ctx := c.Request().Context()
-	user, err := h.usersService.FindUserByID(ctx, inp.ID)
+	user, err := h.usersService.GetUserByID(c.Request().Context(), inp.ID)
 
 	if err != nil {
 		if errors.Is(err, users.ErrUserNotFound) {
-			log.Infof("Handler: User not found: %s", inp.ID.Hex())
 			return echo.NewHTTPError(http.StatusNotFound, "User not found")
 		}
-		log.WithError(err).Errorf("Handler: Failed to find user by ID: %s", inp.ID.Hex())
+
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to retrieve user data")
 	}
 
@@ -95,16 +78,13 @@ func (h *handler) Handle(c echo.Context, inp Request) error {
 		ID:          user.ID,
 		DisplayName: user.DisplayName,
 		Email:       user.Email,
-		SystemRole:  entity.SystemRoleType(user.SystemRole),
+		SystemRole:  user.SystemRole,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
 		Balance:     user.Balance,
 	}
 
-	includeClient := lo.Contains(inp.Profiles, "client")
-	includeFreelancer := lo.Contains(inp.Profiles, "freelancer")
-
-	if includeClient {
+	if lo.Contains(inp.Profiles, "client") {
 		response.Client = &Profile{
 			Rating:      user.Client.Rating,
 			Description: user.Client.Description,
@@ -112,7 +92,7 @@ func (h *handler) Handle(c echo.Context, inp Request) error {
 		}
 	}
 
-	if includeFreelancer {
+	if lo.Contains(inp.Profiles, "freelancer") {
 		response.Freelancer = &Profile{
 			Rating:      user.Freelancer.Rating,
 			Description: user.Freelancer.Description,
