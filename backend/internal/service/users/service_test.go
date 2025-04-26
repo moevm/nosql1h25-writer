@@ -14,7 +14,72 @@ import (
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	users_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/users/mocks"
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 )
+func TestService_GetUserByID(t *testing.T) {
+    log.SetOutput(io.Discard)
+    ctx := context.Background()
+    userID := primitive.NewObjectID()
+
+    ctrl := gomock.NewController(t)
+    defer ctrl.Finish()
+
+    tests := []struct {
+        name        string
+        mockSetup   func(*users_repo_mocks.MockRepo)
+        wantUser    entity.UserExt
+        wantErr     bool
+        expectedErr error
+    }{
+        {
+            name: "Success - user found",
+            mockSetup: func(m *users_repo_mocks.MockRepo) {
+                m.EXPECT().
+                    GetByIDExt(ctx, userID).
+                    Return(entity.UserExt{
+                        User: entity.User{
+                            ID: userID,
+                            Email: "test@example.com",
+                        },
+                    }, nil)
+            },
+            wantUser: entity.UserExt{
+                User: entity.User{
+                    ID: userID,
+                    Email: "test@example.com",
+                },
+            },
+        },
+        {
+            name: "Error - user not found",
+            mockSetup: func(m *users_repo_mocks.MockRepo) {
+                m.EXPECT().
+                    GetByIDExt(ctx, userID).
+                    Return(entity.UserExt{}, users_repo.ErrUserNotFound)
+            },
+            wantErr:     true,
+            expectedErr: users_service.ErrUserNotFound,
+        },
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            mockRepo := users_repo_mocks.NewMockRepo(ctrl)
+            tt.mockSetup(mockRepo)
+
+            service := users_service.New(mockRepo)
+            got, err := service.GetUserByID(ctx, userID)
+
+            if tt.wantErr {
+                assert.Error(t, err)
+                assert.ErrorIs(t, err, tt.expectedErr)
+            } else {
+                assert.NoError(t, err)
+                assert.Equal(t, tt.wantUser, got)
+            }
+        })
+    }
+}
 
 func TestService_UpdateBalance_Deposit(t *testing.T) {
 	log.SetOutput(io.Discard)
