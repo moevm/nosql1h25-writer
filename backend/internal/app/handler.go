@@ -25,7 +25,7 @@ func (app *App) GetHealthHandler() api.Handler {
 	return app.getHealthHandler
 }
 
-func (app *App) GetUsersIdHandler() api.Handler {
+func (app *App) GetUsersIDHandler() api.Handler {
 	return get_users_id.New(app.UsersService())
 }
 

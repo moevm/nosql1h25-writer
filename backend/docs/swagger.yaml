@@ -592,7 +592,7 @@ paths:
       consumes:
       - application/json
       description: Retrieves user details by their ObjectID. Requires authentication.
-        Access restricted to the user themselves or administrators. Optionally filters
+        Access allowed to the user themselves or administrators. Optionally filters
         profiles.
       parameters:
       - description: User ObjectID (Hex)

@@ -553,7 +553,7 @@
                         "JWT": []
                     }
                 ],
-                "description": "Retrieves user details by their ObjectID. Requires authentication. Access restricted to the user themselves or administrators. Optionally filters profiles.",
+                "description": "Retrieves user details by their ObjectID. Requires authentication. Access allowed to the user themselves or administrators. Optionally filters profiles.",
                 "consumes": [
                     "application/json"
                 ],

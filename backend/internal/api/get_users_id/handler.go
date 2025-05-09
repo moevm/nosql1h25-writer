@@ -49,7 +49,7 @@ func New(usersService users.Service) api.Handler {
 // Handle - Get user by ID handler
 //
 //	@Summary		Get user by ID
-//	@Description	Retrieves user details by their ObjectID. Requires authentication. Access restricted to the user themselves or administrators. Optionally filters profiles.
+//	@Description	Retrieves user details by their ObjectID. Requires authentication. Access allowed to the user themselves or administrators. Optionally filters profiles.
 //	@Tags			Users
 //	@Security		JWT
 //	@Accept			json
