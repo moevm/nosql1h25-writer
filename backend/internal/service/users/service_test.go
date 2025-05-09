@@ -19,22 +19,22 @@ import (
 
 func TestService_GetUserByID(t *testing.T) {
 	log.SetOutput(io.Discard)
-	ctx := context.Background()
-	userID := primitive.NewObjectID()
+	var (
+		ctx    = context.Background()
+		userID = primitive.NewObjectID()
+		ctrl   = gomock.NewController(t)
+	)
+	type MockBehavior func(r *users_repo_mocks.MockRepo)
 
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	tests := []struct {
-		name        string
-		mockSetup   func(*users_repo_mocks.MockRepo)
-		wantUser    entity.UserExt
-		wantErr     bool
-		expectedErr error
+	for _, tc := range []struct {
+		name         string
+		mockBehavior MockBehavior
+		want         entity.UserExt
+		expectedErr  error
 	}{
 		{
 			name: "Success - user found",
-			mockSetup: func(m *users_repo_mocks.MockRepo) {
+			mockBehavior: func(m *users_repo_mocks.MockRepo) {
 				m.EXPECT().
 					GetByIDExt(ctx, userID).
 					Return(entity.UserExt{
@@ -44,40 +44,32 @@ func TestService_GetUserByID(t *testing.T) {
 						},
 					}, nil)
 			},
-			wantUser: entity.UserExt{
+			want: entity.UserExt{
 				User: entity.User{
 					ID:    userID,
 					Email: "test@example.com",
 				},
 			},
-		},
-		{
+		}, {
 			name: "Error - user not found",
-			mockSetup: func(m *users_repo_mocks.MockRepo) {
+			mockBehavior: func(m *users_repo_mocks.MockRepo) {
 				m.EXPECT().
 					GetByIDExt(ctx, userID).
 					Return(entity.UserExt{}, users_repo.ErrUserNotFound)
 			},
-			wantErr:     true,
 			expectedErr: users_service.ErrUserNotFound,
 		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			mockRepo := users_repo_mocks.NewMockRepo(ctrl)
-			tt.mockSetup(mockRepo)
+			tc.mockBehavior(mockRepo)
 
 			service := users_service.New(mockRepo)
-			got, err := service.GetUserByID(ctx, userID)
+			got, err := service.GetByIDExt(ctx, userID)
 
-			if tt.wantErr {
-				assert.Error(t, err)
-				assert.ErrorIs(t, err, tt.expectedErr)
-			} else {
-				assert.NoError(t, err)
-				assert.Equal(t, tt.wantUser, got)
-			}
+			assert.ErrorIs(t, err, tc.expectedErr)
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }

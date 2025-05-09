@@ -51,15 +51,13 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u enti
 }
 
 func (r *repository) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
-	collection := r.usersColl
 	var user entity.UserExt
-
 	filter := bson.M{
 		"_id":    userID,
 		"active": true,
 	}
 
-	if err := collection.FindOne(ctx, filter).Decode(&user); err != nil {
+	if err := r.usersColl.FindOne(ctx, filter).Decode(&user); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return entity.UserExt{}, ErrUserNotFound
 		}

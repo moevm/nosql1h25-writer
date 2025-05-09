@@ -43,7 +43,7 @@ func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, 
 	return newBalance, nil
 }
 
-func (s *service) GetUserByID(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
+func (s *service) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
 	user, err := s.usersRepo.GetByIDExt(ctx, userID)
 
 	if err != nil {

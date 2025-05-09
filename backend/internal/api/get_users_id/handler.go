@@ -64,7 +64,7 @@ func New(usersService users.Service) api.Handler {
 //	@Failure		500		{object}	echo.HTTPError	"Internal server error"
 //	@Router			/users/{id} [get]
 func (h *handler) Handle(c echo.Context, inp Request) error {
-	user, err := h.usersService.GetUserByID(c.Request().Context(), inp.ID)
+	user, err := h.usersService.GetByIDExt(c.Request().Context(), inp.ID)
 
 	if err != nil {
 		if errors.Is(err, users.ErrUserNotFound) {
