@@ -50,6 +50,24 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (u enti
 	return u, nil
 }
 
+func (r *repository) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
+	var user entity.UserExt
+	filter := bson.M{
+		"_id":    userID,
+		"active": true,
+	}
+
+	if err := r.usersColl.FindOne(ctx, filter).Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return entity.UserExt{}, ErrUserNotFound
+		}
+
+		return entity.UserExt{}, err
+	}
+
+	return user, nil
+}
+
 func (r *repository) Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error) {
 	var u entity.User
 	err := r.usersColl.FindOneAndUpdate(

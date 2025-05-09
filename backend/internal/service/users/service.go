@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -40,4 +41,18 @@ func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, 
 	}
 
 	return newBalance, nil
+}
+
+func (s *service) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
+	user, err := s.usersRepo.GetByIDExt(ctx, userID)
+
+	if err != nil {
+		if errors.Is(err, users.ErrUserNotFound) {
+			return entity.UserExt{}, ErrUserNotFound
+		}
+
+		log.Errorf("users.service.GetByIDExt - s.usersRepo.GetByIDExt: %v", err)
+		return entity.UserExt{}, ErrCannotGetUser
+	}
+	return user, nil
 }

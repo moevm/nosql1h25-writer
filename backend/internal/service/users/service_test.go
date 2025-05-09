@@ -11,10 +11,68 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	users_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/users/mocks"
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
+
+func TestService_GetUserByID(t *testing.T) {
+	log.SetOutput(io.Discard)
+	var (
+		ctx    = context.Background()
+		userID = primitive.NewObjectID()
+		ctrl   = gomock.NewController(t)
+	)
+	type MockBehavior func(r *users_repo_mocks.MockRepo)
+
+	for _, tc := range []struct {
+		name         string
+		mockBehavior MockBehavior
+		want         entity.UserExt
+		expectedErr  error
+	}{
+		{
+			name: "Success - user found",
+			mockBehavior: func(m *users_repo_mocks.MockRepo) {
+				m.EXPECT().
+					GetByIDExt(ctx, userID).
+					Return(entity.UserExt{
+						User: entity.User{
+							ID:    userID,
+							Email: "test@example.com",
+						},
+					}, nil)
+			},
+			want: entity.UserExt{
+				User: entity.User{
+					ID:    userID,
+					Email: "test@example.com",
+				},
+			},
+		}, {
+			name: "Error - user not found",
+			mockBehavior: func(m *users_repo_mocks.MockRepo) {
+				m.EXPECT().
+					GetByIDExt(ctx, userID).
+					Return(entity.UserExt{}, users_repo.ErrUserNotFound)
+			},
+			expectedErr: users_service.ErrUserNotFound,
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			mockRepo := users_repo_mocks.NewMockRepo(ctrl)
+			tc.mockBehavior(mockRepo)
+
+			service := users_service.New(mockRepo)
+			got, err := service.GetByIDExt(ctx, userID)
+
+			assert.ErrorIs(t, err, tc.expectedErr)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
 
 func TestService_UpdateBalance_Deposit(t *testing.T) {
 	log.SetOutput(io.Discard)
