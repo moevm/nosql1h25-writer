@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import LogoutButton from './LogoutButton'
-import { isAuthenticated } from '../integrations/auth'
 import { useEffect, useState } from 'react'
+import { isAuthenticated } from '../integrations/auth'
+import LogoutButton from './LogoutButton'
 
 export default function Header() {
   const [auth, setAuth] = useState(isAuthenticated())

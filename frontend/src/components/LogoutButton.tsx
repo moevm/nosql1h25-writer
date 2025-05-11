@@ -1,6 +1,6 @@
 import { Button } from 'antd';
-import { clearTokens, api } from '../integrations/auth';
 import { useNavigate } from '@tanstack/react-router';
+import { api, clearTokens } from '../integrations/auth';
 
 export default function LogoutButton() {
   const navigate = useNavigate();
