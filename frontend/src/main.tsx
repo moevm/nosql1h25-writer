@@ -12,6 +12,8 @@ import DemoFormAddress from './routes/demo.form.address'
 import DemoFormSimple from './routes/demo.form.simple'
 import DemoTable from './routes/demo.table'
 import DemoTanstackQuery from './routes/demo.tanstack-query'
+import AuthRoute from './routes/auth.route'
+import RegisterRoute from './routes/register.route'
 
 import Header from './components/Header'
 
@@ -23,6 +25,7 @@ import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
 import App from './App.tsx'
+import { AuthProvider } from './context/AuthContext'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -48,6 +51,8 @@ const routeTree = rootRoute.addChildren([
   DemoFormSimple(rootRoute),
   DemoTable(rootRoute),
   DemoTanstackQuery(rootRoute),
+  AuthRoute(rootRoute),
+  RegisterRoute(rootRoute),
 ])
 
 const router = createRouter({
@@ -72,9 +77,11 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <TanstackQuery.Provider>
-        <RouterProvider router={router} />
-      </TanstackQuery.Provider>
+      <AuthProvider>
+        <TanstackQuery.Provider>
+          <RouterProvider router={router} />
+        </TanstackQuery.Provider>
+      </AuthProvider>
     </StrictMode>,
   )
 }
