@@ -1,9 +1,9 @@
 import React from 'react'
 import { createRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Card, Row, Col, Pagination, Button, Input, Select, Spin } from 'antd'
-import type { RootRoute } from '@tanstack/react-router'
+import { Button, Card, Col, Input, Pagination, Row, Select, Spin } from 'antd'
 import { api } from '../integrations/auth'
+import type { RootRoute } from '@tanstack/react-router'
 
 const { Search } = Input
 const { Option } = Select
@@ -23,7 +23,7 @@ function OrdersList() {
   const [pageSize, setPageSize] = React.useState(6)
   const [search, setSearch] = React.useState('')
 
-  const { data, isLoading } = useQuery<{ orders: Order[]; total: number }>({
+  const { data, isLoading } = useQuery<{ orders: Array<Order>; total: number }>({
     queryKey: ['orders', page, pageSize, search],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -31,11 +31,11 @@ function OrdersList() {
         limit: String(pageSize),
       })
       const res = await api.get(`/orders?${params}`)
-      return res.data as { orders: Order[]; total: number }
+      return res.data as { orders: Array<Order>; total: number }
     },
   })
 
-  const orders: Order[] = data && 'orders' in data ? data.orders : []
+  const orders: Array<Order> = data && 'orders' in data ? data.orders : []
   const total = data && 'total' in data ? data.total : 0
 
   return (
@@ -97,7 +97,6 @@ function OrdersList() {
                     </div>
                   </div>
                 }
-                bordered={false}
                 style={{ background: '#e6f4ff' }}
               >
                 <div style={{ fontWeight: 600, marginBottom: 4 }}>{order.title}</div>
