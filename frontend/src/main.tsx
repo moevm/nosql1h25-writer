@@ -14,6 +14,7 @@ import DemoTable from './routes/demo.table'
 import DemoTanstackQuery from './routes/demo.tanstack-query'
 import AuthRoute from './routes/auth.route'
 import RegisterRoute from './routes/register.route'
+import OrdersRoute from './routes/orders.route'
 
 import Header from './components/Header'
 
@@ -53,6 +54,7 @@ const routeTree = rootRoute.addChildren([
   DemoTanstackQuery(rootRoute),
   AuthRoute(rootRoute),
   RegisterRoute(rootRoute),
+  OrdersRoute(rootRoute),
 ])
 
 const router = createRouter({
