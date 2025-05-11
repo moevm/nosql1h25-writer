@@ -1,9 +1,9 @@
 # Step 1: Build
 FROM node:20-alpine3.21 AS builder
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY ../frontend/package.json package-lock.json ./
 RUN npm ci
-COPY . .
+COPY ../frontend .
 RUN npm run build
 
 # Step 2: Run
