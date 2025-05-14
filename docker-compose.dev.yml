@@ -1,0 +1,37 @@
+volumes:
+  mongo_data:
+    driver: local
+  backend_logs:
+    driver: local
+
+networks:
+  net:
+    driver: bridge
+
+services:
+  backend:
+    build: ./backend
+    environment:
+      MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
+      CONFIG_PATH: ${BACKEND_CONFIG_PATH}
+      AUTH_JWT_SECRET_KEY: ${AUTH_JWT_SECRET_KEY}
+    ports:
+      - "3001:8080"
+    depends_on:
+      - mongodb
+    volumes:
+      - backend_logs:/logs
+    networks:
+      - net
+
+  mongodb:
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - net
+    restart: unless-stopped
+    command: mongod --logpath /dev/null

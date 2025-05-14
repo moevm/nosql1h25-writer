@@ -6,7 +6,8 @@ To run this application:
 
 ```bash
 npm install
-npm run start
+npm run dev:docker
+npm run dev
 ```
 
 # Building For Production
