@@ -70,4 +70,19 @@ api.interceptors.response.use(
     }
     return Promise.reject(error);
   }
-); 
+);
+
+export function parseJwt(token: string): any {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+}
+
+export function getUserIdFromToken(): string | null {
+  const token = getAccessToken();
+  if (!token) return null;
+  const payload = parseJwt(token);
+  return payload && payload.userId ? payload.userId : null;
+} 
