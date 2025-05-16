@@ -1,0 +1,25 @@
+.order-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+}
+
+.order-card .ant-card-head {
+  border-bottom: none;
+  padding: 16px;
+}
+
+.order-card .ant-card-body {
+  padding: 16px;
+}
+
+.order-card .ant-tag {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+} 
