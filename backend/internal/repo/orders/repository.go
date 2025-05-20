@@ -50,35 +50,70 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 				},
 			},
 		}}},
-		{{Key: "$project", Value: bson.M{
-			"_id":            1,
-			"clientId":       1,
-			"title":          1,
-			"description":    1,
-			"completionTime": 1,
-			"cost":           1,
-			"freelancerId":   1,
-			"budget":         1,
-			"createdAt":      1,
-			"updatedAt":      1,
-			"responses":      1,
-			"statuses":       1,
+		// {{Key: "$project", Value: bson.M{
+		// 	"_id":            1,
+		// 	"clientId":       1,
+		// 	"title":          1,
+		// 	"description":    1,
+		// 	"completionTime": 1,
+		// 	"cost":           1,
+		// 	"freelancerId":   1,
+		// 	"budget":         1,
+		// 	"createdAt":      1,
+		// 	"updatedAt":      1,
+		// 	"responses":      1,
+		// 	"statuses":       1,
+		// }}},
+		// {{Key: "$skip", Value: int64(offset)}},
+		// {{Key: "$limit", Value: int64(limit)}},
+		{{Key: "$facet", Value: bson.M{
+			"orders": mongo.Pipeline{
+				{{Key: "$project", Value: bson.M{
+					"_id":            1,
+					"clientId":       1,
+					"title":          1,
+					"description":    1,
+					"completionTime": 1,
+					"cost":           1,
+					"freelancerId":   1,
+					"budget":         1,
+					"createdAt":      1,
+					"updatedAt":      1,
+					"responses":      1,
+					"statuses":       1,
+				}}},
+				{{Key: "$skip", Value: int64(offset)}},
+				{{Key: "$limit", Value: int64(limit)}},
+			},
+			"total": mongo.Pipeline{
+				{{Key: "$count", Value: "count"}},
+			},
 		}}},
-		{{Key: "$skip", Value: int64(offset)}},
-		{{Key: "$limit", Value: int64(limit)}},
 	}
 	cursor, err := r.ordersColl.Aggregate(ctx, pipeline)
 	if err != nil {
 		return FindOut{}, err
 	}
 
-	var orders []entity.OrderExt
-	if err := cursor.All(ctx, &orders); err != nil {
+	var result []struct {
+		Orders []entity.OrderExt `bson:"orders"`
+		Total  []struct {
+			Count int `bson:"count"`
+		} `bson:"total"`
+	}
+
+	if err := cursor.All(ctx, &result); err != nil {
 		return FindOut{}, err
 	}
 
+	totalCount := 0
+	if len(result) > 0 && len(result[0].Total) > 0 {
+		totalCount = result[0].Total[0].Count
+	}
+
 	var out FindOut
-	for _, order := range orders {
+	out.Total = totalCount
+	for _, order := range result[0].Orders {
 		out.Orders = append(out.Orders, OrderWithClientData{
 			ID:             order.ID.Hex(),
 			Title:          order.Title,

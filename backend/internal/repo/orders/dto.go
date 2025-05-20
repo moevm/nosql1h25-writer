@@ -4,6 +4,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type FindOut struct {
 	Orders []OrderWithClientData
+	Total  int
 }
 
 type OrderWithClientData struct {

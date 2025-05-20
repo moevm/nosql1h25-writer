@@ -69,7 +69,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 			Rating:         order.Rating,
 		})
 	}
-	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: len(orderList)})
+	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: findOut.Total})
 }
 
 func applyDefaults(in Request) (offset int, limit int) {

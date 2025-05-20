@@ -27,6 +27,7 @@ func (s *service) Find(ctx context.Context, offset, limit int) (FindOut, error) 
 		return FindOut{}, ErrCannotFindOrders
 	}
 	var serviceFindOut FindOut
+	serviceFindOut.Total = out.Total
 	for _, order := range out.Orders {
 		serviceFindOut.Orders = append(serviceFindOut.Orders, OrderWithClientData{
 			ID:             order.ID,

@@ -12,6 +12,7 @@ type CreateIn struct {
 
 type FindOut struct {
 	Orders []OrderWithClientData
+	Total  int
 }
 
 type OrderWithClientData struct {

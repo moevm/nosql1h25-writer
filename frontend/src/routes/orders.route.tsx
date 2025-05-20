@@ -226,8 +226,13 @@ function OrdersList() {
           current={page}
           pageSize={pageSize}
           total={total}
-          onChange={setPage}
-          onShowSizeChange={(_, size) => setPageSize(size)}
+          onChange={(newPage) => setPage(newPage)}
+          //onChange={setPage}
+          //onShowSizeChange={(_, size) => setPageSize(size)}
+          onShowSizeChange={(_, newSize) => {
+            setPageSize(newSize)
+            setPage(1)
+          }}
           showSizeChanger
           pageSizeOptions={[6, 12, 18, 24]}
           showTotal={(total) => `Всего ${total} заказов`}
