@@ -5,6 +5,7 @@ import { Button, Card, Col, Input, Pagination, Row, Select, Spin, Slider, Space,
 import { api } from '../integrations/auth'
 import type { RootRoute } from '@tanstack/react-router'
 import './orders.css'
+import ProtectedRoute from '../components/ProtectedRoute'
 
 const { Search } = Input
 const { Option } = Select
@@ -235,6 +236,10 @@ function OrdersList() {
 export default (parentRoute: RootRoute) =>
   createRoute({
     path: '/orders',
-    component: OrdersList,
+    component: () => (
+      <ProtectedRoute>
+          <OrdersList />
+      </ProtectedRoute>
+    ),
     getParentRoute: () => parentRoute,
   }) 
