@@ -1,8 +1,9 @@
 import React from 'react'
 import { createRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Card, Col, Input, Pagination, Row, Select, Spin, Slider, Space, Tag } from 'antd'
+import { Button, Card, Col, Input, Pagination, Row, Select, Slider, Space, Spin, Tag } from 'antd'
 import { api } from '../integrations/auth'
+import ProtectedRoute from '../components/ProtectedRoute'
 import type { RootRoute } from '@tanstack/react-router'
 import './orders.css'
 
@@ -20,7 +21,7 @@ interface Order {
   status: 'new' | 'in_progress' | 'completed'
 }
 
-function OrdersList() {
+function OrdersPage() {
   const [page, setPage] = React.useState(1)
   const [pageSize, setPageSize] = React.useState(6)
   const [search, setSearch] = React.useState('')
@@ -225,16 +226,23 @@ function OrdersList() {
           onShowSizeChange={(_, size) => setPageSize(size)}
           showSizeChanger
           pageSizeOptions={[6, 12, 18, 24]}
-          showTotal={(total) => `Всего ${total} заказов`}
+          showTotal={(totalItems) => `Всего ${totalItems} заказов`}
         />
       </div>
     </div>
   )
 }
 
-export default (parentRoute: RootRoute) =>
-  createRoute({
+function createOrdersRoute(parentRoute: RootRoute) {
+  return createRoute({
     path: '/orders',
-    component: OrdersList,
+    component: () => (
+      <ProtectedRoute>
+        <OrdersPage />
+      </ProtectedRoute>
+    ),
     getParentRoute: () => parentRoute,
-  }) 
+  })
+}
+
+export default createOrdersRoute 

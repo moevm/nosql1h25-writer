@@ -1,16 +1,31 @@
-import { useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { Navigate } from '@tanstack/react-router'
+import { roleUtils } from '../utils/role'
 import { useAuth } from '../context/AuthContext'
+import type { ReactNode } from 'react'
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+type UserRole = 'client' | 'freelancer'
+
+interface ProtectedRouteProps {
+  children: ReactNode
+  allowedRoles?: Array<UserRole>
+  fallbackPath?: string
+}
+
+export default function ProtectedRoute({ 
+  children, 
+  allowedRoles = [],
+  fallbackPath = '/'
+}: ProtectedRouteProps) {
   const { isAuthenticated } = useAuth()
-  const navigate = useNavigate()
+  const currentRole = roleUtils.getRole()
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />
+  }
+  
+  if (allowedRoles.length > 0 && !allowedRoles.includes(currentRole)) {
+    return <Navigate to={fallbackPath} />
+  }
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate({ to: '/login' })
-    }
-  }, [isAuthenticated])
-
-  return isAuthenticated ? <>{children}</> : null
+  return <>{children}</>
 } 
