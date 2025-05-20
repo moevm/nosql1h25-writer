@@ -29,6 +29,7 @@ type Response struct {
 }
 
 type Order struct {
+	ID             string  `json:"id"`
 	Title          string  `json:"title"`
 	Description    string  `json:"description"`
 	CompletionTime int     `json:"completionTime"`
@@ -59,6 +60,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 	orderList := make([]Order, 0, len(findOut.Orders))
 	for _, order := range findOut.Orders {
 		orderList = append(orderList, Order{
+			ID:             order.ID,
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: order.CompletionTime,

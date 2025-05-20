@@ -7,6 +7,7 @@ type FindOut struct {
 }
 
 type OrderWithClientData struct {
+	ID             string
 	Title          string
 	Description    string
 	CompletionTime int

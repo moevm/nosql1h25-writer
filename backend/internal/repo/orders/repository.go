@@ -51,6 +51,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 			},
 		}}},
 		{{Key: "$project", Value: bson.M{
+			"_id":            1,
 			"clientId":       1,
 			"title":          1,
 			"description":    1,
@@ -79,6 +80,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 	var out FindOut
 	for _, order := range orders {
 		out.Orders = append(out.Orders, OrderWithClientData{
+			ID:             order.ID.Hex(),
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: int(order.CompletionTime),

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@tanstack/react-router'
 import { createRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Input, Pagination, Row, Select, Spin, Slider, Space, Tag } from 'antd'
@@ -12,6 +13,7 @@ const { Option } = Select
 
 // Тип заказа
 interface Order {
+  id: string
   clientName: string
   completionTime: number
   cost: number
@@ -149,6 +151,7 @@ function OrdersList() {
         <Row gutter={[16, 16]}>
           {orders.map((order, idx) => (
             <Col xs={24} sm={12} md={8} key={idx}>
+              <Link to={`/orders/${order.id}` as any}>
               <Card
                 title={
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -213,6 +216,7 @@ function OrdersList() {
                   </span>
                 </div>
               </Card>
+              </Link>
             </Col>
           ))}
         </Row>
