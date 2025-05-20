@@ -53,43 +53,6 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 		matchFilter["cost"] = costCond
 	}
 
-	// pipeline := mongo.Pipeline{
-	// 	{{Key: "$match", Value: bson.M{
-	// 		"active": true,
-	// 	}}},
-	// 	{{Key: "$match", Value: bson.M{
-	// 		"$expr": bson.M{
-	// 			"$eq": bson.A{
-	// 				bson.M{"$arrayElemAt": bson.A{"$statuses.type", -1}},
-	// 				entity.StatusTypeBeginning,
-	// 			},
-	// 		},
-	// 	}}},
-	// 	{{Key: "$facet", Value: bson.M{
-	// 		"orders": mongo.Pipeline{
-	// 			{{Key: "$project", Value: bson.M{
-	// 				"_id":            1,
-	// 				"clientId":       1,
-	// 				"title":          1,
-	// 				"description":    1,
-	// 				"completionTime": 1,
-	// 				"cost":           1,
-	// 				"freelancerId":   1,
-	// 				"budget":         1,
-	// 				"createdAt":      1,
-	// 				"updatedAt":      1,
-	// 				"responses":      1,
-	// 				"statuses":       1,
-	// 			}}},
-	// 			{{Key: "$skip", Value: int64(offset)}},
-	// 			{{Key: "$limit", Value: int64(limit)}},
-	// 		},
-	// 		"total": mongo.Pipeline{
-	// 			{{Key: "$count", Value: "count"}},
-	// 		},
-	// 	}}},
-	// }
-
 	pipeline := mongo.Pipeline{
 		{{Key: "$match", Value: matchFilter}},
 		{{Key: "$match", Value: bson.M{
