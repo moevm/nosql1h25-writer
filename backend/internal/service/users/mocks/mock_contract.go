@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	entity "github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	users "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
@@ -40,6 +41,21 @@ func NewMockService(ctrl *gomock.Controller) *MockService {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
+}
+
+// GetByIDExt mocks base method.
+func (m *MockService) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByIDExt", ctx, userID)
+	ret0, _ := ret[0].(entity.UserExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByIDExt indicates an expected call of GetByIDExt.
+func (mr *MockServiceMockRecorder) GetByIDExt(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDExt", reflect.TypeOf((*MockService)(nil).GetByIDExt), ctx, userID)
 }
 
 // UpdateBalance mocks base method.

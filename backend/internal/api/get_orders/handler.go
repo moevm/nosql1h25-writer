@@ -19,8 +19,10 @@ func New(orderService orders.Service) api.Handler {
 }
 
 type Request struct {
-	Offset *int `query:"offset" validate:"gte=0" example:"0"`
-	Limit  *int `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	Offset  *int `query:"offset" validate:"gte=0" example:"0"`
+	Limit   *int `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	MinCost *int `query:"minCost" validate:"omitempty,gte=0" example:"100"`
+	MaxCost *int `query:"maxCost" validate:"omitempty,gte=0" example:"1000"`
 }
 
 type Response struct {
@@ -53,7 +55,7 @@ type Order struct {
 //	@Router			/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	offset, limit := applyDefaults(in)
-	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit)
+	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit, in.MinCost, in.MaxCost)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

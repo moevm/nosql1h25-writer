@@ -37,11 +37,61 @@ func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectI
 	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
 
-func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, error) {
+func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCost *int) (FindOut, error) {
+	matchFilter := bson.M{
+		"active": true,
+	}
+
+	costCond := bson.M{}
+	if minCost != nil {
+		costCond["$gte"] = *minCost
+	}
+	if maxCost != nil {
+		costCond["$lte"] = *maxCost
+	}
+	if len(costCond) > 0 {
+		matchFilter["cost"] = costCond
+	}
+
+	// pipeline := mongo.Pipeline{
+	// 	{{Key: "$match", Value: bson.M{
+	// 		"active": true,
+	// 	}}},
+	// 	{{Key: "$match", Value: bson.M{
+	// 		"$expr": bson.M{
+	// 			"$eq": bson.A{
+	// 				bson.M{"$arrayElemAt": bson.A{"$statuses.type", -1}},
+	// 				entity.StatusTypeBeginning,
+	// 			},
+	// 		},
+	// 	}}},
+	// 	{{Key: "$facet", Value: bson.M{
+	// 		"orders": mongo.Pipeline{
+	// 			{{Key: "$project", Value: bson.M{
+	// 				"_id":            1,
+	// 				"clientId":       1,
+	// 				"title":          1,
+	// 				"description":    1,
+	// 				"completionTime": 1,
+	// 				"cost":           1,
+	// 				"freelancerId":   1,
+	// 				"budget":         1,
+	// 				"createdAt":      1,
+	// 				"updatedAt":      1,
+	// 				"responses":      1,
+	// 				"statuses":       1,
+	// 			}}},
+	// 			{{Key: "$skip", Value: int64(offset)}},
+	// 			{{Key: "$limit", Value: int64(limit)}},
+	// 		},
+	// 		"total": mongo.Pipeline{
+	// 			{{Key: "$count", Value: "count"}},
+	// 		},
+	// 	}}},
+	// }
+
 	pipeline := mongo.Pipeline{
-		{{Key: "$match", Value: bson.M{
-			"active": true,
-		}}},
+		{{Key: "$match", Value: matchFilter}},
 		{{Key: "$match", Value: bson.M{
 			"$expr": bson.M{
 				"$eq": bson.A{
@@ -50,22 +100,6 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 				},
 			},
 		}}},
-		// {{Key: "$project", Value: bson.M{
-		// 	"_id":            1,
-		// 	"clientId":       1,
-		// 	"title":          1,
-		// 	"description":    1,
-		// 	"completionTime": 1,
-		// 	"cost":           1,
-		// 	"freelancerId":   1,
-		// 	"budget":         1,
-		// 	"createdAt":      1,
-		// 	"updatedAt":      1,
-		// 	"responses":      1,
-		// 	"statuses":       1,
-		// }}},
-		// {{Key: "$skip", Value: int64(offset)}},
-		// {{Key: "$limit", Value: int64(limit)}},
 		{{Key: "$facet", Value: bson.M{
 			"orders": mongo.Pipeline{
 				{{Key: "$project", Value: bson.M{
@@ -90,6 +124,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int) (FindOut, erro
 			},
 		}}},
 	}
+
 	cursor, err := r.ordersColl.Aggregate(ctx, pipeline)
 	if err != nil {
 		return FindOut{}, err
