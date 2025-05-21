@@ -87,10 +87,10 @@ export default function AuthPage() {
         >
           <div className="space-y-4">
             <form.AppField name="email">
-              {field => <TextField label="Email" />}
+              {() => <TextField label="Email" />}
             </form.AppField>
             <form.AppField name="password">
-              {field => <TextField label="Пароль" type="password" hint="Минимум 8 символов" />}
+              {() => <TextField label="Пароль" type="password" hint="Минимум 8 символов" />}
             </form.AppField>
           </div>
 
