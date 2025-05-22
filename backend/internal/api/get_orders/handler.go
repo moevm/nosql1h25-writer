@@ -19,8 +19,10 @@ func New(orderService orders.Service) api.Handler {
 }
 
 type Request struct {
-	Offset *int `query:"offset" validate:"gte=0" example:"0"`
-	Limit  *int `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	Offset  *int `query:"offset" validate:"gte=0" example:"0"`
+	Limit   *int `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	MinCost *int `query:"minCost" validate:"omitempty,gte=0" example:"100"`
+	MaxCost *int `query:"maxCost" validate:"omitempty,gte=0" example:"1000"`
 }
 
 type Response struct {
@@ -29,6 +31,7 @@ type Response struct {
 }
 
 type Order struct {
+	ID             string  `json:"id"`
 	Title          string  `json:"title"`
 	Description    string  `json:"description"`
 	CompletionTime int     `json:"completionTime"`
@@ -52,13 +55,14 @@ type Order struct {
 //	@Router			/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	offset, limit := applyDefaults(in)
-	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit)
+	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit, in.MinCost, in.MaxCost)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	orderList := make([]Order, 0, len(findOut.Orders))
 	for _, order := range findOut.Orders {
 		orderList = append(orderList, Order{
+			ID:             order.ID,
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: order.CompletionTime,
@@ -67,7 +71,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 			Rating:         order.Rating,
 		})
 	}
-	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: len(orderList)})
+	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: findOut.Total})
 }
 
 func applyDefaults(in Request) (offset int, limit int) {

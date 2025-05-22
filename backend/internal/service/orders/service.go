@@ -20,15 +20,17 @@ func New(ordersRepo orders.Repo) Service {
 	return &service{ordersRepo: ordersRepo}
 }
 
-func (s *service) Find(ctx context.Context, offset, limit int) (FindOut, error) {
-	out, err := s.ordersRepo.Find(ctx, offset, limit)
+func (s *service) Find(ctx context.Context, offset, limit int, minCost, maxCost *int) (FindOut, error) {
+	out, err := s.ordersRepo.Find(ctx, offset, limit, minCost, maxCost)
 	if err != nil {
 		logrus.Errorf("OrderService.Find - s.ordersRepo: %v", err)
 		return FindOut{}, ErrCannotFindOrders
 	}
 	var serviceFindOut FindOut
+	serviceFindOut.Total = out.Total
 	for _, order := range out.Orders {
 		serviceFindOut.Orders = append(serviceFindOut.Orders, OrderWithClientData{
+			ID:             order.ID,
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: order.CompletionTime,
