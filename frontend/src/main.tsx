@@ -15,6 +15,7 @@ import DemoTanstackQuery from './routes/demo.tanstack-query'
 import AuthRoute from './routes/auth.route'
 import RegisterRoute from './routes/register.route'
 import OrdersRoute from './routes/orders.route'
+import OrderDetailsRoute from './routes/order.details.route'
 import ProfileRoute from './routes/profile.route'
 
 import Header from './components/Header'
@@ -56,6 +57,7 @@ const routeTree = rootRoute.addChildren([
   AuthRoute(rootRoute),
   RegisterRoute(rootRoute),
   OrdersRoute(rootRoute),
+  OrderDetailsRoute(rootRoute),
   ProfileRoute(rootRoute),
 ])
 

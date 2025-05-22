@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@tanstack/react-router'
 import { createRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Input, Pagination, Row, Select, Slider, Space, Spin, Tag } from 'antd'
@@ -6,12 +7,14 @@ import { api } from '../integrations/auth'
 import ProtectedRoute from '../components/ProtectedRoute'
 import type { RootRoute } from '@tanstack/react-router'
 import './orders.css'
+import ProtectedRoute from '../components/ProtectedRoute'
 
 const { Search } = Input
 const { Option } = Select
 
 // Тип заказа
 interface Order {
+  id: string
   clientName: string
   completionTime: number
   cost: number
@@ -149,6 +152,7 @@ function OrdersPage() {
         <Row gutter={[16, 16]}>
           {orders.map((order, idx) => (
             <Col xs={24} sm={12} md={8} key={idx}>
+              <Link to={`/orders/${order.id}` as any}>
               <Card
                 title={
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -213,6 +217,7 @@ function OrdersPage() {
                   </span>
                 </div>
               </Card>
+              </Link>
             </Col>
           ))}
         </Row>
@@ -222,8 +227,13 @@ function OrdersPage() {
           current={page}
           pageSize={pageSize}
           total={total}
-          onChange={setPage}
-          onShowSizeChange={(_, size) => setPageSize(size)}
+          onChange={(newPage) => setPage(newPage)}
+          //onChange={setPage}
+          //onShowSizeChange={(_, size) => setPageSize(size)}
+          onShowSizeChange={(_, newSize) => {
+            setPageSize(newSize)
+            setPage(1)
+          }}
           showSizeChanger
           pageSizeOptions={[6, 12, 18, 24]}
           showTotal={(totalItems) => `Всего ${totalItems} заказов`}
