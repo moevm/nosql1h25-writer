@@ -16,7 +16,10 @@ import AuthRoute from './routes/auth.route'
 import RegisterRoute from './routes/register.route'
 import OrdersRoute from './routes/orders.route'
 import OrderDetailsRoute from './routes/order.details.route'
-import ProfileRoute from './routes/profile.route'
+import AdminLayout from './routes/AdminLayout'
+import AdminUsers from './routes/AdminUsers'
+import ProfilePage from './components/ProfilePage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 import Header from './components/Header'
 
@@ -24,6 +27,7 @@ import TanstackQueryLayout from './integrations/tanstack-query/layout'
 
 import * as TanstackQuery from './integrations/tanstack-query/root-provider'
 
+import 'antd/dist/reset.css'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
@@ -48,8 +52,31 @@ const indexRoute = createRoute({
   component: App,
 })
 
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: AdminLayout,
+})
+
+const adminUsersRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/users',
+  component: AdminUsers,
+})
+
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/profile',
+  component: () => (
+    <ProtectedRoute allowedRoles={['client', 'freelancer']}>
+      <ProfilePage />
+    </ProtectedRoute>
+  ),
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  adminRoute.addChildren([adminUsersRoute]),
   DemoFormAddress(rootRoute),
   DemoFormSimple(rootRoute),
   DemoTable(rootRoute),
@@ -58,7 +85,7 @@ const routeTree = rootRoute.addChildren([
   RegisterRoute(rootRoute),
   OrdersRoute(rootRoute),
   OrderDetailsRoute(rootRoute),
-  ProfileRoute(rootRoute),
+  profileRoute,
 ])
 
 const router = createRouter({

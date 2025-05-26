@@ -1,13 +1,12 @@
 import React from 'react'
-import { Link } from '@tanstack/react-router'
-import { createRoute } from '@tanstack/react-router'
+import { Link, createRoute } from '@tanstack/react-router'
+
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Input, Pagination, Row, Select, Slider, Space, Spin, Tag } from 'antd'
 import { api } from '../integrations/auth'
 import ProtectedRoute from '../components/ProtectedRoute'
 import type { RootRoute } from '@tanstack/react-router'
 import './orders.css'
-import ProtectedRoute from '../components/ProtectedRoute'
 
 const { Search } = Input
 const { Option } = Select
@@ -228,8 +227,8 @@ function OrdersPage() {
           pageSize={pageSize}
           total={total}
           onChange={(newPage) => setPage(newPage)}
-          //onChange={setPage}
-          //onShowSizeChange={(_, size) => setPageSize(size)}
+          // onChange={setPage}
+          // onShowSizeChange={(_, size) => setPageSize(size)}
           onShowSizeChange={(_, newSize) => {
             setPageSize(newSize)
             setPage(1)

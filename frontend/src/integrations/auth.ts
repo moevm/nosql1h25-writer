@@ -38,7 +38,6 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
   if (token) {
-    config.headers = config.headers || {};
     config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
@@ -85,4 +84,11 @@ export function getUserIdFromToken(): string | null {
   if (!token) return null;
   const payload = parseJwt(token);
   return payload && payload.userId ? payload.userId : null;
+}
+
+export function isAdmin(): boolean {
+  const token = getAccessToken();
+  if (!token) return false;
+  const payload = parseJwt(token);
+  return payload && payload.systemRole === 'admin';
 } 

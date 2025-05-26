@@ -38,7 +38,10 @@ export default function AuthPage() {
   const [serverError, setServerError] = useState('')
 
   const form = useAppForm({
-    defaultValues: { email: '', password: '' },
+    defaultValues: { 
+      email: '', 
+      password: '',
+    },
     validators: { onBlur: schema },
     onSubmit: async ({ value }) => {
       try {
@@ -61,7 +64,7 @@ export default function AuthPage() {
         
         login(data.accessToken, data.refreshToken)
         message.success('Вход выполнен успешно!')
-        await navigate({ to: '/' })
+        await navigate({ to: '/profile' })
       } catch (e) {
         setServerError(e instanceof Error ? e.message : 'Ошибка авторизации')
       }
@@ -79,7 +82,7 @@ export default function AuthPage() {
         <FormError message={serverError} />
         <form
           className="space-y-4"
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault()
             e.stopPropagation()
             form.handleSubmit()
@@ -95,14 +98,18 @@ export default function AuthPage() {
           </div>
 
           <RoleSelector />
-          
+
           <div className="space-y-4">
-            <Link 
-              to="/register" 
-              className="inline-block text-blue-600 border-b border-dotted border-blue-600 hover:text-blue-800 hover:border-blue-800 transition-colors"
-            >
-              Создать аккаунт
-            </Link>
+            <div className="space-y-1">
+              <Link
+                to="/register"
+                className="block text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                <span className="border-b border-dotted border-blue-600 hover:border-blue-800">
+                  Создать аккаунт
+                </span>
+              </Link>
+            </div>
             <form.AppForm>
               <button
                 type="submit"
