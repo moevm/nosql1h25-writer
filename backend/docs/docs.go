@@ -426,6 +426,18 @@ const docTemplate = `{
                         "description": "Limit",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "cost_asc",
+                            "cost_desc",
+                            "newest",
+                            "oldest"
+                        ],
+                        "type": "string",
+                        "description": "Sort field: cost_asc, cost_desc, newest, oldest",
+                        "name": "sortBy",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -687,6 +699,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "description": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "rating": {

@@ -35,6 +35,8 @@ definitions:
         type: integer
       description:
         type: string
+      id:
+        type: string
       rating:
         type: number
       title:
@@ -502,6 +504,15 @@ paths:
         minimum: 1
         name: limit
         type: integer
+      - description: 'Sort field: cost_asc, cost_desc, newest, oldest'
+        enum:
+        - cost_asc
+        - cost_desc
+        - newest
+        - oldest
+        in: query
+        name: sortBy
+        type: string
       produces:
       - application/json
       responses:
