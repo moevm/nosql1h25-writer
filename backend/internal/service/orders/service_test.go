@@ -76,6 +76,7 @@ func TestService_Find(t *testing.T) {
 		limit   = 10
 		minCost = 0
 		maxCost = 1000000
+		sortBy  = "cost_asc"
 	)
 
 	sampleOrder := orders_repo.OrderWithClientData{
@@ -106,14 +107,14 @@ func TestService_Find(t *testing.T) {
 		{
 			name: "successful find",
 			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
-				r.EXPECT().Find(ctx, offset, limit, &minCost, &maxCost).Return(orders_repo.FindOut{Orders: []orders_repo.OrderWithClientData{sampleOrder}}, nil)
+				r.EXPECT().Find(ctx, offset, limit, &minCost, &maxCost, &sortBy).Return(orders_repo.FindOut{Orders: []orders_repo.OrderWithClientData{sampleOrder}}, nil)
 			},
 			want: orders_service.FindOut{Orders: []orders_service.OrderWithClientData{expectedOrder}},
 		},
 		{
 			name: "find failure",
 			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
-				r.EXPECT().Find(ctx, offset, limit, &minCost, &maxCost).Return(orders_repo.FindOut{}, assert.AnError)
+				r.EXPECT().Find(ctx, offset, limit, &minCost, &maxCost, &sortBy).Return(orders_repo.FindOut{}, assert.AnError)
 			},
 			want:    orders_service.FindOut{},
 			wantErr: orders_service.ErrCannotFindOrders,
@@ -132,7 +133,7 @@ func TestService_Find(t *testing.T) {
 
 			svc := orders_service.New(mockRepo)
 
-			got, err := svc.Find(ctx, offset, limit, &minCost, &maxCost)
+			got, err := svc.Find(ctx, offset, limit, &minCost, &maxCost, &sortBy)
 
 			assert.ErrorIs(t, err, tc.wantErr)
 			assert.Equal(t, tc.want, got)

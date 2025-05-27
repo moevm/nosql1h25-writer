@@ -58,18 +58,18 @@ func (mr *MockServiceMockRecorder) Create(ctx, in any) *gomock.Call {
 }
 
 // Find mocks base method.
-func (m *MockService) Find(ctx context.Context, offset, limit int, minCost, maxCost *int) (orders.FindOut, error) {
+func (m *MockService) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (orders.FindOut, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Find", ctx, offset, limit, minCost, maxCost)
+	ret := m.ctrl.Call(m, "Find", ctx, offset, limit, minCost, maxCost, sortBy)
 	ret0, _ := ret[0].(orders.FindOut)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Find indicates an expected call of Find.
-func (mr *MockServiceMockRecorder) Find(ctx, offset, limit, minCost, maxCost any) *gomock.Call {
+func (mr *MockServiceMockRecorder) Find(ctx, offset, limit, minCost, maxCost, sortBy any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockService)(nil).Find), ctx, offset, limit, minCost, maxCost)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockService)(nil).Find), ctx, offset, limit, minCost, maxCost, sortBy)
 }
 
 // GetByID mocks base method.

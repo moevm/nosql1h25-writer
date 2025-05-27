@@ -37,7 +37,7 @@ func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectI
 	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
 
-func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCost *int) (FindOut, error) {
+func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
 	matchFilter := bson.M{
 		"active": true,
 	}
@@ -53,6 +53,50 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 		matchFilter["cost"] = costCond
 	}
 
+	sortStage := bson.D{}
+	if sortBy == nil {
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
+	} else {
+		switch *sortBy {
+		case "newest":
+			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
+		case "oldest":
+			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: 1}}}}
+		case "cost_asc":
+			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "cost", Value: 1}}}}
+		case "cost_desc":
+			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "cost", Value: -1}}}}
+		default:
+			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}} // fallback
+		}
+	}
+
+	ordersPipeline := mongo.Pipeline{
+		{{Key: "$project", Value: bson.M{
+			"_id":            1,
+			"clientId":       1,
+			"title":          1,
+			"description":    1,
+			"completionTime": 1,
+			"cost":           1,
+			"freelancerId":   1,
+			"budget":         1,
+			"createdAt":      1,
+			"updatedAt":      1,
+			"responses":      1,
+			"statuses":       1,
+		}}},
+	}
+
+	if len(sortStage) > 0 {
+		ordersPipeline = append(ordersPipeline, sortStage)
+	}
+
+	ordersPipeline = append(ordersPipeline,
+		bson.D{{Key: "$skip", Value: int64(offset)}},
+		bson.D{{Key: "$limit", Value: int64(limit)}},
+	)
+
 	pipeline := mongo.Pipeline{
 		{{Key: "$match", Value: matchFilter}},
 		{{Key: "$match", Value: bson.M{
@@ -64,24 +108,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 			},
 		}}},
 		{{Key: "$facet", Value: bson.M{
-			"orders": mongo.Pipeline{
-				{{Key: "$project", Value: bson.M{
-					"_id":            1,
-					"clientId":       1,
-					"title":          1,
-					"description":    1,
-					"completionTime": 1,
-					"cost":           1,
-					"freelancerId":   1,
-					"budget":         1,
-					"createdAt":      1,
-					"updatedAt":      1,
-					"responses":      1,
-					"statuses":       1,
-				}}},
-				{{Key: "$skip", Value: int64(offset)}},
-				{{Key: "$limit", Value: int64(limit)}},
-			},
+			"orders": ordersPipeline,
 			"total": mongo.Pipeline{
 				{{Key: "$count", Value: "count"}},
 			},

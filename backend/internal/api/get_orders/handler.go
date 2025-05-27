@@ -19,10 +19,11 @@ func New(orderService orders.Service) api.Handler {
 }
 
 type Request struct {
-	Offset  *int `query:"offset" validate:"gte=0" example:"0"`
-	Limit   *int `query:"limit" validate:"gte=1,lte=200" example:"10"`
-	MinCost *int `query:"minCost" validate:"omitempty,gte=0" example:"100"`
-	MaxCost *int `query:"maxCost" validate:"omitempty,gte=0" example:"1000"`
+	Offset  *int    `query:"offset" validate:"gte=0" example:"0"`
+	Limit   *int    `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	MinCost *int    `query:"minCost" validate:"omitempty,gte=0" example:"100"`
+	MaxCost *int    `query:"maxCost" validate:"omitempty,gte=0" example:"1000"`
+	SortBy  *string `query:"sortBy" validate:"omitempty,oneof=newest oldest cost_asc cost_desc" example:"cost"`
 }
 
 type Response struct {
@@ -46,8 +47,9 @@ type Order struct {
 //	@Summary		Get orders list
 //	@Tags			orders
 //	@Security		JWT
-//	@Param			offset	query	int	false	"Offset"	default(0)	minimum(0)	example(0)
-//	@Param			limit	query	int	false	"Limit"		default(10)	minimum(1)	maximum(200)	example(10)
+//	@Param			offset	query	int		false	"Offset"											default(0)	minimum(0)	example(0)
+//	@Param			limit	query	int		false	"Limit"												default(10)	minimum(1)	maximum(200)	example(10)
+//	@Param			sortBy	query	string	false	"Sort field: cost_asc, cost_desc, newest, oldest"	Enums(cost_asc,cost_desc,newest,oldest)
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	Response
@@ -55,7 +57,7 @@ type Order struct {
 //	@Router			/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	offset, limit := applyDefaults(in)
-	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit, in.MinCost, in.MaxCost)
+	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit, in.MinCost, in.MaxCost, in.SortBy)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
