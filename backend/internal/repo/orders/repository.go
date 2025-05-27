@@ -53,7 +53,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 		matchFilter["cost"] = costCond
 	}
 
-	sortStage := bson.D{}
+	var sortStage bson.D
 	if sortBy == nil {
 		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
 	} else {
