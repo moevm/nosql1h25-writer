@@ -127,3 +127,41 @@ func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectI
 
 	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
+
+func (r *repository) UpdateProfile(ctx context.Context, input UpdateInput) error {
+	update := bson.M{}
+	now := r.clock.Now()
+
+	if input.DisplayName != nil {
+		update["displayName"] = *input.DisplayName
+	}
+
+	if input.FreelancerDescription != nil {
+		update["freelancer.description"] = *input.FreelancerDescription
+		update["freelancer.updatedAt"] = now
+	}
+
+	if input.ClientDescription != nil {
+		update["client.description"] = *input.ClientDescription
+		update["client.updatedAt"] = now
+	}
+
+	if len(update) == 0 {
+		// Нечего обновлять
+		return nil
+	}
+
+	update["updatedAt"] = now
+
+	filter := bson.M{"_id": input.UserID}
+
+	res, err := r.usersColl.UpdateOne(ctx, filter, bson.M{"$set": update})
+	if err != nil {
+		return ErrCannotUpdateUser
+	}
+	if res.MatchedCount == 0 {
+		return ErrUserNotFound
+	}
+
+	return nil
+}
