@@ -23,7 +23,7 @@ func New(ordersService orders.Service) api.Handler {
 type Request struct {
 	Title          string `json:"title" validate:"required,min=3,max=32" example:"Сценарий"`
 	Description    string `json:"description" validate:"required,min=16,max=8192" example:"Написать сценарий вот такой и такой"`
-	CompletionTime int64  `json:"comletionTime" validate:"required,gte=3600000000000" example:"3600000000000"`
+	CompletionTime int64  `json:"completionTime" validate:"required,gte=3600000000000" example:"3600000000000"`
 	Cost           int    `json:"cost" validate:"gte=0" example:"500"`
 }
 
