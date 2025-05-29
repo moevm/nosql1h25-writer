@@ -7,7 +7,6 @@ import { api } from '../integrations/auth'
 import ProtectedRoute from '../components/ProtectedRoute'
 import type { RootRoute } from '@tanstack/react-router'
 import './orders.css'
-import ProtectedRoute from '../components/ProtectedRoute'
 
 const { Search } = Input
 const { Option } = Select
