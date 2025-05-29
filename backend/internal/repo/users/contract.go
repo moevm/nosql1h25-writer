@@ -16,4 +16,5 @@ type Repo interface {
 	GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error)
 	Deposit(ctx context.Context, userID primitive.ObjectID, amount int) (int, error)
 	Withdraw(ctx context.Context, userID primitive.ObjectID, amount int) (int, error)
+	UpdateProfile(ctx context.Context, input UpdateInput) error
 }
