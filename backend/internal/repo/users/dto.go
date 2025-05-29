@@ -1,9 +1,6 @@
 package users
 
-import (
-	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type CreateIn struct {
 	DisplayName string
@@ -11,9 +8,7 @@ type CreateIn struct {
 	Password    string
 }
 
-type UpdateInput struct {
-	RequesterID           primitive.ObjectID
-	RequesterRole         entity.SystemRoleType
+type UpdateIn struct {
 	UserID                primitive.ObjectID
 	DisplayName           *string
 	FreelancerDescription *string
