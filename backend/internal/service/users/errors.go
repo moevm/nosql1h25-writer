@@ -9,4 +9,5 @@ var (
 	ErrInsufficientFunds = errors.New("insufficient funds")
 	ErrUserAlreadyExists = errors.New("user already exists")
 	ErrCannotCreateUser  = errors.New("cannot create user")
+	ErrCannotUpdateUser  = errors.New("cannot update user")
 )

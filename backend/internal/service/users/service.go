@@ -56,3 +56,22 @@ func (s *service) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (en
 	}
 	return user, nil
 }
+
+func (s *service) Update(ctx context.Context, in UpdateIn) error {
+	err := s.usersRepo.Update(ctx, users.UpdateIn{
+		UserID:                in.UserID,
+		DisplayName:           in.DisplayName,
+		FreelancerDescription: in.FreelancerDescription,
+		ClientDescription:     in.ClientDescription,
+	})
+	if err != nil {
+		if errors.Is(err, users.ErrUserNotFound) {
+			return ErrUserNotFound
+		}
+
+		log.Errorf("users.service.Update - usersRepo.Update: %v", err)
+		return ErrCannotUpdateUser
+	}
+
+	return nil
+}

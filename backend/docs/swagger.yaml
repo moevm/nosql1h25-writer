@@ -82,6 +82,28 @@ definitions:
       updatedAt:
         type: string
     type: object
+  internal_api_patch_users_id.Request:
+    properties:
+      clientDescription:
+        type: string
+      displayName:
+        example: username
+        maxLength: 64
+        minLength: 3
+        type: string
+      freelancerDescription:
+        type: string
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  internal_api_patch_users_id.Response:
+    properties:
+      updated:
+        example: true
+        type: boolean
+    type: object
   internal_api_post_auth_login.Request:
     properties:
       email:
@@ -652,6 +674,55 @@ paths:
       security:
       - JWT: []
       summary: Get user by ID
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Partially update user fields. Admin can update any user; regular
+        user can update only their own profile.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_patch_users_id.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_patch_users_id.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Update user
       tags:
       - Users
 securityDefinitions:

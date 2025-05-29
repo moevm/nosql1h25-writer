@@ -127,3 +127,32 @@ func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectI
 
 	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
+
+func (r *repository) Update(ctx context.Context, in UpdateIn) error {
+	now := r.clock.Now()
+	update := bson.M{"updatedAt": now}
+
+	if in.DisplayName != nil {
+		update["displayName"] = *in.DisplayName
+	}
+
+	if in.FreelancerDescription != nil {
+		update["freelancer.description"] = *in.FreelancerDescription
+		update["freelancer.updatedAt"] = now
+	}
+
+	if in.ClientDescription != nil {
+		update["client.description"] = *in.ClientDescription
+		update["client.updatedAt"] = now
+	}
+
+	err := r.usersColl.FindOneAndUpdate(ctx, bson.M{"_id": in.UserID, "active": true}, bson.M{"$set": update}).Err()
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return ErrUserNotFound
+		}
+		return err
+	}
+
+	return nil
+}

@@ -11,4 +11,5 @@ import (
 type Service interface {
 	UpdateBalance(ctx context.Context, userID primitive.ObjectID, op OperationType, amount int) (int, error)
 	GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error)
+	Update(ctx context.Context, in UpdateIn) error
 }
