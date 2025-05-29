@@ -25,12 +25,8 @@ func New(usersService users.Service) api.Handler {
 type Request struct {
 	ID                    primitive.ObjectID `param:"id" validate:"required"`
 	DisplayName           *string            `json:"displayName" validate:"omitempty,min=3,max=64" example:"username"`
-	FreelancerDescription *string            `json:"freelancerDescription,omitempty"`
-	ClientDescription     *string            `json:"clientDescription,omitempty"`
-}
-
-type Response struct {
-	Updated bool `json:"updated" example:"true"`
+	FreelancerDescription *string            `json:"freelancerDescription" validate:"omitempty,min=16,max=2048"`
+	ClientDescription     *string            `json:"clientDescription" validate:"omitempty,min=16,max=2048"`
 }
 
 // Handle - Update user
@@ -43,7 +39,7 @@ type Response struct {
 //	@Param			request	body	Request	true	"Fields to update"
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	Response
+//	@Success		200
 //	@Failure		400	{object}	echo.HTTPError
 //	@Failure		401	{object}	echo.HTTPError
 //	@Failure		403	{object}	echo.HTTPError
@@ -55,31 +51,28 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 	RequesterID := c.Get(mw.UserIDKey).(primitive.ObjectID)          //nolint:forcetypeassert
 
 	// Проверка: если не передано ни одного изменяемого поля
-	if in.DisplayName == nil && in.FreelancerDescription == nil &&
-		in.ClientDescription == nil {
+	if in.DisplayName == nil && in.FreelancerDescription == nil && in.ClientDescription == nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "no fields to update")
 	}
 
-	update := users.UpdateInput{
-		RequesterID:           RequesterID,
-		RequesterRole:         RequesterRole,
+	// Только админ или сам пользователь может обновлять
+	if RequesterRole != entity.SystemRoleTypeAdmin && RequesterID != in.ID {
+		return echo.NewHTTPError(http.StatusForbidden, "access denied")
+	}
+
+	err := h.usersService.Update(c.Request().Context(), users.UpdateIn{
 		UserID:                in.ID,
 		DisplayName:           in.DisplayName,
 		FreelancerDescription: in.FreelancerDescription,
 		ClientDescription:     in.ClientDescription,
-	}
-
-	err := h.usersService.UpdateProfile(c.Request().Context(), update)
+	})
 	if err != nil {
 		if errors.Is(err, users.ErrUserNotFound) {
-			return echo.NewHTTPError(http.StatusNotFound, "user not found")
-		}
-		if errors.Is(err, users.ErrForbidden) {
-			return echo.NewHTTPError(http.StatusForbidden, "access denied")
+			return echo.NewHTTPError(http.StatusNotFound, err.Error())
 		}
 
-		return echo.NewHTTPError(http.StatusInternalServerError, "internal error")
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, Response{Updated: true})
+	return c.NoContent(http.StatusOK)
 }
