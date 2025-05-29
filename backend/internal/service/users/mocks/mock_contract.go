@@ -72,3 +72,17 @@ func (mr *MockServiceMockRecorder) UpdateBalance(ctx, userID, op, amount any) *g
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBalance", reflect.TypeOf((*MockService)(nil).UpdateBalance), ctx, userID, op, amount)
 }
+
+// UpdateProfile mocks base method.
+func (m *MockService) UpdateProfile(ctx context.Context, input users.UpdateInput) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateProfile", ctx, input)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateProfile indicates an expected call of UpdateProfile.
+func (mr *MockServiceMockRecorder) UpdateProfile(ctx, input any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProfile", reflect.TypeOf((*MockService)(nil).UpdateProfile), ctx, input)
+}
