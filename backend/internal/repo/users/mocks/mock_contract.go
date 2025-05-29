@@ -118,18 +118,18 @@ func (mr *MockRepoMockRecorder) GetByIDExt(ctx, userID any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDExt", reflect.TypeOf((*MockRepo)(nil).GetByIDExt), ctx, userID)
 }
 
-// UpdateProfile mocks base method.
-func (m *MockRepo) UpdateProfile(ctx context.Context, input users.UpdateInput) error {
+// Update mocks base method.
+func (m *MockRepo) Update(ctx context.Context, in users.UpdateIn) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateProfile", ctx, input)
+	ret := m.ctrl.Call(m, "Update", ctx, in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// UpdateProfile indicates an expected call of UpdateProfile.
-func (mr *MockRepoMockRecorder) UpdateProfile(ctx, input any) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockRepoMockRecorder) Update(ctx, in any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProfile", reflect.TypeOf((*MockRepo)(nil).UpdateProfile), ctx, input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRepo)(nil).Update), ctx, in)
 }
 
 // Withdraw mocks base method.

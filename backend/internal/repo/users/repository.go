@@ -128,39 +128,30 @@ func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectI
 	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
 
-func (r *repository) UpdateProfile(ctx context.Context, input UpdateInput) error {
-	update := bson.M{}
+func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 	now := r.clock.Now()
+	update := bson.M{"updatedAt": now}
 
-	if input.DisplayName != nil {
-		update["displayName"] = *input.DisplayName
+	if in.DisplayName != nil {
+		update["displayName"] = *in.DisplayName
 	}
 
-	if input.FreelancerDescription != nil {
-		update["freelancer.description"] = *input.FreelancerDescription
+	if in.FreelancerDescription != nil {
+		update["freelancer.description"] = *in.FreelancerDescription
 		update["freelancer.updatedAt"] = now
 	}
 
-	if input.ClientDescription != nil {
-		update["client.description"] = *input.ClientDescription
+	if in.ClientDescription != nil {
+		update["client.description"] = *in.ClientDescription
 		update["client.updatedAt"] = now
 	}
 
-	if len(update) == 0 {
-		// Нечего обновлять
-		return nil
-	}
-
-	update["updatedAt"] = now
-
-	filter := bson.M{"_id": input.UserID}
-
-	res, err := r.usersColl.UpdateOne(ctx, filter, bson.M{"$set": update})
+	err := r.usersColl.FindOneAndUpdate(ctx, bson.M{"_id": in.UserID, "active": true}, bson.M{"$set": update}).Err()
 	if err != nil {
-		return ErrCannotUpdateUser
-	}
-	if res.MatchedCount == 0 {
-		return ErrUserNotFound
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return ErrUserNotFound
+		}
+		return err
 	}
 
 	return nil
