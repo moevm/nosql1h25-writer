@@ -56,3 +56,37 @@ func (s *service) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (en
 	}
 	return user, nil
 }
+
+func (s *service) UpdateProfile(ctx context.Context, input UpdateInput) error {
+	// Проверка наличия пользователя
+	_, err := s.usersRepo.GetByID(ctx, input.UserID)
+	if err != nil {
+		if errors.Is(err, users.ErrUserNotFound) {
+			return ErrUserNotFound
+		}
+		log.Errorf("users.service.UpdateProfile - GetByID: %v", err)
+		return ErrCannotUpdateUser
+	}
+
+	// Только админ или сам пользователь может обновлять
+	if input.RequesterRole != entity.SystemRoleTypeAdmin && input.RequesterID != input.UserID {
+		return ErrForbidden
+	}
+
+	// Пытаемся обновить профиль
+	// err = s.usersRepo.UpdateProfile(ctx, input)
+	err = s.usersRepo.UpdateProfile(ctx, users.UpdateInput{
+		RequesterID:           input.RequesterID,
+		RequesterRole:         input.RequesterRole,
+		UserID:                input.UserID,
+		DisplayName:           input.DisplayName,
+		FreelancerDescription: input.FreelancerDescription,
+		ClientDescription:     input.ClientDescription,
+	})
+	if err != nil {
+		log.Errorf("users.service.UpdateProfile - usersRepo.UpdateProfile: %v", err)
+		return ErrCannotUpdateUser
+	}
+
+	return nil
+}
