@@ -13,6 +13,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_register"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_deposit"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_balance_withdraw"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_order_response"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_orders"
 )
 
@@ -117,4 +118,13 @@ func (app *App) PostOrdersHandler() api.Handler {
 
 	app.postOrdersHandler = post_orders.New(app.OrdersService())
 	return app.postOrdersHandler
+}
+
+func (app *App) PostOrdersResponseHandler() api.Handler {
+	if app.postOrdersResponseHandler != nil {
+		return app.postOrdersResponseHandler
+	}
+
+	app.postOrdersResponseHandler = post_order_response.New(app.OrdersService())
+	return app.postOrdersResponseHandler
 }

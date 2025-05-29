@@ -65,6 +65,7 @@ func (app *App) configureRouter(handler *echo.Echo) {
 		ordersGroup.POST("", app.PostOrdersHandler().Handle)
 		ordersGroup.GET("", app.GetOrdersHandler().Handle)
 		ordersGroup.GET("/:id", app.GetOrdersIDHandler().Handle)
+		ordersGroup.POST("/:id/response", app.PostOrdersResponseHandler().Handle)
 	}
 }
 

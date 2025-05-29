@@ -564,6 +564,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/orders/{id}/response": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create response to existing order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Response to order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "6838b94ef4b02cca187b2ec2",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_order_response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "get": {
                 "security": [
@@ -938,15 +994,27 @@ const docTemplate = `{
                 }
             }
         },
+        "internal_api_post_order_response.Response": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "522bb79455449d881b004d27"
+                }
+            }
+        },
         "internal_api_post_orders.Request": {
             "type": "object",
             "required": [
-                "comletionTime",
+                "completionTime",
                 "description",
                 "title"
             ],
             "properties": {
-                "comletionTime": {
+                "completionTime": {
                     "type": "integer",
                     "minimum": 3600000000000,
                     "example": 3600000000000

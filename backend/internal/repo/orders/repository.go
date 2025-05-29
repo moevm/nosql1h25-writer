@@ -170,3 +170,37 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderW
 		Rating:         0.0, // пока без объединения с юзерами
 	}, nil
 }
+
+func (r *repository) GetOrderExtByID(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error) {
+    var orderExt entity.OrderExt
+    
+    err := r.ordersColl.FindOne(
+        ctx,
+        bson.M{"_id": id, "active": true},
+    ).Decode(&orderExt)
+    
+    if err != nil {
+        if errors.Is(err, mongo.ErrNoDocuments) {
+            return entity.OrderExt{}, ErrOrderNotFound
+        }
+        return entity.OrderExt{}, err
+    }
+    
+    return orderExt, nil
+}
+
+func (r *repository) Update(ctx context.Context, id primitive.ObjectID, order entity.OrderExt) error {
+	order.UpdatedAt = r.clock.Now()
+	
+	_, err := r.ordersColl.UpdateOne(
+		ctx,
+		bson.M{"_id": id},
+		bson.M{"$set": order},
+	)
+	
+	if err != nil {
+		return err
+	}
+	
+	return nil
+}

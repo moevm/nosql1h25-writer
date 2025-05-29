@@ -200,9 +200,17 @@ definitions:
         example: 111
         type: integer
     type: object
+  internal_api_post_order_response.Response:
+    properties:
+      id:
+        example: 522bb79455449d881b004d27
+        type: string
+    required:
+    - id
+    type: object
   internal_api_post_orders.Request:
     properties:
-      comletionTime:
+      completionTime:
         example: 3600000000000
         minimum: 3600000000000
         type: integer
@@ -221,7 +229,7 @@ definitions:
         minLength: 3
         type: string
     required:
-    - comletionTime
+    - completionTime
     - description
     - title
     type: object
@@ -596,6 +604,42 @@ paths:
       security:
       - JWT: []
       summary: Get info about order
+      tags:
+      - orders
+  /orders/{id}/response:
+    post:
+      consumes:
+      - application/json
+      description: Create response to existing order
+      parameters:
+      - description: Order ID
+        example: 6838b94ef4b02cca187b2ec2
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_post_order_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Response to order
       tags:
       - orders
   /users/{id}:

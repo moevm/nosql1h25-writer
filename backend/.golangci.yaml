@@ -1,5 +1,3 @@
-version: '2'
-
 linters:
   enable:
     - gocritic
@@ -13,8 +11,9 @@ linters:
     - unparam
     - ineffassign
     - goconst
-    - intrange
     - forcetypeassert
+  disable:
+    - typecheck
   exclusions:
     rules:
       - path: _test\.go

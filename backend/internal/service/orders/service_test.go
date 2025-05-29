@@ -13,6 +13,7 @@ import (
 	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	orders_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders/mocks"
 	orders_service "github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
+	users_service_mocks "github.com/moevm/nosql1h25-writer/backend/internal/service/users/mocks"
 )
 
 func TestService_Create(t *testing.T) {
@@ -57,9 +58,10 @@ func TestService_Create(t *testing.T) {
 			ctrl := gomock.NewController(t)
 
 			mockOrdersRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 			tc.mockBehavior(mockOrdersRepo)
 
-			s := orders_service.New(mockOrdersRepo)
+			s := orders_service.New(mockOrdersRepo, mockUsersService)
 
 			got, err := s.Create(ctx, serviceIn)
 
@@ -128,10 +130,11 @@ func TestService_Find(t *testing.T) {
 			ctrl := gomock.NewController(t)
 
 			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 
 			tc.mockBehavior(mockRepo)
 
-			svc := orders_service.New(mockRepo)
+			svc := orders_service.New(mockRepo, mockUsersService)
 
 			got, err := svc.Find(ctx, offset, limit, &minCost, &maxCost, &sortBy)
 
@@ -195,10 +198,11 @@ func TestService_GetByID(t *testing.T) {
 			ctrl := gomock.NewController(t)
 
 			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 
 			tc.mockBehavior(mockRepo)
 
-			svc := orders_service.New(mockRepo)
+			svc := orders_service.New(mockRepo, mockUsersService)
 
 			got, err := svc.GetByID(ctx, orderID)
 

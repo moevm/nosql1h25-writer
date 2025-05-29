@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	entity "github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	orders "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
@@ -85,4 +86,33 @@ func (m *MockRepo) GetByID(ctx context.Context, id primitive.ObjectID) (orders.O
 func (mr *MockRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockRepo)(nil).GetByID), ctx, id)
+}
+
+// GetOrderExtByID mocks base method.
+func (m *MockRepo) GetOrderExtByID(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrderExtByID", ctx, id)
+	ret0, _ := ret[0].(entity.OrderExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrderExtByID indicates an expected call of GetOrderExtByID.
+func (mr *MockRepoMockRecorder) GetOrderExtByID(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrderExtByID", reflect.TypeOf((*MockRepo)(nil).GetOrderExtByID), ctx, id)
+}
+
+// Update mocks base method.
+func (m *MockRepo) Update(ctx context.Context, id primitive.ObjectID, order entity.OrderExt) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, id, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockRepoMockRecorder) Update(ctx, id, order any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRepo)(nil).Update), ctx, id, order)
 }
