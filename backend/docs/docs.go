@@ -562,6 +562,77 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Only updates fields present in the request. Admin can update any order. User can update only their own open orders.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Update order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Fields to update",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_patch_orders_id.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
             }
         },
         "/users/{id}": {
@@ -844,6 +915,39 @@ const docTemplate = `{
                 }
             }
         },
+        "internal_api_patch_orders_id.Request": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "completionTime": {
+                    "type": "integer",
+                    "minimum": 3600000000000,
+                    "example": 3600000000000
+                },
+                "cost": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 5000
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "minLength": 16,
+                    "example": "New Order Description"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 4,
+                    "example": "New title"
+                }
+            }
+        },
         "internal_api_patch_users_id.Request": {
             "type": "object",
             "required": [
@@ -853,7 +957,8 @@ const docTemplate = `{
                 "clientDescription": {
                     "type": "string",
                     "maxLength": 2048,
-                    "minLength": 16
+                    "minLength": 16,
+                    "example": "Client Description"
                 },
                 "displayName": {
                     "type": "string",
@@ -864,7 +969,8 @@ const docTemplate = `{
                 "freelancerDescription": {
                     "type": "string",
                     "maxLength": 2048,
-                    "minLength": 16
+                    "minLength": 16,
+                    "example": "Freelancer Description"
                 },
                 "id": {
                     "type": "string"
@@ -1039,12 +1145,12 @@ const docTemplate = `{
         "internal_api_post_orders.Request": {
             "type": "object",
             "required": [
-                "comletionTime",
+                "completionTime",
                 "description",
                 "title"
             ],
             "properties": {
-                "comletionTime": {
+                "completionTime": {
                     "type": "integer",
                     "minimum": 3600000000000,
                     "example": 3600000000000
