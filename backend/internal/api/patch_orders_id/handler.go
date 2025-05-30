@@ -63,7 +63,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 			if errors.Is(err, orders.ErrOrderNotFound) {
 				return echo.NewHTTPError(http.StatusNotFound, err.Error())
 			}
-			
+
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 

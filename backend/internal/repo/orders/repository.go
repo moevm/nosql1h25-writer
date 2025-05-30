@@ -202,7 +202,7 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return ErrOrderNotFound
 		}
-		
+
 		return err
 	}
 
