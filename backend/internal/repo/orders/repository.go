@@ -80,7 +80,6 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 			"completionTime": 1,
 			"cost":           1,
 			"freelancerId":   1,
-			"budget":         1,
 			"createdAt":      1,
 			"updatedAt":      1,
 			"responses":      1,
@@ -170,6 +169,18 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderW
 		ClientName:     "",  // пока без объединения с юзерами
 		Rating:         0.0, // пока без объединения с юзерами
 	}, nil
+}
+
+func (r *repository) GetByIDExt(ctx context.Context, id primitive.ObjectID) (order entity.OrderExt, _ error) {
+	if err := r.ordersColl.FindOne(ctx, bson.M{"_id": id, "active": true}).Decode(&order); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return order, ErrOrderNotFound
+		}
+
+		return order, err
+	}
+
+	return order, nil
 }
 
 func (r *repository) Update(ctx context.Context, in UpdateIn) error {

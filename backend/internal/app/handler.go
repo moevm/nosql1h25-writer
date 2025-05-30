@@ -99,7 +99,7 @@ func (app *App) GetOrdersIDHandler() api.Handler {
 		return app.getOrdersIDHandler
 	}
 
-	app.getOrdersIDHandler = get_orders_id.New(app.OrdersService())
+	app.getOrdersIDHandler = get_orders_id.New(app.OrdersService(), app.UsersService())
 	return app.getOrdersIDHandler
 }
 

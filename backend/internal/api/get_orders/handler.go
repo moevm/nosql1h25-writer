@@ -58,10 +58,12 @@ type Order struct {
 //	@Router			/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
 	offset, limit := applyDefaults(in)
+
 	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit, in.MinCost, in.MaxCost, in.SortBy)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
+
 	orderList := make([]Order, 0, len(findOut.Orders))
 	for _, order := range findOut.Orders {
 		orderList = append(orderList, Order{
@@ -74,6 +76,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 			Rating:         order.Rating,
 		})
 	}
+
 	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: findOut.Total})
 }
 

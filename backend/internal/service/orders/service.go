@@ -5,9 +5,9 @@ import (
 	"errors"
 
 	log "github.com/sirupsen/logrus"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 )
 
@@ -22,11 +22,11 @@ func New(ordersRepo orders.Repo) Service {
 func (s *service) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
 	out, err := s.ordersRepo.Find(ctx, offset, limit, minCost, maxCost, sortBy)
 	if err != nil {
-		log.Errorf("OrderService.Find - s.ordersRepo: %v", err)
+		log.Errorf("orders.service.Find - s.ordersRepo.Find: %v", err)
 		return FindOut{}, ErrCannotFindOrders
 	}
-	var serviceFindOut FindOut
-	serviceFindOut.Total = out.Total
+
+	serviceFindOut := FindOut{Total: out.Total}
 	for _, order := range out.Orders {
 		serviceFindOut.Orders = append(serviceFindOut.Orders, OrderWithClientData{
 			ID:             order.ID,
@@ -47,10 +47,26 @@ func (s *service) GetByID(ctx context.Context, id primitive.ObjectID) (OrderWith
 		if errors.Is(err, orders.ErrOrderNotFound) {
 			return OrderWithClientData{}, ErrOrderNotFound
 		}
-		log.Errorf("OrderService.Get - s.ordersRepo: %v", err)
+
+		log.Errorf("orders.service.GetByID - s.ordersRepo.GetByID: %v", err)
 		return OrderWithClientData{}, ErrCannotGetOrder
 	}
+
 	return OrderWithClientData(out), nil
+}
+
+func (s *service) GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error) {
+	out, err := s.ordersRepo.GetByIDExt(ctx, id)
+	if err != nil {
+		if errors.Is(err, orders.ErrOrderNotFound) {
+			return entity.OrderExt{}, ErrOrderNotFound
+		}
+
+		log.Errorf("orders.service.GetByIDExt - s.ordersRepo.GetByIDExt: %v", err)
+		return entity.OrderExt{}, ErrCannotGetOrder
+	}
+
+	return out, nil
 }
 
 func (s *service) Create(ctx context.Context, in CreateIn) (primitive.ObjectID, error) {
@@ -81,6 +97,7 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 		if errors.Is(err, orders.ErrOrderNotFound) {
 			return ErrOrderNotFound
 		}
+
 		log.Errorf("service.orders.Update - s.ordersRepo.Update: %v", err)
 		return ErrCannotUpdateOrder
 	}
