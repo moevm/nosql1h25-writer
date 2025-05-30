@@ -85,6 +85,8 @@ definitions:
   internal_api_patch_users_id.Request:
     properties:
       clientDescription:
+        maxLength: 2048
+        minLength: 16
         type: string
       displayName:
         example: username
@@ -92,17 +94,13 @@ definitions:
         minLength: 3
         type: string
       freelancerDescription:
+        maxLength: 2048
+        minLength: 16
         type: string
       id:
         type: string
     required:
     - id
-    type: object
-  internal_api_patch_users_id.Response:
-    properties:
-      updated:
-        example: true
-        type: boolean
     type: object
   internal_api_post_auth_login.Request:
     properties:
@@ -698,8 +696,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/internal_api_patch_users_id.Response'
         "400":
           description: Bad Request
           schema:

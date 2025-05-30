@@ -682,10 +682,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/internal_api_patch_users_id.Response"
-                        }
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -854,7 +851,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "clientDescription": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 2048,
+                    "minLength": 16
                 },
                 "displayName": {
                     "type": "string",
@@ -863,19 +862,12 @@ const docTemplate = `{
                     "example": "username"
                 },
                 "freelancerDescription": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 2048,
+                    "minLength": 16
                 },
                 "id": {
                     "type": "string"
-                }
-            }
-        },
-        "internal_api_patch_users_id.Response": {
-            "type": "object",
-            "properties": {
-                "updated": {
-                    "type": "boolean",
-                    "example": true
                 }
             }
         },

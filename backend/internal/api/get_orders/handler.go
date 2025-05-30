@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/decorator"
@@ -32,13 +33,13 @@ type Response struct {
 }
 
 type Order struct {
-	ID             string  `json:"id"`
-	Title          string  `json:"title"`
-	Description    string  `json:"description"`
-	CompletionTime int     `json:"completionTime"`
-	Cost           int     `json:"cost,omitempty"`
-	ClientName     string  `json:"clientName"`
-	Rating         float64 `json:"rating"`
+	ID             primitive.ObjectID `json:"id"`
+	Title          string             `json:"title"`
+	Description    string             `json:"description"`
+	CompletionTime int64              `json:"completionTime"`
+	Cost           int                `json:"cost,omitempty"`
+	ClientName     string             `json:"clientName"`
+	Rating         float64            `json:"rating"`
 }
 
 // Handle - Get Orders

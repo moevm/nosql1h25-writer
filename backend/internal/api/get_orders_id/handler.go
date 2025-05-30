@@ -27,13 +27,13 @@ type Request struct {
 type Response struct {
 	Title          string  `json:"title"`
 	Description    string  `json:"description"`
-	CompletionTime int     `json:"completionTime"`
+	CompletionTime int64   `json:"completionTime"`
 	Cost           int     `json:"cost,omitempty"`
 	ClientName     string  `json:"clientName"`
 	Rating         float64 `json:"rating"`
 }
 
-// Handle - Get Ordes by ID
+// Handle - Get Order by ID
 //
 //	@Description	Return order by MongoDB ObjectID
 //	@Summary		Get info about order
