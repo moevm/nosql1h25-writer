@@ -140,10 +140,10 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 	out.Total = totalCount
 	for _, order := range result[0].Orders {
 		out.Orders = append(out.Orders, OrderWithClientData{
-			ID:             order.ID.Hex(),
+			ID:             order.ID,
 			Title:          order.Title,
 			Description:    order.Description,
-			CompletionTime: int(order.CompletionTime),
+			CompletionTime: order.CompletionTime,
 			Cost:           order.Cost,
 			ClientName:     "",  // пока без объединения с юзерами
 			Rating:         0.0, // пока без объединения с юзерами
@@ -162,11 +162,48 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderW
 		return OrderWithClientData{}, err
 	}
 	return OrderWithClientData{
+		ClientID:       order.ClientID,
 		Title:          order.Title,
 		Description:    order.Description,
-		CompletionTime: int(order.CompletionTime),
+		CompletionTime: order.CompletionTime,
 		Cost:           order.Cost,
 		ClientName:     "",  // пока без объединения с юзерами
 		Rating:         0.0, // пока без объединения с юзерами
 	}, nil
+}
+
+func (r *repository) Update(ctx context.Context, in UpdateIn) error {
+	now := r.clock.Now()
+	update := bson.M{"updatedAt": now}
+
+	if in.Title != nil {
+		update["title"] = *in.Title
+	}
+
+	if in.Description != nil {
+		update["description"] = *in.Description
+	}
+
+	if in.CompletionTime != nil {
+		update["completionTime"] = *in.CompletionTime
+	}
+
+	if in.Cost != nil {
+		update["cost"] = *in.Cost
+	}
+
+	err := r.ordersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": in.OrderID, "active": true},
+		bson.M{"$set": update},
+	).Err()
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return ErrOrderNotFound
+		}
+		return err
+	}
+
+	return nil
 }
