@@ -16,11 +16,20 @@ type FindOut struct {
 }
 
 type OrderWithClientData struct {
-	ID             string
+	ID             primitive.ObjectID
+	ClientID       primitive.ObjectID
 	Title          string
 	Description    string
-	CompletionTime int
+	CompletionTime int64
 	Cost           int
 	ClientName     string
 	Rating         float64
+}
+
+type UpdateIn struct {
+	OrderID        primitive.ObjectID
+	Title          *string
+	Description    *string
+	CompletionTime *int64
+	Cost           *int
 }
