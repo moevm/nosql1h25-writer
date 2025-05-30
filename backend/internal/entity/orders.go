@@ -15,7 +15,6 @@ type Order struct {
 	Cost           int                `bson:"cost,omitempty"`
 	Active         bool               `bson:"active"`
 	FreelancerID   primitive.ObjectID `bson:"freelancerId,omitempty"`
-	Budget         int                `bson:"budget,omitempty"`
 	CreatedAt      time.Time          `bson:"createdAt"`
 	UpdatedAt      time.Time          `bson:"updatedAt"`
 }
@@ -29,7 +28,6 @@ type OrderExt struct {
 type Response struct {
 	FreelancerName string             `bson:"freelancerName"`
 	FreelancerID   primitive.ObjectID `bson:"freelancerId"`
-	ChatID         primitive.ObjectID `bson:"chatId"`
 	CoverLetter    string             `bson:"coverLetter"`
 	Active         bool               `bson:"active"`
 	CreatedAt      time.Time          `bson:"createdAt"`

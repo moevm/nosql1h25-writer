@@ -4,6 +4,24 @@ definitions:
     properties:
       message: {}
     type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType:
+    enum:
+    - beginning
+    - negotiation
+    - budgeting
+    - work
+    - reviews
+    - finished
+    - dispute
+    type: string
+    x-enum-varnames:
+    - StatusTypeBeginning
+    - StatusTypeNegotiation
+    - StatusTypeBudgeting
+    - StatusTypeWork
+    - StatusTypeReviews
+    - StatusTypeFinished
+    - StatusTypeDispute
   github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
     enum:
     - admin
@@ -52,6 +70,73 @@ definitions:
         example: 250
         type: integer
     type: object
+  internal_api_get_orders_id.Order:
+    properties:
+      clientId:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      clientName:
+        example: John Doe
+        type: string
+      clientRating:
+        example: 4.8
+        type: number
+      completionTime:
+        example: 3600000000000
+        type: integer
+      cost:
+        example: 500
+        type: integer
+      createdAt:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      description:
+        example: Write something for me but more words
+        type: string
+      freelancerId:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      id:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
+        example: beginning
+      title:
+        example: Write something for me
+        type: string
+      updatedAt:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+    required:
+    - clientId
+    - clientName
+    - clientRating
+    - completionTime
+    - createdAt
+    - description
+    - id
+    - status
+    - title
+    - updatedAt
+    type: object
+  internal_api_get_orders_id.Response:
+    properties:
+      hasActiveResponse:
+        type: boolean
+      isClient:
+        type: boolean
+      isFreelancer:
+        type: boolean
+      order:
+        $ref: '#/definitions/internal_api_get_orders_id.Order'
+    required:
+    - hasActiveResponse
+    - isClient
+    - isFreelancer
+    - order
+    type: object
   internal_api_get_users_id.Profile:
     properties:
       description:
@@ -85,6 +170,8 @@ definitions:
   internal_api_patch_users_id.Request:
     properties:
       clientDescription:
+        maxLength: 2048
+        minLength: 16
         type: string
       displayName:
         example: username
@@ -92,17 +179,13 @@ definitions:
         minLength: 3
         type: string
       freelancerDescription:
+        maxLength: 2048
+        minLength: 16
         type: string
       id:
         type: string
     required:
     - id
-    type: object
-  internal_api_patch_users_id.Response:
-    properties:
-      updated:
-        example: true
-        type: boolean
     type: object
   internal_api_post_auth_login.Request:
     properties:
@@ -224,7 +307,7 @@ definitions:
     type: object
   internal_api_post_orders.Request:
     properties:
-      comletionTime:
+      completionTime:
         example: 3600000000000
         minimum: 3600000000000
         type: integer
@@ -243,7 +326,7 @@ definitions:
         minLength: 3
         type: string
     required:
-    - comletionTime
+    - completionTime
     - description
     - title
     type: object
@@ -588,7 +671,7 @@ paths:
       - orders
   /orders/{id}:
     get:
-      description: Return order by MongoDB ObjectID
+      description: Return order by ID
       parameters:
       - description: Order ID
         in: path
@@ -601,14 +684,17 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/internal_api_get_orders_id.Response'
         "400":
-          description: Incorrect ID
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/echo.HTTPError'
         "404":
-          description: Order not found
+          description: Not Found
           schema:
             $ref: '#/definitions/echo.HTTPError'
         "500":
@@ -617,7 +703,7 @@ paths:
             $ref: '#/definitions/echo.HTTPError'
       security:
       - JWT: []
-      summary: Get info about order
+      summary: Get info about order and several related things
       tags:
       - orders
   /users/{id}:
@@ -698,8 +784,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/internal_api_patch_users_id.Response'
         "400":
           description: Bad Request
           schema:

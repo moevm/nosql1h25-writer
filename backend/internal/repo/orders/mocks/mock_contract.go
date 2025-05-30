@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	entity "github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	orders "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
@@ -85,4 +86,19 @@ func (m *MockRepo) GetByID(ctx context.Context, id primitive.ObjectID) (orders.O
 func (mr *MockRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockRepo)(nil).GetByID), ctx, id)
+}
+
+// GetByIDExt mocks base method.
+func (m *MockRepo) GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByIDExt", ctx, id)
+	ret0, _ := ret[0].(entity.OrderExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByIDExt indicates an expected call of GetByIDExt.
+func (mr *MockRepoMockRecorder) GetByIDExt(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDExt", reflect.TypeOf((*MockRepo)(nil).GetByIDExt), ctx, id)
 }

@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
-	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 )
 
 type service struct {

@@ -518,14 +518,14 @@ const docTemplate = `{
                         "JWT": []
                     }
                 ],
-                "description": "Return order by MongoDB ObjectID",
+                "description": "Return order by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "orders"
                 ],
-                "summary": "Get info about order",
+                "summary": "Get info about order and several related things",
                 "parameters": [
                     {
                         "type": "string",
@@ -539,18 +539,23 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/internal_api_get_orders_id.Response"
                         }
                     },
                     "400": {
-                        "description": "Incorrect ID",
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/echo.HTTPError"
                         }
                     },
                     "404": {
-                        "description": "Order not found",
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/echo.HTTPError"
                         }
@@ -682,10 +687,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/internal_api_patch_users_id.Response"
-                        }
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -727,6 +729,27 @@ const docTemplate = `{
             "properties": {
                 "message": {}
             }
+        },
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType": {
+            "type": "string",
+            "enum": [
+                "beginning",
+                "negotiation",
+                "budgeting",
+                "work",
+                "reviews",
+                "finished",
+                "dispute"
+            ],
+            "x-enum-varnames": [
+                "StatusTypeBeginning",
+                "StatusTypeNegotiation",
+                "StatusTypeBudgeting",
+                "StatusTypeWork",
+                "StatusTypeReviews",
+                "StatusTypeFinished",
+                "StatusTypeDispute"
+            ]
         },
         "github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType": {
             "type": "string",
@@ -801,6 +824,98 @@ const docTemplate = `{
                 }
             }
         },
+        "internal_api_get_orders_id.Order": {
+            "type": "object",
+            "required": [
+                "clientId",
+                "clientName",
+                "clientRating",
+                "completionTime",
+                "createdAt",
+                "description",
+                "id",
+                "status",
+                "title",
+                "updatedAt"
+            ],
+            "properties": {
+                "clientId": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "clientName": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "clientRating": {
+                    "type": "number",
+                    "example": 4.8
+                },
+                "completionTime": {
+                    "type": "integer",
+                    "example": 3600000000000
+                },
+                "cost": {
+                    "type": "integer",
+                    "example": 500
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Write something for me but more words"
+                },
+                "freelancerId": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "status": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                        }
+                    ],
+                    "example": "beginning"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Write something for me"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                }
+            }
+        },
+        "internal_api_get_orders_id.Response": {
+            "type": "object",
+            "required": [
+                "hasActiveResponse",
+                "isClient",
+                "isFreelancer",
+                "order"
+            ],
+            "properties": {
+                "hasActiveResponse": {
+                    "type": "boolean"
+                },
+                "isClient": {
+                    "type": "boolean"
+                },
+                "isFreelancer": {
+                    "type": "boolean"
+                },
+                "order": {
+                    "$ref": "#/definitions/internal_api_get_orders_id.Order"
+                }
+            }
+        },
         "internal_api_get_users_id.Profile": {
             "type": "object",
             "properties": {
@@ -854,7 +969,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "clientDescription": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 2048,
+                    "minLength": 16
                 },
                 "displayName": {
                     "type": "string",
@@ -863,19 +980,12 @@ const docTemplate = `{
                     "example": "username"
                 },
                 "freelancerDescription": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 2048,
+                    "minLength": 16
                 },
                 "id": {
                     "type": "string"
-                }
-            }
-        },
-        "internal_api_patch_users_id.Response": {
-            "type": "object",
-            "properties": {
-                "updated": {
-                    "type": "boolean",
-                    "example": true
                 }
             }
         },
@@ -1047,12 +1157,12 @@ const docTemplate = `{
         "internal_api_post_orders.Request": {
             "type": "object",
             "required": [
-                "comletionTime",
+                "completionTime",
                 "description",
                 "title"
             ],
             "properties": {
-                "comletionTime": {
+                "completionTime": {
                     "type": "integer",
                     "minimum": 3600000000000,
                     "example": 3600000000000

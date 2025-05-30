@@ -17,7 +17,7 @@ import (
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
-func TestService_GetUserByID(t *testing.T) {
+func TestService_GetByIDExt(t *testing.T) {
 	log.SetOutput(io.Discard)
 	var (
 		ctx    = context.Background()
