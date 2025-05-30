@@ -25,8 +25,8 @@ func New(usersService users.Service) api.Handler {
 type Request struct {
 	ID                    primitive.ObjectID `param:"id" validate:"required"`
 	DisplayName           *string            `json:"displayName" validate:"omitempty,min=3,max=64" example:"username"`
-	FreelancerDescription *string            `json:"freelancerDescription" validate:"omitempty,min=16,max=2048"`
-	ClientDescription     *string            `json:"clientDescription" validate:"omitempty,min=16,max=2048"`
+	FreelancerDescription *string            `json:"freelancerDescription" validate:"omitempty,min=16,max=2048" example:"Freelancer Description"`
+	ClientDescription     *string            `json:"clientDescription" validate:"omitempty,min=16,max=2048" example:"Client Description"`
 }
 
 // Handle - Update user

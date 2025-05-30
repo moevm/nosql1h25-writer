@@ -7,6 +7,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users_id"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/patch_orders_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/patch_users_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
@@ -127,4 +128,13 @@ func (app *App) PatchUsersIDHandler() api.Handler {
 
 	app.patchUsersIDHandler = patch_users_id.New(app.UsersService())
 	return app.patchUsersIDHandler
+}
+
+func (app *App) PatchOrdersIDHandler() api.Handler {
+	if app.patchOrdersIDHandler != nil {
+		return app.patchOrdersIDHandler
+	}
+
+	app.patchOrdersIDHandler = patch_orders_id.New(app.OrdersService())
+	return app.patchOrdersIDHandler
 }
