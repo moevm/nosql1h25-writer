@@ -61,10 +61,12 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		order, err := h.ordersService.GetByID(c.Request().Context(), in.ID)
 		if err != nil {
 			if errors.Is(err, orders.ErrOrderNotFound) {
-				return echo.NewHTTPError(http.StatusNotFound, "order not found")
+				return echo.NewHTTPError(http.StatusNotFound, err.Error())
 			}
+			
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
+
 		if order.ClientID != userID {
 			return echo.NewHTTPError(http.StatusForbidden, "access denied")
 		}

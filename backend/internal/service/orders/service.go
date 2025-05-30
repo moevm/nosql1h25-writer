@@ -4,9 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
-	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
@@ -23,7 +22,7 @@ func New(ordersRepo orders.Repo) Service {
 func (s *service) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
 	out, err := s.ordersRepo.Find(ctx, offset, limit, minCost, maxCost, sortBy)
 	if err != nil {
-		logrus.Errorf("OrderService.Find - s.ordersRepo: %v", err)
+		log.Errorf("OrderService.Find - s.ordersRepo: %v", err)
 		return FindOut{}, ErrCannotFindOrders
 	}
 	var serviceFindOut FindOut
@@ -48,7 +47,7 @@ func (s *service) GetByID(ctx context.Context, id primitive.ObjectID) (OrderWith
 		if errors.Is(err, orders.ErrOrderNotFound) {
 			return OrderWithClientData{}, ErrOrderNotFound
 		}
-		logrus.Errorf("OrderService.Get - s.ordersRepo: %v", err)
+		log.Errorf("OrderService.Get - s.ordersRepo: %v", err)
 		return OrderWithClientData{}, ErrCannotGetOrder
 	}
 	return OrderWithClientData(out), nil
@@ -82,7 +81,7 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 		if errors.Is(err, orders.ErrOrderNotFound) {
 			return ErrOrderNotFound
 		}
-		logrus.Errorf("service.orders.Update - s.ordersRepo.Update: %v", err)
+		log.Errorf("service.orders.Update - s.ordersRepo.Update: %v", err)
 		return ErrCannotUpdateOrder
 	}
 
