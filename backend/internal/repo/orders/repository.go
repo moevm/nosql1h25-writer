@@ -161,6 +161,7 @@ func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderW
 		return OrderWithClientData{}, err
 	}
 	return OrderWithClientData{
+		ClientID:       order.ClientID,
 		Title:          order.Title,
 		Description:    order.Description,
 		CompletionTime: order.CompletionTime,
@@ -180,4 +181,41 @@ func (r *repository) GetByIDExt(ctx context.Context, id primitive.ObjectID) (ord
 	}
 
 	return order, nil
+}
+
+func (r *repository) Update(ctx context.Context, in UpdateIn) error {
+	now := r.clock.Now()
+	update := bson.M{"updatedAt": now}
+
+	if in.Title != nil {
+		update["title"] = *in.Title
+	}
+
+	if in.Description != nil {
+		update["description"] = *in.Description
+	}
+
+	if in.CompletionTime != nil {
+		update["completionTime"] = *in.CompletionTime
+	}
+
+	if in.Cost != nil {
+		update["cost"] = *in.Cost
+	}
+
+	err := r.ordersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": in.OrderID, "active": true},
+		bson.M{"$set": update},
+	).Err()
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return ErrOrderNotFound
+		}
+
+		return err
+	}
+
+	return nil
 }

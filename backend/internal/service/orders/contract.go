@@ -14,4 +14,5 @@ type Service interface {
 	Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error)
 	GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error)
 	GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error)
+	Update(ctx context.Context, in UpdateIn) error
 }

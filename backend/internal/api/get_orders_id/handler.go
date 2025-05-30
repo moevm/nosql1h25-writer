@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"

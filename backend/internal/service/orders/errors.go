@@ -7,4 +7,5 @@ var (
 	ErrCannotGetOrder    = errors.New("cannot get order")
 	ErrCannotFindOrders  = errors.New("cannot find orders")
 	ErrCannotCreateOrder = errors.New("cannot create order")
+	ErrCannotUpdateOrder = errors.New("cannot update order")
 )

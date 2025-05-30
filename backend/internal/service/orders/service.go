@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	log "github.com/sirupsen/logrus"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
@@ -84,4 +83,24 @@ func (s *service) Create(ctx context.Context, in CreateIn) (primitive.ObjectID, 
 	}
 
 	return id, nil
+}
+
+func (s *service) Update(ctx context.Context, in UpdateIn) error {
+	err := s.ordersRepo.Update(ctx, orders.UpdateIn{
+		OrderID:        in.OrderID,
+		Title:          in.Title,
+		Description:    in.Description,
+		CompletionTime: in.CompletionTime,
+		Cost:           in.Cost,
+	})
+	if err != nil {
+		if errors.Is(err, orders.ErrOrderNotFound) {
+			return ErrOrderNotFound
+		}
+
+		log.Errorf("service.orders.Update - s.ordersRepo.Update: %v", err)
+		return ErrCannotUpdateOrder
+	}
+
+	return nil
 }

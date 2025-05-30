@@ -167,9 +167,35 @@ definitions:
       updatedAt:
         type: string
     type: object
+  internal_api_patch_orders_id.Request:
+    properties:
+      completionTime:
+        example: 3600000000000
+        minimum: 3600000000000
+        type: integer
+      cost:
+        example: 5000
+        minimum: 0
+        type: integer
+      description:
+        example: New Order Description
+        maxLength: 2048
+        minLength: 16
+        type: string
+      id:
+        type: string
+      title:
+        example: New title
+        maxLength: 256
+        minLength: 4
+        type: string
+    required:
+    - id
+    type: object
   internal_api_patch_users_id.Request:
     properties:
       clientDescription:
+        example: Client Description
         maxLength: 2048
         minLength: 16
         type: string
@@ -179,6 +205,7 @@ definitions:
         minLength: 3
         type: string
       freelancerDescription:
+        example: Freelancer Description
         maxLength: 2048
         minLength: 16
         type: string
@@ -704,6 +731,53 @@ paths:
       security:
       - JWT: []
       summary: Get info about order and several related things
+      tags:
+      - orders
+    patch:
+      consumes:
+      - application/json
+      description: Only updates fields present in the request. Admin can update any
+        order. User can update only their own open orders.
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_patch_orders_id.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Update order
       tags:
       - orders
   /users/{id}:

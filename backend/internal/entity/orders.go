@@ -35,7 +35,6 @@ type Response struct {
 
 type Status struct {
 	Type      StatusType `bson:"type"`
-	Content   string     `bson:"content,omitempty"`
 	CreatedAt time.Time  `bson:"createdAt"`
 }
 

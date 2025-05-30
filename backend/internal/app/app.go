@@ -64,6 +64,8 @@ type App struct {
 
 	patchUsersIDHandler api.Handler
 
+	patchOrdersIDHandler api.Handler
+
 	// middlewares
 	authMW *mw.AuthMW
 

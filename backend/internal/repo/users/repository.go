@@ -146,7 +146,12 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 		update["client.updatedAt"] = now
 	}
 
-	err := r.usersColl.FindOneAndUpdate(ctx, bson.M{"_id": in.UserID, "active": true}, bson.M{"$set": update}).Err()
+	err := r.usersColl.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": in.UserID, "active": true},
+		bson.M{"$set": update},
+	).Err()
+
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return ErrUserNotFound
