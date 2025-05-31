@@ -69,7 +69,7 @@ export default function RegisterPage() {
         
         login(data.accessToken, data.refreshToken)
         message.success('Регистрация успешна!')
-        await navigate({ to: '/' })
+        await navigate({ to: '/profile' })
       } catch (e) {
         setServerError(e instanceof Error ? e.message : 'Ошибка регистрации')
       }
