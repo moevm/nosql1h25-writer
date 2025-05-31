@@ -105,6 +105,24 @@ const OrderDetails: React.FC = () => {
     }
   }
 
+  const handleCloseOrder = async () => {
+    try {
+      setIsSubmitting(true)
+      await api.patch(`/orders/${id}`, {
+        id,
+        status: 'finished'
+      })
+      
+      message.success('Заказ успешно закрыт')
+      // Обновляем данные заказа
+      await queryClient.invalidateQueries({ queryKey: ['order', id] })
+    } catch (error) {
+      message.error('Ошибка при закрытии заказа')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div style={{ 
@@ -185,6 +203,18 @@ const OrderDetails: React.FC = () => {
           {order.description}
         </div>
 
+        {data.isClient && isCurrentRoleClient && order.status !== 'finished' && (
+          <div style={{ marginTop: 32, textAlign: 'right' }}>
+            <Button 
+              danger
+              onClick={handleCloseOrder}
+              loading={isSubmitting}
+            >
+              Закрыть заказ
+            </Button>
+          </div>
+        )}
+
         {data.isClient && isCurrentRoleClient && (
           <div style={{ 
             marginTop: 32,
@@ -232,7 +262,7 @@ const OrderDetails: React.FC = () => {
           </div>
         )}
 
-        {!data.isClient && !data.hasActiveResponse && (
+        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status === 'beginning' && (
           <div style={{ marginTop: 32 }}>
             <Input.TextArea 
               placeholder="Написать заказчику..." 
@@ -242,15 +272,29 @@ const OrderDetails: React.FC = () => {
               onChange={(e) => setCoverLetter(e.target.value)}
               maxLength={512}
               showCount
+              disabled={data.hasActiveResponse}
             />
             <Button 
               type="primary" 
               onClick={handleSubmitResponse}
               loading={isSubmitting}
-              disabled={!coverLetter.trim()}
+              disabled={!coverLetter.trim() || data.hasActiveResponse}
             >
-              Готов взяться
+              {data.hasActiveResponse ? 'Вы уже откликнулись' : 'Готов взяться'}
             </Button>
+          </div>
+        )}
+
+        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status !== 'beginning' && (
+          <div style={{ 
+            marginTop: 32,
+            padding: 16,
+            backgroundColor: '#f5f5f5',
+            borderRadius: 8,
+            textAlign: 'center',
+            color: '#666'
+          }}>
+            Откликаться на заказ можно только в статусе "Новый"
           </div>
         )}
       </Card>
