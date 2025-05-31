@@ -176,11 +176,49 @@ func (r *repository) GetByIDExt(ctx context.Context, id primitive.ObjectID) (ord
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return order, ErrOrderNotFound
 		}
-
 		return order, err
 	}
-
 	return order, nil
+}
+
+func (r *repository) CreateResponse(
+	ctx context.Context,
+	orderID primitive.ObjectID,
+	userID primitive.ObjectID,
+	coverLetter, freelancerName string,
+) error {
+	now := r.clock.Now()
+
+	response := entity.Response{
+		FreelancerName: freelancerName,
+		CoverLetter:    coverLetter,
+		FreelancerID:   userID,
+		CreatedAt:      now,
+		Active:         true,
+	}
+
+	update := bson.M{
+		"$push": bson.M{
+			"responses": response,
+		},
+		"$set": bson.M{
+			"updatedAt": now,
+		},
+	}
+
+	_, err := r.ordersColl.UpdateOne(
+		ctx,
+		bson.M{"_id": orderID, "active": true},
+		update,
+	)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return ErrOrderNotFound
+		}
+		return err
+	}
+
+	return nil
 }
 
 func (r *repository) Update(ctx context.Context, in UpdateIn) error {

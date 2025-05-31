@@ -14,6 +14,8 @@ import (
 	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	orders_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders/mocks"
 	orders_service "github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
+	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	users_service_mocks "github.com/moevm/nosql1h25-writer/backend/internal/service/users/mocks"
 )
 
 func TestService_Create(t *testing.T) {
@@ -58,9 +60,10 @@ func TestService_Create(t *testing.T) {
 			ctrl := gomock.NewController(t)
 
 			mockOrdersRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 			tc.mockBehavior(mockOrdersRepo)
 
-			s := orders_service.New(mockOrdersRepo)
+			s := orders_service.New(mockOrdersRepo, mockUsersService)
 
 			got, err := s.Create(ctx, serviceIn)
 
@@ -123,16 +126,16 @@ func TestService_Find(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
 
 			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 
 			tc.mockBehavior(mockRepo)
 
-			svc := orders_service.New(mockRepo)
+			svc := orders_service.New(mockRepo, mockUsersService)
 
 			got, err := svc.Find(ctx, offset, limit, &minCost, &maxCost, &sortBy)
 
@@ -190,21 +193,115 @@ func TestService_GetByID(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
 
 			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 
 			tc.mockBehavior(mockRepo)
 
-			svc := orders_service.New(mockRepo)
+			svc := orders_service.New(mockRepo, mockUsersService)
 
 			got, err := svc.GetByID(ctx, orderID)
 
 			assert.ErrorIs(t, err, tc.wantErr)
 			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
+func TestService_CreateResponse(t *testing.T) {
+	var (
+		ctx            = context.TODO()
+		orderID        = primitive.NewObjectID()
+		userID         = primitive.NewObjectID()
+		clientID       = primitive.NewObjectID()
+		coverLetter    = "Я заинтересован в вашем проекте"
+		freelancerName = "name"
+	)
+
+	orderExt := entity.OrderExt{
+		Order: entity.Order{
+			ID:       orderID,
+			ClientID: clientID,
+		},
+		Statuses: []entity.Status{{Type: entity.StatusTypeBeginning}},
+	}
+
+	userExt := entity.UserExt{
+		User: entity.User{
+			ID:          userID,
+			DisplayName: freelancerName,
+		},
+	}
+
+	type MockBehavior func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService)
+
+	tests := []struct {
+		name         string
+		mockBehavior MockBehavior
+		wantErr      error
+	}{
+		{
+			name: "successful response creation",
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
+				repo.EXPECT().GetByIDExt(ctx, orderID).Return(orderExt, nil)
+				usersService.EXPECT().GetByIDExt(ctx, userID).Return(userExt, nil)
+				repo.EXPECT().CreateResponse(ctx, orderID, userID, coverLetter, freelancerName).Return(nil)
+			},
+		},
+		{
+			name: "order not found",
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
+				repo.EXPECT().GetByIDExt(ctx, orderID).Return(entity.OrderExt{}, orders_repo.ErrOrderNotFound)
+			},
+			wantErr: orders_service.ErrOrderNotFound,
+		},
+		{
+			name: "user is order author",
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
+				orderExtWithSameClient := orderExt
+				orderExtWithSameClient.ClientID = userID
+				repo.EXPECT().GetByIDExt(ctx, orderID).Return(orderExtWithSameClient, nil)
+			},
+			wantErr: orders_service.ErrCannotResponse,
+		},
+		{
+			name: "user not found",
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
+				repo.EXPECT().GetByIDExt(ctx, orderID).Return(orderExt, nil)
+				usersService.EXPECT().GetByIDExt(ctx, userID).Return(entity.UserExt{}, users_service.ErrUserNotFound)
+			},
+			wantErr: users_service.ErrUserNotFound,
+		},
+		{
+			name: "error pushing response",
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
+				repo.EXPECT().GetByIDExt(ctx, orderID).Return(orderExt, nil)
+				usersService.EXPECT().GetByIDExt(ctx, userID).Return(userExt, nil)
+				repo.EXPECT().CreateResponse(ctx, orderID, userID, coverLetter, freelancerName).Return(assert.AnError)
+			},
+			wantErr: orders_service.ErrCannotCreateResponse,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			ctrl := gomock.NewController(t)
+
+			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
+
+			tc.mockBehavior(mockRepo, mockUsersService)
+
+			svc := orders_service.New(mockRepo, mockUsersService)
+
+			err := svc.CreateResponse(ctx, orderID, userID, coverLetter)
+
+			assert.ErrorIs(t, err, tc.wantErr)
 		})
 	}
 }
@@ -252,16 +349,16 @@ func TestService_GetByIDExt(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
 
 			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
 
 			tc.mockBehavior(mockRepo)
 
-			svc := orders_service.New(mockRepo)
+			svc := orders_service.New(mockRepo, mockUsersService)
 
 			got, err := svc.GetByIDExt(ctx, orderID)
 
