@@ -3,14 +3,13 @@ package orders
 import (
 	"context"
 	"errors"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
-	users "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
 type service struct {
@@ -112,47 +111,35 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 	return nil
 }
 
-func (s *service) CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverletter string) error {
+func (s *service) CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverLetter string) error {
 	orderExt, err := s.GetByIDExt(ctx, orderID)
 	if err != nil {
-		log.Errorf("orders.service.CreateResponse - s.GetByIDExt: %v", err)
 		return err
 	}
 
-	if orderExt.ClientID == userID {
+	if orderExt.ClientID == userID || orderExt.Statuses[len(orderExt.Statuses)-1].Type != entity.StatusTypeBeginning {
 		return ErrCannotResponse
+	}
+
+	for _, response := range orderExt.Responses {
+		if response.Active && response.FreelancerID == userID {
+			return ErrCannotResponse
+		}
 	}
 
 	user, err := s.usersService.GetByIDExt(ctx, userID)
 	if err != nil {
-		log.Errorf("orders.service.CreateResponse - s.usersService.GetByIDExt: %v", err)
-		return users.ErrUserNotFound
+		return err
 	}
 
-	response := entity.Response{
-		FreelancerID:   userID,
-		FreelancerName: user.DisplayName,
-		CoverLetter:    coverletter,
-		Active:         true,
-		CreatedAt:      time.Now().UTC(),
-	}
-
-	if len(orderExt.Statuses) > 0 && orderExt.Statuses[len(orderExt.Statuses)-1].Type == entity.StatusTypeBeginning {
-		userHasNoResponse := true
-		for _, r := range orderExt.Responses {
-			if r.FreelancerID == userID {
-				userHasNoResponse = false
-				break
-			}
+	err = s.ordersRepo.CreateResponse(ctx, orderID, userID, coverLetter, user.DisplayName)
+	if err != nil {
+		if errors.Is(err, orders.ErrOrderNotFound) {
+			return ErrOrderNotFound
 		}
 
-		if userHasNoResponse {
-			err = s.ordersRepo.PushResponse(ctx, response, orderID)
-			if err != nil {
-				log.Errorf("orders.service.CreateResponse - s.ordersRepo.PushResponse: %v", err)
-				return ErrCannotResponse
-			}
-		}
+		log.Errorf("orders.service.CreateResponse - s.ordersRepo.CreateResponse: %v", err)
+		return ErrCannotCreateResponse
 	}
 
 	return nil

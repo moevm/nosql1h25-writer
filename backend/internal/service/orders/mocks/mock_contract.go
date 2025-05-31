@@ -59,17 +59,17 @@ func (mr *MockServiceMockRecorder) Create(ctx, in any) *gomock.Call {
 }
 
 // CreateResponse mocks base method.
-func (m *MockService) CreateResponse(ctx context.Context, orderID, userID primitive.ObjectID, coverletter string) error {
+func (m *MockService) CreateResponse(ctx context.Context, orderID, userID primitive.ObjectID, coverLetter string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateResponse", ctx, orderID, userID, coverletter)
+	ret := m.ctrl.Call(m, "CreateResponse", ctx, orderID, userID, coverLetter)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateResponse indicates an expected call of CreateResponse.
-func (mr *MockServiceMockRecorder) CreateResponse(ctx, orderID, userID, coverletter any) *gomock.Call {
+func (mr *MockServiceMockRecorder) CreateResponse(ctx, orderID, userID, coverLetter any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateResponse", reflect.TypeOf((*MockService)(nil).CreateResponse), ctx, orderID, userID, coverletter)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateResponse", reflect.TypeOf((*MockService)(nil).CreateResponse), ctx, orderID, userID, coverLetter)
 }
 
 // Find mocks base method.

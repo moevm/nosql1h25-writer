@@ -651,9 +651,6 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "orders"
                 ],
@@ -661,7 +658,6 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "example": "683b2dc10949bd1e64266ed0",
                         "description": "Order ID",
                         "name": "id",
                         "in": "path",
@@ -678,12 +674,6 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/internal_api_post_order_response.Response"
-                        }
-                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -1418,21 +1408,11 @@ const docTemplate = `{
             "properties": {
                 "coverLetter": {
                     "type": "string",
+                    "maxLength": 512,
+                    "minLength": 16,
                     "example": "Я заинтересован в вашем проекте и имею релевантный опыт в этой области. Готов обсудить детали и начать работу."
                 },
                 "orderID": {
-                    "type": "string",
-                    "example": "683b2dc10949bd1e64266ed0"
-                }
-            }
-        },
-        "internal_api_post_order_response.Response": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
                     "type": "string",
                     "example": "683b2dc10949bd1e64266ed0"
                 }

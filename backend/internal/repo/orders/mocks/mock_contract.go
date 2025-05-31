@@ -58,6 +58,20 @@ func (mr *MockRepoMockRecorder) Create(ctx, in any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepo)(nil).Create), ctx, in)
 }
 
+// CreateResponse mocks base method.
+func (m *MockRepo) CreateResponse(ctx context.Context, orderID, userID primitive.ObjectID, coverLetter, freelancerName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateResponse", ctx, orderID, userID, coverLetter, freelancerName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateResponse indicates an expected call of CreateResponse.
+func (mr *MockRepoMockRecorder) CreateResponse(ctx, orderID, userID, coverLetter, freelancerName any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateResponse", reflect.TypeOf((*MockRepo)(nil).CreateResponse), ctx, orderID, userID, coverLetter, freelancerName)
+}
+
 // Find mocks base method.
 func (m *MockRepo) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (orders.FindOut, error) {
 	m.ctrl.T.Helper()
@@ -101,20 +115,6 @@ func (m *MockRepo) GetByIDExt(ctx context.Context, id primitive.ObjectID) (entit
 func (mr *MockRepoMockRecorder) GetByIDExt(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDExt", reflect.TypeOf((*MockRepo)(nil).GetByIDExt), ctx, id)
-}
-
-// PushResponse mocks base method.
-func (m *MockRepo) PushResponse(ctx context.Context, response entity.Response, orderID primitive.ObjectID) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PushResponse", ctx, response, orderID)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// PushResponse indicates an expected call of PushResponse.
-func (mr *MockRepoMockRecorder) PushResponse(ctx, response, orderID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushResponse", reflect.TypeOf((*MockRepo)(nil).PushResponse), ctx, response, orderID)
 }
 
 // Update mocks base method.

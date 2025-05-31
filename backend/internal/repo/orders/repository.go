@@ -181,16 +181,21 @@ func (r *repository) GetByIDExt(ctx context.Context, id primitive.ObjectID) (ord
 	return order, nil
 }
 
-func (r *repository) PushResponse(ctx context.Context, response entity.Response, orderID primitive.ObjectID) error {
+func (r *repository) CreateResponse(
+	ctx context.Context,
+	orderID primitive.ObjectID,
+	userID primitive.ObjectID,
+	coverLetter, freelancerName string,
+) error {
 	now := r.clock.Now()
 
-	// Устанавливаем временные метки, если они не заданы
-	if response.CreatedAt.IsZero() {
-		response.CreatedAt = now
+	response := entity.Response{
+		FreelancerName: freelancerName,
+		CoverLetter:    coverLetter,
+		FreelancerID:   userID,
+		CreatedAt:      now,
+		Active:         true,
 	}
-
-	// Гарантируем, что ответ активен
-	response.Active = true
 
 	update := bson.M{
 		"$push": bson.M{

@@ -391,6 +391,8 @@ definitions:
       coverLetter:
         example: Я заинтересован в вашем проекте и имею релевантный опыт в этой области.
           Готов обсудить детали и начать работу.
+        maxLength: 512
+        minLength: 16
         type: string
       orderID:
         example: 683b2dc10949bd1e64266ed0
@@ -398,14 +400,6 @@ definitions:
     required:
     - coverLetter
     - orderID
-    type: object
-  internal_api_post_order_response.Response:
-    properties:
-      id:
-        example: 683b2dc10949bd1e64266ed0
-        type: string
-    required:
-    - id
     type: object
   internal_api_post_orders.Request:
     properties:
@@ -862,7 +856,6 @@ paths:
       description: Create response to existing order
       parameters:
       - description: Order ID
-        example: 683b2dc10949bd1e64266ed0
         in: path
         name: id
         required: true
@@ -873,13 +866,7 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/internal_api_post_order_response.Request'
-      produces:
-      - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/internal_api_post_order_response.Response'
         "400":
           description: Bad Request
           schema:

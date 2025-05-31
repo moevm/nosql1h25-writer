@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 	"testing"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -127,7 +126,6 @@ func TestService_Find(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
@@ -195,7 +193,6 @@ func TestService_GetByID(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
@@ -217,11 +214,12 @@ func TestService_GetByID(t *testing.T) {
 
 func TestService_CreateResponse(t *testing.T) {
 	var (
-		ctx         = context.TODO()
-		orderID     = primitive.NewObjectID()
-		userID      = primitive.NewObjectID()
-		clientID    = primitive.NewObjectID()
-		coverLetter = "Я заинтересован в вашем проекте"
+		ctx            = context.TODO()
+		orderID        = primitive.NewObjectID()
+		userID         = primitive.NewObjectID()
+		clientID       = primitive.NewObjectID()
+		coverLetter    = "Я заинтересован в вашем проекте"
+		freelancerName = "name"
 	)
 
 	orderExt := entity.OrderExt{
@@ -229,18 +227,13 @@ func TestService_CreateResponse(t *testing.T) {
 			ID:       orderID,
 			ClientID: clientID,
 		},
-		Statuses: []entity.Status{
-			{
-				Type:      entity.StatusTypeBeginning,
-				CreatedAt: time.Now(),
-			},
-		},
+		Statuses: []entity.Status{{Type: entity.StatusTypeBeginning}},
 	}
 
 	userExt := entity.UserExt{
 		User: entity.User{
 			ID:          userID,
-			DisplayName: "Test User",
+			DisplayName: freelancerName,
 		},
 	}
 
@@ -256,7 +249,7 @@ func TestService_CreateResponse(t *testing.T) {
 			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
 				repo.EXPECT().GetByIDExt(ctx, orderID).Return(orderExt, nil)
 				usersService.EXPECT().GetByIDExt(ctx, userID).Return(userExt, nil)
-				repo.EXPECT().PushResponse(ctx, gomock.Any(), orderID).Return(nil)
+				repo.EXPECT().CreateResponse(ctx, orderID, userID, coverLetter, freelancerName).Return(nil)
 			},
 		},
 		{
@@ -288,14 +281,13 @@ func TestService_CreateResponse(t *testing.T) {
 			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersService *users_service_mocks.MockService) {
 				repo.EXPECT().GetByIDExt(ctx, orderID).Return(orderExt, nil)
 				usersService.EXPECT().GetByIDExt(ctx, userID).Return(userExt, nil)
-				repo.EXPECT().PushResponse(ctx, gomock.Any(), orderID).Return(assert.AnError)
+				repo.EXPECT().CreateResponse(ctx, orderID, userID, coverLetter, freelancerName).Return(assert.AnError)
 			},
-			wantErr: orders_service.ErrCannotResponse,
+			wantErr: orders_service.ErrCannotCreateResponse,
 		},
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
@@ -310,6 +302,68 @@ func TestService_CreateResponse(t *testing.T) {
 			err := svc.CreateResponse(ctx, orderID, userID, coverLetter)
 
 			assert.ErrorIs(t, err, tc.wantErr)
+		})
+	}
+}
+
+func TestService_GetByIDExt(t *testing.T) {
+	ctx := context.TODO()
+	orderID := primitive.NewObjectID()
+
+	order := entity.OrderExt{
+		Order: entity.Order{
+			ID:    orderID,
+			Title: "Bombordiro_crocodilo",
+		},
+	}
+
+	type MockBehavior func(repo *orders_repo_mocks.MockRepo)
+
+	tests := []struct {
+		name         string
+		mockBehavior MockBehavior
+		want         entity.OrderExt
+		wantErr      error
+	}{
+		{
+			name: "successful",
+			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
+				r.EXPECT().GetByIDExt(ctx, orderID).Return(order, nil)
+			},
+			want: order,
+		},
+		{
+			name: "order not found",
+			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
+				r.EXPECT().GetByIDExt(ctx, orderID).Return(entity.OrderExt{}, orders_repo.ErrOrderNotFound)
+			},
+			wantErr: orders_service.ErrOrderNotFound,
+		},
+		{
+			name: "unexpected error",
+			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
+				r.EXPECT().GetByIDExt(ctx, orderID).Return(entity.OrderExt{}, assert.AnError)
+			},
+			wantErr: orders_service.ErrCannotGetOrder,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			ctrl := gomock.NewController(t)
+
+			mockRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersService := users_service_mocks.NewMockService(ctrl)
+
+			tc.mockBehavior(mockRepo)
+
+			svc := orders_service.New(mockRepo, mockUsersService)
+
+			got, err := svc.GetByIDExt(ctx, orderID)
+
+			assert.ErrorIs(t, err, tc.wantErr)
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }
