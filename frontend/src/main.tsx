@@ -18,6 +18,8 @@ import OrdersRoute from './routes/orders.route'
 import OrderDetailsRoute from './routes/order.details.route'
 import AdminLayout from './routes/AdminLayout'
 import AdminUsers from './routes/AdminUsers'
+import { AdminImportRoute } from './routes/admin.import.route'
+import { AdminExportRoute } from './routes/admin.export.route'
 import ProfilePage from './components/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -64,6 +66,18 @@ const adminUsersRoute = createRoute({
   component: AdminUsers,
 })
 
+const adminImportRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/import',
+  component: AdminImportRoute,
+})
+
+const adminExportRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/export',
+  component: AdminExportRoute,
+})
+
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
@@ -76,7 +90,11 @@ const profileRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  adminRoute.addChildren([adminUsersRoute]),
+  adminRoute.addChildren([
+    adminUsersRoute,
+    adminImportRoute,
+    adminExportRoute,
+  ]),
   DemoFormAddress(rootRoute),
   DemoFormSimple(rootRoute),
   DemoTable(rootRoute),

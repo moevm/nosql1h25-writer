@@ -1,8 +1,8 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { Card, Input, Button, Spin, Tag } from 'antd'
-import { api } from '../integrations/auth'
+import { Button, Card, Input, Spin, Tag } from 'antd'
+import { api } from '../integrations/api'
 
 interface OrderDetailsType {
   id: string
@@ -25,7 +25,7 @@ const getStatusColor = (status: string) => {
 }
 
 const OrderDetails: React.FC = () => {
-  const { id } = useParams({ strict: false }) as { id: string }
+  const { id } = useParams({ strict: false })
 
   const { data, isLoading } = useQuery<OrderDetailsType>({
     queryKey: ['order', id],

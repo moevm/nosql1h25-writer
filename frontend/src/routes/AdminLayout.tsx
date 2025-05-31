@@ -32,11 +32,11 @@ const AdminLayout = () => {
   }
 
   return (
-    <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
+    <Layout style={{ minHeight: '100vh', paddingTop: 64 }}>
       <AdminSidebar currentPath={currentPath} />
       {/* Контентная область справа от сайдбара */}
       <Layout style={{ marginLeft: 250 }}>
-        <Content style={{ margin: '0 16px 24px 16px', padding: 24, background: '#fff', minHeight: 'calc(100vh - 64px - 24px - 24px)' }}>
+        <Content style={{ margin: '0 16px 24px 16px', padding: 24, background: '#fff' }}>
           <Outlet />
         </Content>
       </Layout>

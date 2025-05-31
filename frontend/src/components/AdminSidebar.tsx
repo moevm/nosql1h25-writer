@@ -1,5 +1,5 @@
 import { Layout, Menu } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { ExportOutlined, ImportOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
@@ -48,6 +48,16 @@ const AdminSidebar = ({ currentPath }: AdminSidebarProps) => {
             key: '/admin/users',
             icon: <UserOutlined />,
             label: 'Пользователи',
+          },
+          {
+            key: '/admin/import',
+            icon: <ImportOutlined />,
+            label: 'Импорт базы',
+          },
+          {
+            key: '/admin/export',
+            icon: <ExportOutlined />,
+            label: 'Экспорт базы',
           },
         ]}
       />

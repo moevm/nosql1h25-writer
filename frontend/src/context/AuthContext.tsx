@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { api, isAuthenticated as checkAuth, clearTokens, setTokens } from '../integrations/auth'
+import { isAuthenticated as checkAuth, clearTokens, setTokens } from '../integrations/auth'
+import { api } from '../integrations/api'
 
 interface User {
   id: string;

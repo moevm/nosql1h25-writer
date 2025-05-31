@@ -5,8 +5,14 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useAppForm } from '../hooks/demo.form'
 import { useFieldContext } from '../hooks/demo.form-context'
+import { api } from '../integrations/api'
 import { FormError } from './FormError'
 import { RoleSelector } from './RoleSelector'
+import type { AxiosError } from 'axios'
+
+interface EchoHTTPError {
+  message: string;
+}
 
 const schema = z.object({
   email: z.string().email('Введите корректный email'),
@@ -46,27 +52,42 @@ export default function AuthPage() {
     onSubmit: async ({ value }) => {
       try {
         setServerError('')
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: value.email,
-            password: value.password,
-          }),
-        })
         
-        const data = await res.json()
+        const res = await api.post('/auth/login', {
+          email: value.email,
+          password: value.password,
+        });
         
-        if (!res.ok) {
-          setServerError(data.message || 'Ошибка авторизации')
-          return
+        login(res.data.accessToken, res.data.refreshToken);
+        message.success('Вход выполнен успешно!');
+        await navigate({ to: '/profile' });
+
+      } catch (e) {
+        const axiosError = e as AxiosError<EchoHTTPError>;
+        console.error('Ошибка авторизации:', axiosError);
+        
+        let errorMessage = 'Ошибка авторизации';
+
+        if (axiosError.response) {
+          if (axiosError.response.data.message) {
+            errorMessage = axiosError.response.data.message;
+          } else if (axiosError.message) {
+             errorMessage = axiosError.message;
+          }
+        } else if (axiosError.request) {
+          errorMessage = 'Нет ответа от сервера. Проверьте подключение к интернету.';
+        } else {
+          errorMessage = axiosError.message || 'Неизвестная ошибка при запросе авторизации';
         }
         
-        login(data.accessToken, data.refreshToken)
-        message.success('Вход выполнен успешно!')
-        await navigate({ to: '/profile' })
-      } catch (e) {
-        setServerError(e instanceof Error ? e.message : 'Ошибка авторизации')
+        setServerError(errorMessage);
+        message.error({
+          content: errorMessage,
+          duration: 5,
+          style: {
+            marginTop: '20vh',
+          },
+        });
       }
     },
   })

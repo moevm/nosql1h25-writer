@@ -3,7 +3,7 @@ import { Link, createRoute } from '@tanstack/react-router'
 
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Input, Pagination, Row, Select, Slider, Space, Spin, Tag } from 'antd'
-import { api } from '../integrations/auth'
+import { api } from '../integrations/api'
 import ProtectedRoute from '../components/ProtectedRoute'
 import type { RootRoute } from '@tanstack/react-router'
 import './orders.css'
