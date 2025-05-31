@@ -1,7 +1,7 @@
-import React from 'react'
-import { useQuery } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { Avatar, Button, Card, Input, List, Spin, Tag } from 'antd'
+import { Avatar, Button, Card, Input, List, Spin, Tag, message } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { api } from '../integrations/api'
 import { roleUtils } from '../utils/role'
@@ -72,10 +72,38 @@ const formatRating = (rating: number) => {
 
 const OrderDetails: React.FC = () => {
   const { id } = useParams({ from: '/orders/$id' })
+  const [coverLetter, setCoverLetter] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const queryClient = useQueryClient()
+
   const { data, isLoading } = useQuery<OrderDetailsType>({
     queryKey: ['order', id],
     queryFn: () => api.get(`/orders/${id}`).then(res => res.data)
   })
+
+  const handleSubmitResponse = async () => {
+    if (!coverLetter.trim()) {
+      message.error('Пожалуйста, напишите сопроводительное письмо')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      await api.post(`/orders/${id}/response`, {
+        coverLetter: coverLetter.trim(),
+        orderID: id
+      })
+      
+      message.success('Отклик успешно отправлен')
+      setCoverLetter('')
+      // Обновляем данные заказа
+      await queryClient.invalidateQueries({ queryKey: ['order', id] })
+    } catch (error) {
+      message.error('Ошибка при отправке отклика')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -206,8 +234,23 @@ const OrderDetails: React.FC = () => {
 
         {!data.isClient && !data.hasActiveResponse && (
           <div style={{ marginTop: 32 }}>
-            <Input.TextArea placeholder="Написать заказчику..." rows={4} style={{ marginBottom: 12 }} />
-            <Button type="primary">Готов взяться</Button>
+            <Input.TextArea 
+              placeholder="Написать заказчику..." 
+              rows={4} 
+              style={{ marginBottom: 12 }}
+              value={coverLetter}
+              onChange={(e) => setCoverLetter(e.target.value)}
+              maxLength={512}
+              showCount
+            />
+            <Button 
+              type="primary" 
+              onClick={handleSubmitResponse}
+              loading={isSubmitting}
+              disabled={!coverLetter.trim()}
+            >
+              Готов взяться
+            </Button>
           </div>
         )}
       </Card>
