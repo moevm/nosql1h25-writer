@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/jonboulle/clockwork"
-	log "github.com/sirupsen/logrus"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -119,11 +118,6 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 	if err != nil {
 		return FindOut{}, err
 	}
-	defer func() {
-		if err := cursor.Close(ctx); err != nil {
-			log.Errorf("failed to close cursor: %v", err)
-		}
-	}()
 
 	var result []struct {
 		Orders []entity.OrderExt `bson:"orders"`

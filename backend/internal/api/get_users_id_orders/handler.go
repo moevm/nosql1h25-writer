@@ -3,6 +3,7 @@ package get_users_id_orders
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -30,10 +31,10 @@ type Order struct {
 	CompletionTime int64              `json:"completionTime"`
 	Status         entity.StatusType  `json:"status"`
 	TotalResponses int                `json:"totalResponses"`
-	Cost           int                `json:"cost"`
-	FreelancerID   primitive.ObjectID `json:"freelancerId"`
-	CreatedAt      string             `json:"createdAt"`
-	UpdatedAt      string             `json:"updatedAt"`
+	Cost           int                `json:"cost,omitempty"`
+	FreelancerID   primitive.ObjectID `json:"freelancerId,omitzero"`
+	CreatedAt      time.Time          `json:"createdAt"`
+	UpdatedAt      time.Time          `json:"updatedAt"`
 }
 
 type Response struct {
@@ -66,18 +67,15 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 
 	ordersExt, err := h.users.FindOrdersByUserID(c.Request().Context(), requesterID, in.ID)
 	if err != nil {
-		if errors.Is(err, users.ErrUserNotFound) {
-			return echo.NewHTTPError(http.StatusNotFound, "user not found")
+		if errors.Is(err, users.ErrCannotFindOrders) {
+			return echo.NewHTTPError(http.StatusNotFound, err.Error())
 		}
-		return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	orders := make([]Order, 0, len(ordersExt))
 	for _, orderExt := range ordersExt {
-		status := entity.StatusTypeBeginning
-		if len(orderExt.Statuses) > 0 {
-			status = orderExt.Statuses[len(orderExt.Statuses)-1].Type
-		}
+		status := orderExt.Statuses[len(orderExt.Statuses)-1].Type
 
 		totalResponses := 0
 		for _, response := range orderExt.Responses {
@@ -96,8 +94,8 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 			TotalResponses: totalResponses,
 			Cost:           orderExt.Cost,
 			FreelancerID:   orderExt.FreelancerID,
-			CreatedAt:      orderExt.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:      orderExt.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedAt:      orderExt.CreatedAt,
+			UpdatedAt:      orderExt.UpdatedAt,
 		})
 	}
 
