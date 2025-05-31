@@ -269,7 +269,7 @@ export function OrdersPage() {
                       fontSize: 18,
                       color: '#1890ff'
                     }}>
-                      💰 {order.cost ? `${order.cost.toLocaleString()} ₽` : 'Договорная'}
+                      💰 {order.cost ? `${order.cost.toLocaleString()} ₽` : 'По договорённости'}
                     </span>
                   </div>
                 </Card>

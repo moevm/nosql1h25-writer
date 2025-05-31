@@ -139,7 +139,7 @@ const OrderDetails: React.FC = () => {
               ⏰ {formatCompletionTime(order.completionTime)}
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#1890ff' }}>
-              💰 {order.cost.toLocaleString()} ₽
+              💰 {order.cost ? `${order.cost.toLocaleString()} ₽` : 'По договорённости'}
             </div>
           </div>
         </div>
