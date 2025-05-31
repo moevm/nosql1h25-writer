@@ -12,11 +12,11 @@ services:
   backend:
     build: ./backend
     environment:
-      MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017"
+      MONGO_URI: "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@db:27017"
       CONFIG_PATH: ${BACKEND_CONFIG_PATH}
       AUTH_JWT_SECRET_KEY: ${AUTH_JWT_SECRET_KEY}
     depends_on:
-      - mongodb
+      - db
     volumes:
       - backend_logs:/logs
     networks:
@@ -32,7 +32,7 @@ services:
   proxy:
     image: nginx:1.27.4-alpine3.21
     ports:
-      - "80:80"
+      - "127.0.0.1:80:80"
     depends_on:
       - backend
       - frontend
@@ -41,7 +41,7 @@ services:
     networks:
       - net
 
-  mongodb:
+  db:
     image: mongo:8.0
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
