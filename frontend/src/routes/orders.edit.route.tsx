@@ -1,14 +1,14 @@
 import { createRoute } from '@tanstack/react-router'
 import ProtectedRoute from '../components/ProtectedRoute'
-import OrderDetails from '../components/OrderDetails'
+import OrderEdit from '../components/OrderEdit'
 import type { RootRoute } from '@tanstack/react-router'
 
-export const createOrderDetailsRoute = (parentRoute: RootRoute) =>
+export const createOrderEditRoute = (parentRoute: RootRoute) =>
   createRoute({
-    path: '/orders/$id',
+    path: '/edit-order',
     component: () => (
-      <ProtectedRoute>
-        <OrderDetails />
+      <ProtectedRoute allowedRoles={['client']}>
+        <OrderEdit />
       </ProtectedRoute>
     ),
     getParentRoute: () => parentRoute,
