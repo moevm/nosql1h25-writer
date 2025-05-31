@@ -185,35 +185,51 @@ func (r *repository) GetByIDExt(ctx context.Context, id primitive.ObjectID) (ord
 
 func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 	now := r.clock.Now()
-	update := bson.M{"updatedAt": now}
+
+	updateSet := bson.M{
+		"updatedAt": now,
+	}
 
 	if in.Title != nil {
-		update["title"] = *in.Title
+		updateSet["title"] = *in.Title
 	}
 
 	if in.Description != nil {
-		update["description"] = *in.Description
+		updateSet["description"] = *in.Description
 	}
 
 	if in.CompletionTime != nil {
-		update["completionTime"] = *in.CompletionTime
+		updateSet["completionTime"] = *in.CompletionTime
 	}
 
 	if in.Cost != nil {
-		update["cost"] = *in.Cost
+		updateSet["cost"] = *in.Cost
+	}
+
+	update := bson.M{
+		"$set": updateSet,
+	}
+
+	// если статус задан, пушим его в массив statuses
+	if in.Status != nil {
+		update["$push"] = bson.M{
+			"statuses": entity.Status{
+				Type:      *in.Status,
+				CreatedAt: now,
+			},
+		}
 	}
 
 	err := r.ordersColl.FindOneAndUpdate(
 		ctx,
 		bson.M{"_id": in.OrderID, "active": true},
-		bson.M{"$set": update},
+		update,
 	).Err()
 
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return ErrOrderNotFound
 		}
-
 		return err
 	}
 
