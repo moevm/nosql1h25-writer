@@ -1119,6 +1119,23 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "status": {
+                    "enum": [
+                        "beginning",
+                        "negotiation",
+                        "budgeting",
+                        "work",
+                        "reviews",
+                        "finished",
+                        "dispute"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                        }
+                    ],
+                    "example": "finished"
+                },
                 "title": {
                     "type": "string",
                     "maxLength": 256,

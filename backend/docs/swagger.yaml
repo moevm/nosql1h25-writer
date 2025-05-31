@@ -226,6 +226,18 @@ definitions:
         type: string
       id:
         type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
+        enum:
+        - beginning
+        - negotiation
+        - budgeting
+        - work
+        - reviews
+        - finished
+        - dispute
+        example: finished
       title:
         example: New title
         maxLength: 256
