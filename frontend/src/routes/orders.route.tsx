@@ -7,7 +7,7 @@ export const createOrdersRoute = (parentRoute: RootRoute) =>
   createRoute({
     path: '/orders',
     component: () => (
-      <ProtectedRoute allowedRoles={['freelancer']}>
+      <ProtectedRoute>
         <OrdersPage />
       </ProtectedRoute>
     ),

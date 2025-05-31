@@ -20,6 +20,8 @@ interface OrderDetailsType {
     status: string
     createdAt: string
     updatedAt: string
+    freelancerId?: string
+    freelancerEmail?: string
     responses?: Array<{
       freelancerName: string
       freelancerId: string
@@ -118,6 +120,25 @@ const OrderDetails: React.FC = () => {
       await queryClient.invalidateQueries({ queryKey: ['order', id] })
     } catch (error) {
       message.error('Ошибка при закрытии заказа')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleAcceptResponse = async (freelancerId: string) => {
+    try {
+      setIsSubmitting(true)
+      await api.patch(`/orders/${id}`, {
+        id,
+        status: 'work',
+        freelancerId
+      })
+      
+      message.success('Отклик принят')
+      // Обновляем данные заказа
+      await queryClient.invalidateQueries({ queryKey: ['order', id] })
+    } catch (error) {
+      message.error('Ошибка при принятии отклика')
     } finally {
       setIsSubmitting(false)
     }
@@ -233,22 +254,73 @@ const OrderDetails: React.FC = () => {
             {order.responses && order.responses.length > 0 ? (
               <List
                 dataSource={order.responses}
-                renderItem={(response) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<Avatar icon={<UserOutlined />} />}
-                      title={response.freelancerName}
-                      description={
-                        <div>
-                          <div style={{ marginBottom: 8 }}>{response.coverLetter}</div>
-                          <div style={{ color: '#888', fontSize: 12 }}>
-                            {new Date(response.createdAt).toLocaleString('ru-RU')}
-                          </div>
-                        </div>
-                      }
-                    />
-                  </List.Item>
-                )}
+                renderItem={(response) => {
+                  const isSelected = order.freelancerId === response.freelancerId
+
+                  return (
+                    <List.Item
+                      style={{
+                        marginBottom: 8,
+                      }}
+                    >
+                       <div style={{
+                         ...(isSelected ? {
+                           backgroundColor: '#f6ffed',
+                           border: '1px solid #b7eb8f',
+                           borderRadius: 8,
+                         } : {}),
+                         padding: '16px',
+                         display: 'flex',
+                         alignItems: 'flex-start',
+                         gap: 24,
+                         width: '100%'
+                       }}>
+                         <List.Item.Meta
+                           avatar={<Avatar icon={<UserOutlined />} />}
+                           title={
+                             <div>
+                               {response.freelancerName}
+                               {isSelected && order.freelancerEmail && (
+                                 <span style={{ 
+                                   marginLeft: 8, 
+                                   color: '#888', 
+                                   fontWeight: 'normal',
+                                   fontSize: '0.9em'
+                                 }}>
+                                   {order.freelancerEmail}
+                                 </span>
+                               )}
+                               {isSelected && (
+                                 <Tag color="success" style={{ marginLeft: 8 }}>
+                                   Выбранный исполнитель
+                                 </Tag>
+                               )}
+                             </div>
+                           }
+                           description={
+                             <div>
+                               <div style={{ marginBottom: 8 }}>{response.coverLetter}</div>
+                               <div style={{ color: '#888', fontSize: 12 }}>
+                                 {new Date(response.createdAt).toLocaleString('ru-RU')}
+                               </div>
+                             </div>
+                           }
+                         />
+                         {(order.status === 'beginning' && !isSelected) && (
+                           <div style={{ flexShrink: 0 }}>
+                              <Button
+                                type="primary"
+                                onClick={() => handleAcceptResponse(response.freelancerId)}
+                                loading={isSubmitting}
+                              >
+                                Принять отклик
+                              </Button>
+                           </div>
+                         )}
+                       </div>
+                    </List.Item>
+                  )
+                }}
               />
             ) : (
               <div style={{ 
