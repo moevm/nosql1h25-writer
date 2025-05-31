@@ -45,6 +45,8 @@ func New(users users.Service) api.Handler {
 	return decorator.NewBindAndValidate(&handler{users: users})
 }
 
+// Handle - find orders by userID
+//
 // @Description	Получить список заказов пользователя
 // @Summary		Получить список заказов пользователя
 // @Tags			Users
