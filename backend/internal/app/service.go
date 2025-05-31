@@ -39,6 +39,6 @@ func (app *App) OrdersService() orders.Service {
 		return app.ordersService
 	}
 
-	app.ordersService = orders.New(app.OrdersRepo())
+	app.ordersService = orders.New(app.OrdersRepo(), app.usersService)
 	return app.ordersService
 }

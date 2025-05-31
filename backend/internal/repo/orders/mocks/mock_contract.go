@@ -103,6 +103,20 @@ func (mr *MockRepoMockRecorder) GetByIDExt(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDExt", reflect.TypeOf((*MockRepo)(nil).GetByIDExt), ctx, id)
 }
 
+// PushResponse mocks base method.
+func (m *MockRepo) PushResponse(ctx context.Context, response entity.Response, orderID primitive.ObjectID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PushResponse", ctx, response, orderID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PushResponse indicates an expected call of PushResponse.
+func (mr *MockRepoMockRecorder) PushResponse(ctx, response, orderID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushResponse", reflect.TypeOf((*MockRepo)(nil).PushResponse), ctx, response, orderID)
+}
+
 // Update mocks base method.
 func (m *MockRepo) Update(ctx context.Context, in orders.UpdateIn) error {
 	m.ctrl.T.Helper()

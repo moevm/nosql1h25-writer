@@ -15,4 +15,5 @@ type Service interface {
 	GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error)
 	GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error)
 	Update(ctx context.Context, in UpdateIn) error
+	CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverletter string) error
 }

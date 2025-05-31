@@ -15,4 +15,5 @@ type Repo interface {
 	GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error)
 	GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error)
 	Update(ctx context.Context, in UpdateIn) error
+	PushResponse(ctx context.Context, response entity.Response, orderID primitive.ObjectID) error
 }

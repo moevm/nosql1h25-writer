@@ -176,11 +176,44 @@ func (r *repository) GetByIDExt(ctx context.Context, id primitive.ObjectID) (ord
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return order, ErrOrderNotFound
 		}
-
 		return order, err
 	}
-
 	return order, nil
+}
+
+func (r *repository) PushResponse(ctx context.Context, response entity.Response, orderID primitive.ObjectID) error {
+	now := r.clock.Now()
+
+	// Устанавливаем временные метки, если они не заданы
+	if response.CreatedAt.IsZero() {
+		response.CreatedAt = now
+	}
+
+	// Гарантируем, что ответ активен
+	response.Active = true
+
+	update := bson.M{
+		"$push": bson.M{
+			"responses": response,
+		},
+		"$set": bson.M{
+			"updatedAt": now,
+		},
+	}
+
+	_, err := r.ordersColl.UpdateOne(
+		ctx,
+		bson.M{"_id": orderID, "active": true},
+		update,
+	)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return ErrOrderNotFound
+		}
+		return err
+	}
+
+	return nil
 }
 
 func (r *repository) Update(ctx context.Context, in UpdateIn) error {

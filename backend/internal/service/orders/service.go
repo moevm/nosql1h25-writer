@@ -3,20 +3,26 @@ package orders
 import (
 	"context"
 	"errors"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	users "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
 type service struct {
-	ordersRepo orders.Repo
+	ordersRepo   orders.Repo
+	usersService users.Service
 }
 
-func New(ordersRepo orders.Repo) Service {
-	return &service{ordersRepo: ordersRepo}
+func New(ordersRepo orders.Repo, usersService users.Service) Service {
+	return &service{
+		ordersRepo:   ordersRepo,
+		usersService: usersService,
+	}
 }
 
 func (s *service) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
@@ -101,6 +107,52 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 
 		log.Errorf("service.orders.Update - s.ordersRepo.Update: %v", err)
 		return ErrCannotUpdateOrder
+	}
+
+	return nil
+}
+
+func (s *service) CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverletter string) error {
+	orderExt, err := s.GetByIDExt(ctx, orderID)
+	if err != nil {
+		log.Errorf("orders.service.CreateResponse - s.GetByIDExt: %v", err)
+		return err
+	}
+
+	if orderExt.ClientID == userID {
+		return ErrCannotResponse
+	}
+
+	user, err := s.usersService.GetByIDExt(ctx, userID)
+	if err != nil {
+		log.Errorf("orders.service.CreateResponse - s.usersService.GetByIDExt: %v", err)
+		return users.ErrUserNotFound
+	}
+
+	response := entity.Response{
+		FreelancerID:   userID,
+		FreelancerName: user.DisplayName,
+		CoverLetter:    coverletter,
+		Active:         true,
+		CreatedAt:      time.Now().UTC(),
+	}
+
+	if len(orderExt.Statuses) > 0 && orderExt.Statuses[len(orderExt.Statuses)-1].Type == entity.StatusTypeBeginning {
+		userHasNoResponse := true
+		for _, r := range orderExt.Responses {
+			if r.FreelancerID == userID {
+				userHasNoResponse = false
+				break
+			}
+		}
+
+		if userHasNoResponse {
+			err = s.ordersRepo.PushResponse(ctx, response, orderID)
+			if err != nil {
+				log.Errorf("orders.service.CreateResponse - s.ordersRepo.PushResponse: %v", err)
+				return ErrCannotResponse
+			}
+		}
 	}
 
 	return nil
