@@ -28,6 +28,7 @@ type Request struct {
 	Description    *string            `json:"description,omitempty" validate:"omitempty,min=16,max=2048" example:"New Order Description"`
 	CompletionTime *int64             `json:"completionTime,omitempty" validate:"omitempty,gte=3600000000000" example:"3600000000000"`
 	Cost           *int               `json:"cost,omitempty" validate:"omitempty,min=0" example:"5000"`
+	Status         *entity.StatusType `json:"status,omitempty" validate:"omitempty,oneof=beginning negotiation budgeting work reviews finished dispute" example:"finished"`
 }
 
 // Handle - Update order
@@ -52,7 +53,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 	userID := c.Get(mw.UserIDKey).(primitive.ObjectID)      //nolint:forcetypeassert
 
 	// Проверка: если не передано ни одного изменяемого поля
-	if in.Title == nil && in.Description == nil && in.CompletionTime == nil && in.Cost == nil {
+	if in.Title == nil && in.Description == nil && in.CompletionTime == nil && in.Cost == nil && in.Status == nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "no fields to update")
 	}
 
@@ -78,6 +79,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		Description:    in.Description,
 		CompletionTime: in.CompletionTime,
 		Cost:           in.Cost,
+		Status:         in.Status,
 	})
 	if err != nil {
 		if errors.Is(err, orders.ErrOrderNotFound) {
