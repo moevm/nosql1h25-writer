@@ -1,11 +1,12 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  Navigate,
   Outlet,
   RouterProvider,
   createRootRoute,
   createRoute,
-  createRouter,
+  createRouter
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import DemoFormAddress from './routes/demo.form.address'
@@ -35,7 +36,6 @@ import 'antd/dist/reset.css'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
-import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext'
 
 const rootRoute = createRootRoute({
@@ -53,7 +53,7 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: App,
+  component: () => <Navigate to="/orders" />,
 })
 
 const adminRoute = createRoute({
