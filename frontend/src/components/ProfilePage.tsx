@@ -1,15 +1,10 @@
 import { Button, Card, Col, Dropdown, Menu, Row, Space, Typography } from 'antd';
 import { useUserProfile } from '../hooks/useUserProfile';
+import { roleUtils, type UserRole } from '../utils/role';
+// import { useNavigate } from '@tanstack/react-router'
+import { useState, useEffect } from 'react';
 
 const { Title, Text } = Typography;
-
-const profileMenu = (
-  <Menu>
-    <Menu.Item key="1">Редактировать профиль</Menu.Item>
-    <Menu.Item key="2">Настройки безопасности</Menu.Item>
-    <Menu.Item key="3">Уведомления</Menu.Item>
-  </Menu>
-);
 
 const balanceMenu = (
   <Menu>
@@ -20,6 +15,45 @@ const balanceMenu = (
 
 export default function ProfilePage() {
   const { data, isLoading } = useUserProfile();
+  // const navigate = useNavigate();
+  // const currentRole = roleUtils.getRole();
+  const [currentRole, setCurrentRole] = useState<UserRole>(roleUtils.getRole());
+
+  const handleRoleChange = (role: UserRole) => {
+    if (role === currentRole) return;
+    roleUtils.setRole(role);
+    // navigate({ to: '/profile' });
+    setCurrentRole(role);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const roleInStorage = roleUtils.getRole();
+      if (roleInStorage !== currentRole) {
+        setCurrentRole(roleInStorage);
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [currentRole]);
+
+  const profileMenuItems = [
+    {
+      key: 'client',
+      label: 'Заказчик',
+      onClick: () => handleRoleChange('client'),
+      style: currentRole === 'client' ? { color: '#1890ff', fontWeight: 'bold' } : {}
+    },
+    {
+      key: 'freelancer',
+      label: 'Исполнитель',
+      onClick: () => handleRoleChange('freelancer'),
+      style: currentRole === 'freelancer' ? { color: '#1890ff', fontWeight: 'bold' } : {}
+    },
+    { key: 'edit', label: 'Редактировать профиль' },
+    { key: 'security', label: 'Настройки безопасности' },
+    { key: 'notifications', label: 'Уведомления' }
+  ];
 
   if (isLoading) return <div style={{ textAlign: 'center', padding: 40 }}>Загрузка...</div>;
   if (!data) return <div style={{ textAlign: 'center', padding: 40 }}>Профиль не найден</div>;
@@ -30,7 +64,7 @@ export default function ProfilePage() {
     <div style={{ maxWidth: 700, margin: '32px auto', background: '#f7faff', borderRadius: 16, padding: 32 }}>
       <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
         <Col>
-          <Dropdown menu={{ items: profileMenu.props.children }} trigger={['click']}>
+          <Dropdown menu={{ items: profileMenuItems }} trigger={['click']}>
             <Button type="default" style={{ fontWeight: 500 }}>Настройки профиля ▼</Button>
           </Dropdown>
         </Col>
@@ -87,12 +121,22 @@ export default function ProfilePage() {
           <Card style={{ borderRadius: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <Text strong>Рейтинг заказчика</Text>
+                <Text strong>
+                  {currentRole === 'client' ? 'Рейтинг заказчика' : 'Рейтинг исполнителя'}
+                </Text>
                 <div style={{ margin: '8px 0' }}>
                   <span style={{ color: '#faad14', fontSize: 20 }}>★</span>
-                  <Text style={{ fontSize: 18, marginLeft: 8 }}>{client?.rating.toFixed(1) ?? '—'}</Text>
+                  <Text style={{ fontSize: 18, marginLeft: 8 }}>
+                    {currentRole === 'client'
+                      ? client?.rating?.toFixed(1) ?? '—'
+                      : data.freelancer?.rating?.toFixed(1) ?? '—'}
+                  </Text>
                 </div>
-                <Text type="secondary">Завершённых заказов: {client?.completedOrders ?? '—'}</Text>
+                <Text type="secondary">
+                  Завершённых заказов: {currentRole === 'client'
+                    ? client?.completedOrders ?? '—'
+                    : data.freelancer?.completedOrders ?? '—'}
+                </Text>
               </div>
               <Button>Показать отзывы</Button>
             </div>

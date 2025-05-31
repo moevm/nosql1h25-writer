@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, createRoute } from '@tanstack/react-router'
+import { Link, createRoute, useNavigate } from '@tanstack/react-router'
 
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Input, Pagination, Row, Select, Slider, Space, Spin, Tag } from 'antd'
@@ -51,6 +51,8 @@ function OrdersPage() {
   const orders: Array<Order> = data && 'orders' in data ? data.orders : []
   const total = data && 'total' in data ? data.total : 0
 
+  const navigate = useNavigate();
+
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
       case 'new':
@@ -82,7 +84,9 @@ function OrdersPage() {
       <h1 style={{ fontSize: 24, marginBottom: 16 }}>Главная исполнителя</h1>
       <Row gutter={[16, 16]} align="middle" style={{ marginBottom: 16 }}>
         <Col>
-          <Button type="primary">В профиль</Button>
+          <Button type="primary" onClick={() => navigate({ to: '/profile' })}>
+            В профиль
+          </Button>
         </Col>
         <Col>
           <Select 
