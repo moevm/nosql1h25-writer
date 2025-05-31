@@ -56,8 +56,9 @@ type App struct {
 	postAuthRefreshHandler  api.Handler
 	postAuthLogoutHandler   api.Handler
 
-	getAdminHandler       api.Handler
-	getAdminExportHandler api.Handler
+	getAdminHandler        api.Handler
+	getAdminExportHandler  api.Handler
+	postAdminImportHandler api.Handler
 
 	postBalanceDepositHandler  api.Handler
 	postBalanceWithdrawHandler api.Handler

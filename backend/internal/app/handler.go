@@ -10,6 +10,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/patch_orders_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/patch_users_id"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_admin_import"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_login"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_logout"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_auth_refresh"
@@ -76,6 +77,15 @@ func (app *App) GetAdminExportHandler() api.Handler {
 
 	app.getAdminExportHandler = get_admin_export.New(app.MongoDumper(), app.Clock())
 	return app.getAdminExportHandler
+}
+
+func (app *App) PostAdminImportHandler() api.Handler {
+	if app.postAdminImportHandler != nil {
+		return app.postAdminImportHandler
+	}
+
+	app.postAdminImportHandler = post_admin_import.New(app.MongoDumper(), app.Clock())
+	return app.postAdminImportHandler
 }
 
 func (app *App) PostBalanceDepositHandler() api.Handler {
