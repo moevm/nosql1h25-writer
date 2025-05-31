@@ -1000,6 +1000,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Write something for me but more words"
                 },
+                "freelancerEmail": {
+                    "type": "string",
+                    "example": "test@mail.com"
+                },
                 "freelancerId": {
                     "type": "string",
                     "example": "582ebf010936ac3ba5cd00e4"
