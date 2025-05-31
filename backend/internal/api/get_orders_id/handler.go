@@ -50,7 +50,7 @@ type Order struct {
 	ClientName     string             `json:"clientName" validate:"required" example:"John Doe"`
 	ClientRating   float64            `json:"clientRating" validate:"required" example:"4.8"`
 	ClientID       primitive.ObjectID `json:"clientId" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
-	FreelancerID   primitive.ObjectID `json:"freelancerId,omitempty" validate:"omitempty" example:"582ebf010936ac3ba5cd00e4"`
+	FreelancerID   primitive.ObjectID `json:"freelancerId,omitzero" validate:"omitzero" example:"582ebf010936ac3ba5cd00e4"`
 	Status         entity.StatusType  `json:"status" validate:"required" example:"beginning"`
 	Title          string             `json:"title" validate:"required" example:"Write something for me"`
 	Description    string             `json:"description" validate:"required" example:"Write something for me but more words"`
