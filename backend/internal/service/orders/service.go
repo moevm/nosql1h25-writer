@@ -92,6 +92,7 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 		Description:    in.Description,
 		CompletionTime: in.CompletionTime,
 		Cost:           in.Cost,
+		Status:         in.Status,
 	})
 	if err != nil {
 		if errors.Is(err, orders.ErrOrderNotFound) {

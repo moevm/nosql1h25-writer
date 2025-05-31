@@ -1,6 +1,9 @@
 package orders
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type CreateIn struct {
 	ClientID       primitive.ObjectID
@@ -32,4 +35,5 @@ type UpdateIn struct {
 	Description    *string
 	CompletionTime *int64
 	Cost           *int
+	Status         *entity.StatusType
 }
