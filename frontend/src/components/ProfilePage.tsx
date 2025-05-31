@@ -1,7 +1,7 @@
 import { Button, Card, Col, Dropdown, Menu, Row, Space, Typography } from 'antd';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { roleUtils, type UserRole } from '../utils/role';
-// import { useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react';
 
 const { Title, Text } = Typography;
@@ -15,14 +15,13 @@ const balanceMenu = (
 
 export default function ProfilePage() {
   const { data, isLoading } = useUserProfile();
-  // const navigate = useNavigate();
-  // const currentRole = roleUtils.getRole();
+  const navigate = useNavigate();
   const [currentRole, setCurrentRole] = useState<UserRole>(roleUtils.getRole());
 
   const handleRoleChange = (role: UserRole) => {
     if (role === currentRole) return;
     roleUtils.setRole(role);
-    // navigate({ to: '/profile' });
+    navigate({ to: '/profile' });
     setCurrentRole(role);
   };
 
@@ -76,7 +75,10 @@ export default function ProfilePage() {
         <Col>
           <Space>
             <Button type="primary">Мои заказы</Button>
-            <Button>Создать заказ</Button>
+            {currentRole === 'client' ?
+              <Button>Создать заказ</Button> :
+              <Button onClick={() => navigate({ to: '/orders' })}>На главную</Button>
+            }
           </Space>
         </Col>
       </Row>
