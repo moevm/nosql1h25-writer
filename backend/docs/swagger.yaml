@@ -460,6 +460,31 @@ paths:
       summary: Check admin rights available
       tags:
       - admin
+  /admin/export:
+    get:
+      description: Export mongodb state and return file
+      produces:
+      - application/gzip
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Export mongodb state and return file
+      tags:
+      - admin
   /auth/login:
     post:
       consumes:

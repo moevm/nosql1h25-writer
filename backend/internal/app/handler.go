@@ -74,7 +74,7 @@ func (app *App) GetAdminExportHandler() api.Handler {
 		return app.getAdminExportHandler
 	}
 
-	app.getAdminExportHandler = get_admin_export.New()
+	app.getAdminExportHandler = get_admin_export.New(app.MongoDumper(), app.Clock())
 	return app.getAdminExportHandler
 }
 

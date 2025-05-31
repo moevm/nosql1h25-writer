@@ -23,6 +23,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
+	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb/mongotools"
 )
 
 type App struct {
@@ -84,6 +85,7 @@ type App struct {
 	// infra
 	passwordHasher hasher.PasswordHasher
 	clock          clockwork.Clock
+	mongoDumper    mongotools.MongoDumper
 }
 
 // New initiate logger and config in App struct for future Start call

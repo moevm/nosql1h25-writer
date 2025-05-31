@@ -3,6 +3,8 @@ package mongotools
 import (
 	"fmt"
 	"os/exec"
+
+	"github.com/sirupsen/logrus"
 )
 
 type MongoDumper interface {
@@ -32,6 +34,7 @@ func (d *dumper) Restore(filepath string) error {
 }
 
 func (d *dumper) Dump(filepath string) error {
+	logrus.Info(d.uri, filepath)
 	if err := exec.Command("mongodump",
 		"--uri="+d.uri,
 		"--archive="+filepath,
