@@ -9,14 +9,19 @@ import (
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	"github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 )
 
 type service struct {
-	ordersRepo orders.Repo
+	ordersRepo   orders.Repo
+	usersService users.Service
 }
 
-func New(ordersRepo orders.Repo) Service {
-	return &service{ordersRepo: ordersRepo}
+func New(ordersRepo orders.Repo, usersService users.Service) Service {
+	return &service{
+		ordersRepo:   ordersRepo,
+		usersService: usersService,
+	}
 }
 
 func (s *service) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
@@ -101,6 +106,40 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 
 		log.Errorf("service.orders.Update - s.ordersRepo.Update: %v", err)
 		return ErrCannotUpdateOrder
+	}
+
+	return nil
+}
+
+func (s *service) CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverLetter string) error {
+	orderExt, err := s.GetByIDExt(ctx, orderID)
+	if err != nil {
+		return err
+	}
+
+	if orderExt.ClientID == userID || orderExt.Statuses[len(orderExt.Statuses)-1].Type != entity.StatusTypeBeginning {
+		return ErrCannotResponse
+	}
+
+	for _, response := range orderExt.Responses {
+		if response.Active && response.FreelancerID == userID {
+			return ErrCannotResponse
+		}
+	}
+
+	user, err := s.usersService.GetByIDExt(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	err = s.ordersRepo.CreateResponse(ctx, orderID, userID, coverLetter, user.DisplayName)
+	if err != nil {
+		if errors.Is(err, orders.ErrOrderNotFound) {
+			return ErrOrderNotFound
+		}
+
+		log.Errorf("orders.service.CreateResponse - s.ordersRepo.CreateResponse: %v", err)
+		return ErrCannotCreateResponse
 	}
 
 	return nil

@@ -386,6 +386,21 @@ definitions:
         example: 111
         type: integer
     type: object
+  internal_api_post_order_response.Request:
+    properties:
+      coverLetter:
+        example: Я заинтересован в вашем проекте и имею релевантный опыт в этой области.
+          Готов обсудить детали и начать работу.
+        maxLength: 512
+        minLength: 16
+        type: string
+      orderID:
+        example: 683b2dc10949bd1e64266ed0
+        type: string
+    required:
+    - coverLetter
+    - orderID
+    type: object
   internal_api_post_orders.Request:
     properties:
       completionTime:
@@ -832,6 +847,45 @@ paths:
       security:
       - JWT: []
       summary: Update order
+      tags:
+      - orders
+  /orders/{id}/response:
+    post:
+      consumes:
+      - application/json
+      description: Create response to existing order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Response data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_post_order_response.Request'
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Response to order
       tags:
       - orders
   /users/{id}:

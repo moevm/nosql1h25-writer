@@ -1,57 +1,68 @@
-import { Button, Card, Col, Dropdown, Menu, Row, Space, Typography } from 'antd';
+import { Button, Card, Col, Dropdown, Row, Space, Typography } from 'antd';
+import { Link } from '@tanstack/react-router';
+import { useState } from 'react';
 import { useUserProfile } from '../hooks/useUserProfile';
+import {  roleUtils } from '../utils/role';
+import type {UserRole} from '../utils/role';
+import type { MenuProps } from 'antd';
 import { roleUtils, type UserRole } from '../utils/role';
 import { useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react';
 
 const { Title, Text } = Typography;
 
-const balanceMenu = (
-  <Menu>
-    <Menu.Item key="1">Пополнить баланс</Menu.Item>
-    <Menu.Item key="2">История операций</Menu.Item>
-  </Menu>
-);
-
 export default function ProfilePage() {
   const { data, isLoading } = useUserProfile();
-  const navigate = useNavigate();
-  const [currentRole, setCurrentRole] = useState<UserRole>(roleUtils.getRole());
+  const [selectedRole] = useState<UserRole>(roleUtils.getRole());
 
   const handleRoleChange = (role: UserRole) => {
-    if (role === currentRole) return;
     roleUtils.setRole(role);
-    navigate({ to: '/profile' });
-    setCurrentRole(role);
+    window.location.reload();
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const roleInStorage = roleUtils.getRole();
-      if (roleInStorage !== currentRole) {
-        setCurrentRole(roleInStorage);
-      }
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [currentRole]);
-
-  const profileMenuItems = [
+  const profileMenuItems: MenuProps['items'] = [
     {
-      key: 'client',
-      label: 'Заказчик',
-      onClick: () => handleRoleChange('client'),
-      style: currentRole === 'client' ? { color: '#1890ff', fontWeight: 'bold' } : {}
+      key: '1',
+      label: 'Редактировать профиль'
     },
     {
-      key: 'freelancer',
-      label: 'Исполнитель',
-      onClick: () => handleRoleChange('freelancer'),
-      style: currentRole === 'freelancer' ? { color: '#1890ff', fontWeight: 'bold' } : {}
+      type: 'divider' as const
     },
-    { key: 'edit', label: 'Редактировать профиль' },
-    { key: 'security', label: 'Настройки безопасности' },
-    { key: 'notifications', label: 'Уведомления' }
+    {
+      key: 'role',
+      label: 'Роль на сайте',
+      children: [
+        {
+          key: 'client',
+          label: 'Заказчик',
+          onClick: () => handleRoleChange('client'),
+          style: {
+            backgroundColor: selectedRole === 'client' ? '#e6f7ff' : undefined,
+            color: selectedRole === 'client' ? '#1890ff' : undefined
+          }
+        },
+        {
+          key: 'freelancer',
+          label: 'Исполнитель',
+          onClick: () => handleRoleChange('freelancer'),
+          style: {
+            backgroundColor: selectedRole === 'freelancer' ? '#e6f7ff' : undefined,
+            color: selectedRole === 'freelancer' ? '#1890ff' : undefined
+          }
+        }
+      ]
+    }
+  ];
+
+  const balanceMenuItems: MenuProps['items'] = [
+    {
+      key: '1',
+      label: 'Пополнить баланс'
+    },
+    {
+      key: '2',
+      label: 'История операций'
+    }
   ];
 
   if (isLoading) return <div style={{ textAlign: 'center', padding: 40 }}>Загрузка...</div>;
@@ -68,7 +79,7 @@ export default function ProfilePage() {
           </Dropdown>
         </Col>
         <Col>
-          <Dropdown menu={{ items: balanceMenu.props.children }} trigger={['click']}>
+          <Dropdown menu={{ items: balanceMenuItems }} trigger={['click']}>
             <Button type="default" style={{ fontWeight: 500 }}>Баланс: <b>{balance.toLocaleString() || '0'} руб.</b> ▼</Button>
           </Dropdown>
         </Col>
@@ -76,8 +87,12 @@ export default function ProfilePage() {
           <Space>
             <Button type="primary">Мои заказы</Button>
             {currentRole === 'client' ?
-              <Button onClick={() => navigate({ to: '/edit-order' })}>Создать заказ</Button> :
-              <Button onClick={() => navigate({ to: '/orders' })}>На главную</Button>
+                <Link to="/orders/create">
+                    <Button>Создать заказ</Button>
+                </Link> :
+                <Link to="/orders">
+                    <Button>Заказы</Button>
+                </Link>
             }
           </Space>
         </Col>
