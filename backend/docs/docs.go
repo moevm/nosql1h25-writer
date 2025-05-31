@@ -906,6 +906,7 @@ const docTemplate = `{
                 "description",
                 "id",
                 "status",
+                "statuses",
                 "title",
                 "updatedAt"
             ],
@@ -946,6 +947,12 @@ const docTemplate = `{
                     "type": "string",
                     "example": "582ebf010936ac3ba5cd00e4"
                 },
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_orders_id.OrderResponse"
+                    }
+                },
                 "status": {
                     "allOf": [
                         {
@@ -954,6 +961,12 @@ const docTemplate = `{
                     ],
                     "example": "beginning"
                 },
+                "statuses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_orders_id.Status"
+                    }
+                },
                 "title": {
                     "type": "string",
                     "example": "Write something for me"
@@ -961,6 +974,33 @@ const docTemplate = `{
                 "updatedAt": {
                     "type": "string",
                     "example": "2020-01-01T00:00:00Z"
+                }
+            }
+        },
+        "internal_api_get_orders_id.OrderResponse": {
+            "type": "object",
+            "required": [
+                "coverLetter",
+                "createdAt",
+                "freelancerId",
+                "freelancerName"
+            ],
+            "properties": {
+                "coverLetter": {
+                    "type": "string",
+                    "example": "Can help with your order"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "freelancerId": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "freelancerName": {
+                    "type": "string",
+                    "example": "David Bowling"
                 }
             }
         },
@@ -984,6 +1024,27 @@ const docTemplate = `{
                 },
                 "order": {
                     "$ref": "#/definitions/internal_api_get_orders_id.Order"
+                }
+            }
+        },
+        "internal_api_get_orders_id.Status": {
+            "type": "object",
+            "required": [
+                "createdAt",
+                "type"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "type": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                        }
+                    ],
+                    "example": "beginning"
                 }
             }
         },

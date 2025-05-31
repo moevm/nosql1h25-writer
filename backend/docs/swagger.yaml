@@ -99,10 +99,18 @@ definitions:
       id:
         example: 582ebf010936ac3ba5cd00e4
         type: string
+      responses:
+        items:
+          $ref: '#/definitions/internal_api_get_orders_id.OrderResponse'
+        type: array
       status:
         allOf:
         - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
         example: beginning
+      statuses:
+        items:
+          $ref: '#/definitions/internal_api_get_orders_id.Status'
+        type: array
       title:
         example: Write something for me
         type: string
@@ -118,8 +126,29 @@ definitions:
     - description
     - id
     - status
+    - statuses
     - title
     - updatedAt
+    type: object
+  internal_api_get_orders_id.OrderResponse:
+    properties:
+      coverLetter:
+        example: Can help with your order
+        type: string
+      createdAt:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      freelancerId:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      freelancerName:
+        example: David Bowling
+        type: string
+    required:
+    - coverLetter
+    - createdAt
+    - freelancerId
+    - freelancerName
     type: object
   internal_api_get_orders_id.Response:
     properties:
@@ -136,6 +165,19 @@ definitions:
     - isClient
     - isFreelancer
     - order
+    type: object
+  internal_api_get_orders_id.Status:
+    properties:
+      createdAt:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
+        example: beginning
+    required:
+    - createdAt
+    - type
     type: object
   internal_api_get_users_id.Profile:
     properties:
