@@ -93,6 +93,9 @@ definitions:
       description:
         example: Write something for me but more words
         type: string
+      freelancerEmail:
+        example: test@mail.com
+        type: string
       freelancerId:
         example: 582ebf010936ac3ba5cd00e4
         type: string
