@@ -22,6 +22,24 @@ type Request struct {
 	ID primitive.ObjectID `param:"id" validate:"required" example:"507f1f77bcf86cd799439011"`
 }
 
+type Order struct {
+	ID             primitive.ObjectID `json:"id"`
+	ClientID       primitive.ObjectID `json:"clientId"`
+	Title          string             `json:"title"`
+	Description    string             `json:"description"`
+	CompletionTime int64              `json:"completionTime"`
+	Status         entity.StatusType  `json:"status"`
+	TotalResponses int                `json:"totalResponses"`
+	Cost           int                `json:"cost"`
+	FreelancerID   primitive.ObjectID `json:"freelancerId"`
+	CreatedAt      string             `json:"createdAt"`
+	UpdatedAt      string             `json:"updatedAt"`
+}
+
+type Response struct {
+	Orders []Order `json:"orders"`
+}
+
 func New(users users.Service) api.Handler {
 	return decorator.NewBindAndValidate(&handler{users: users})
 }
@@ -32,7 +50,7 @@ func New(users users.Service) api.Handler {
 // @Security		JWT
 // @Param			id	path	string	true	"ID пользователя"	example("507f1f77bcf86cd799439011")
 // @Produce		json
-// @Success		200	{array}		entity.OrderExt
+// @Success		200	{object}	Response
 // @Failure		400	{object}	echo.HTTPError
 // @Failure		403	{object}	echo.HTTPError
 // @Failure		404	{object}	echo.HTTPError
@@ -41,19 +59,47 @@ func New(users users.Service) api.Handler {
 func (h *handler) Handle(c echo.Context, in Request) error {
 	requesterID := c.Get(mw.UserIDKey).(primitive.ObjectID) //nolint:forcetypeassert
 	role := c.Get(mw.SystemRoleKey).(entity.SystemRoleType) //nolint:forcetypeassert
-	isAdmin := role == entity.SystemRoleTypeAdmin
 
-	orders, err := h.users.FindOrdersByUserID(c.Request().Context(), requesterID, in.ID, isAdmin)
-	if err != nil {
-		switch {
-		case errors.Is(err, users.ErrForbidden):
-			return echo.NewHTTPError(http.StatusForbidden, "access denied")
-		case errors.Is(err, users.ErrUserNotFound):
-			return echo.NewHTTPError(http.StatusNotFound, "user not found")
-		default:
-			return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
-		}
+	if requesterID != in.ID && role != entity.SystemRoleTypeAdmin {
+		return echo.NewHTTPError(http.StatusForbidden, "access denied")
 	}
 
-	return c.JSON(http.StatusOK, orders)
+	ordersExt, err := h.users.FindOrdersByUserID(c.Request().Context(), requesterID, in.ID)
+	if err != nil {
+		if errors.Is(err, users.ErrUserNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, "user not found")
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
+	}
+
+	orders := make([]Order, 0, len(ordersExt))
+	for _, orderExt := range ordersExt {
+		status := entity.StatusTypeBeginning
+		if len(orderExt.Statuses) > 0 {
+			status = orderExt.Statuses[len(orderExt.Statuses)-1].Type
+		}
+
+		totalResponses := 0
+		for _, response := range orderExt.Responses {
+			if response.Active {
+				totalResponses++
+			}
+		}
+
+		orders = append(orders, Order{
+			ID:             orderExt.ID,
+			ClientID:       orderExt.ClientID,
+			Title:          orderExt.Title,
+			Description:    orderExt.Description,
+			CompletionTime: orderExt.CompletionTime,
+			Status:         status,
+			TotalResponses: totalResponses,
+			Cost:           orderExt.Cost,
+			FreelancerID:   orderExt.FreelancerID,
+			CreatedAt:      orderExt.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:      orderExt.UpdatedAt.Format("2006-01-02 15:04:05"),
+		})
+	}
+
+	return c.JSON(http.StatusOK, Response{Orders: orders})
 }

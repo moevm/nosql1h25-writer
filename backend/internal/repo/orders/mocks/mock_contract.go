@@ -88,18 +88,18 @@ func (mr *MockRepoMockRecorder) Find(ctx, offset, limit, minCost, maxCost, sortB
 }
 
 // FindByUserIDExt mocks base method.
-func (m *MockRepo) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID, isAdmin bool) ([]entity.OrderExt, error) {
+func (m *MockRepo) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByUserIDExt", ctx, userID, isAdmin)
+	ret := m.ctrl.Call(m, "FindByUserIDExt", ctx, userID)
 	ret0, _ := ret[0].([]entity.OrderExt)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByUserIDExt indicates an expected call of FindByUserIDExt.
-func (mr *MockRepoMockRecorder) FindByUserIDExt(ctx, userID, isAdmin any) *gomock.Call {
+func (mr *MockRepoMockRecorder) FindByUserIDExt(ctx, userID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserIDExt", reflect.TypeOf((*MockRepo)(nil).FindByUserIDExt), ctx, userID, isAdmin)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserIDExt", reflect.TypeOf((*MockRepo)(nil).FindByUserIDExt), ctx, userID)
 }
 
 // GetByID mocks base method.

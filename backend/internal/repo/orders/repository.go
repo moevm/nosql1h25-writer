@@ -280,71 +280,16 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 	return nil
 }
 
-func (r *repository) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID, isAdmin bool) ([]entity.OrderExt, error) {
-	match := bson.M{"active": true}
-	if !isAdmin {
-		match["clientId"] = userID
+func (r *repository) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error) {
+	filter := bson.M{
+		"active":   true,
+		"clientId": userID,
 	}
 
-	pipeline := mongo.Pipeline{
-		{{Key: "$match", Value: match}},
-		{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}},
-		{{Key: "$lookup", Value: bson.M{
-			"from":         "users",
-			"localField":   "clientId",
-			"foreignField": "_id",
-			"as":           "client",
-		}}},
-		{{Key: "$lookup", Value: bson.M{
-			"from":         "users",
-			"localField":   "freelancerId",
-			"foreignField": "_id",
-			"as":           "freelancer",
-		}}},
-		{{Key: "$unwind", Value: bson.M{
-			"path":                       "$client",
-			"preserveNullAndEmptyArrays": true,
-		}}},
-		{{Key: "$unwind", Value: bson.M{
-			"path":                       "$freelancer",
-			"preserveNullAndEmptyArrays": true,
-		}}},
-		{{Key: "$project", Value: bson.M{
-			"_id":            1,
-			"clientId":       1,
-			"title":          1,
-			"description":    1,
-			"completionTime": 1,
-			"cost":           1,
-			"freelancerId":   1,
-			"createdAt":      1,
-			"updatedAt":      1,
-			"responses":      1,
-			"statuses":       1,
-			"client": bson.M{
-				"_id":    "$client._id",
-				"email":  "$client.email",
-				"name":   "$client.name",
-				"avatar": "$client.avatar",
-			},
-			"freelancer": bson.M{
-				"_id":    "$freelancer._id",
-				"email":  "$freelancer.email",
-				"name":   "$freelancer.name",
-				"avatar": "$freelancer.avatar",
-			},
-		}}},
-	}
-
-	cursor, err := r.ordersColl.Aggregate(ctx, pipeline)
+	cursor, err := r.ordersColl.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		if err := cursor.Close(ctx); err != nil {
-			log.Errorf("failed to close cursor: %v", err)
-		}
-	}()
 
 	var orders []entity.OrderExt
 	if err := cursor.All(ctx, &orders); err != nil {

@@ -82,21 +82,8 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 	return nil
 }
 
-func (s *service) FindOrdersByUserID(ctx context.Context, requesterID, targetUserID primitive.ObjectID, isAdmin bool) ([]entity.OrderExt, error) {
-	if !isAdmin && requesterID != targetUserID {
-		return nil, ErrForbidden
-	}
-
-	_, err := s.usersRepo.GetByIDExt(ctx, targetUserID)
-	if err != nil {
-		if errors.Is(err, users.ErrUserNotFound) {
-			return nil, ErrUserNotFound
-		}
-		log.Errorf("users.service.FindOrdersByUserID - s.usersRepo.GetByIDExt: %v", err)
-		return nil, ErrCannotGetUser
-	}
-
-	orders, err := s.ordersRepo.FindByUserIDExt(ctx, targetUserID, isAdmin)
+func (s *service) FindOrdersByUserID(ctx context.Context, requesterID, targetUserID primitive.ObjectID) ([]entity.OrderExt, error) {
+	orders, err := s.ordersRepo.FindByUserIDExt(ctx, targetUserID)
 	if err != nil {
 		log.Errorf("users.service.FindOrdersByUserID - s.ordersRepo.FindByUserIDExt: %v", err)
 		return nil, ErrCannotFindOrders

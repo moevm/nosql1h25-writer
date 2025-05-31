@@ -883,10 +883,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.OrderExt"
-                            }
+                            "$ref": "#/definitions/internal_api_get_users_id_orders.Response"
                         }
                     },
                     "400": {
@@ -922,81 +919,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {}
-            }
-        },
-        "github_com_moevm_nosql1h25-writer_backend_internal_entity.OrderExt": {
-            "type": "object",
-            "properties": {
-                "clientID": {
-                    "type": "string"
-                },
-                "completionTime": {
-                    "type": "integer"
-                },
-                "cost": {
-                    "type": "integer"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "freelancerID": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "responses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.Response"
-                    }
-                },
-                "statuses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.Status"
-                    }
-                },
-                "title": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_moevm_nosql1h25-writer_backend_internal_entity.Response": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "coverLetter": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "freelancerID": {
-                    "type": "string"
-                },
-                "freelancerName": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_moevm_nosql1h25-writer_backend_internal_entity.Status": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "type": {
-                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
-                }
             }
         },
         "github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType": {
@@ -1289,6 +1211,55 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users_id_orders.Order": {
+            "type": "object",
+            "properties": {
+                "clientId": {
+                    "type": "string"
+                },
+                "completionTime": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "freelancerId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "totalResponses": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users_id_orders.Response": {
+            "type": "object",
+            "properties": {
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_users_id_orders.Order"
+                    }
                 }
             }
         },
