@@ -61,7 +61,8 @@ type App struct {
 	postBalanceDepositHandler  api.Handler
 	postBalanceWithdrawHandler api.Handler
 
-	postOrdersHandler api.Handler
+	postOrdersHandler         api.Handler
+	postOrdersResponseHandler api.Handler
 
 	patchUsersIDHandler api.Handler
 

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { api, getUserIdFromToken } from '../integrations/auth';
+import { getUserIdFromToken } from '../integrations/auth';
+import { api } from '../integrations/api';
 
 interface UserProfile {
   displayName: string;

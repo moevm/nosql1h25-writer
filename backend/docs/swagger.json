@@ -634,6 +634,67 @@
                 }
             }
         },
+        "/orders/{id}/response": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create response to existing order",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Response to order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Response data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_post_order_response.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "get": {
                 "security": [
@@ -1329,6 +1390,25 @@
                 "newBalance": {
                     "type": "integer",
                     "example": 111
+                }
+            }
+        },
+        "internal_api_post_order_response.Request": {
+            "type": "object",
+            "required": [
+                "coverLetter",
+                "orderID"
+            ],
+            "properties": {
+                "coverLetter": {
+                    "type": "string",
+                    "maxLength": 512,
+                    "minLength": 16,
+                    "example": "Я заинтересован в вашем проекте и имею релевантный опыт в этой области. Готов обсудить детали и начать работу."
+                },
+                "orderID": {
+                    "type": "string",
+                    "example": "683b2dc10949bd1e64266ed0"
                 }
             }
         },

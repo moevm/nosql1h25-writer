@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { api } from './api';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -31,46 +31,19 @@ export function isAuthenticated() {
   return !!getAccessToken();
 }
 
-export const api = axios.create({
-  baseURL: '/api',
-});
-
-api.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers['Authorization'] = `Bearer ${token}`;
+export async function refreshAccessToken() {
+  try {
+    const res = await api.post('/auth/refresh', {
+      refreshToken: getRefreshToken(),
+    });
+    setTokens(res.data.accessToken, res.data.refreshToken);
+    return res.data.accessToken;
+  } catch (refreshError) {
+    clearTokens();
+    window.location.href = '/login';
+    throw refreshError;
   }
-  return config;
-});
-
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry &&
-      getRefreshToken()
-    ) {
-      originalRequest._retry = true;
-      try {
-        const res = await axios.post('/api/auth/refresh', {
-          refreshToken: getRefreshToken(),
-        });
-        setTokens(res.data.accessToken, res.data.refreshToken);
-        originalRequest.headers['Authorization'] = `Bearer ${res.data.accessToken}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        clearTokens();
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+}
 
 export function parseJwt(token: string): any {
   try {
@@ -85,4 +58,11 @@ export function getUserIdFromToken(): string | null {
   if (!token) return null;
   const payload = parseJwt(token);
   return payload && payload.userId ? payload.userId : null;
+}
+
+export function isAdmin(): boolean {
+  const token = getAccessToken();
+  if (!token) return false;
+  const payload = parseJwt(token);
+  return payload && payload.systemRole === 'admin';
 } 
