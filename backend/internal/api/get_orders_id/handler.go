@@ -33,6 +33,18 @@ type Request struct {
 	ID primitive.ObjectID `param:"id" validate:"required"`
 }
 
+type OrderResponse struct {
+	FreelancerName string             `json:"freelancerName" validate:"required" example:"David Bowling"`
+	FreelancerID   primitive.ObjectID `json:"freelancerId" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
+	CoverLetter    string             `json:"coverLetter" validate:"required" example:"Can help with your order"`
+	CreatedAt      time.Time          `json:"createdAt" validate:"required" example:"2020-01-01T00:00:00Z"`
+}
+
+type Status struct {
+	Type      entity.StatusType `json:"type" validate:"required" example:"beginning"`
+	CreatedAt time.Time         `json:"createdAt" validate:"required" example:"2020-01-01T00:00:00Z"`
+}
+
 type Order struct {
 	ID             primitive.ObjectID `json:"id" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
 	ClientName     string             `json:"clientName" validate:"required" example:"John Doe"`
@@ -44,6 +56,8 @@ type Order struct {
 	Description    string             `json:"description" validate:"required" example:"Write something for me but more words"`
 	CompletionTime int64              `json:"completionTime" validate:"required" example:"3600000000000"`
 	Cost           int                `json:"cost,omitempty" validate:"omitempty" example:"500"`
+	Responses      []OrderResponse    `json:"responses,omitempty" validate:"omitempty"`
+	Statuses       []Status           `json:"statuses" validate:"required"`
 	CreatedAt      time.Time          `json:"createdAt" validate:"required" example:"2020-01-01T00:00:00Z"`
 	UpdatedAt      time.Time          `json:"updatedAt" validate:"required" example:"2020-01-01T00:00:00Z"`
 }
@@ -108,12 +122,28 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		IsFreelancer: userID == order.FreelancerID,
 	}
 
+	var responses []OrderResponse
 	for _, response := range order.Responses {
-		if response.Active && response.FreelancerID == userID {
-			res.HasActiveResponse = true
-			break
+		if response.Active {
+			responses = append(responses, OrderResponse{
+				FreelancerName: response.FreelancerName,
+				FreelancerID:   response.FreelancerID,
+				CoverLetter:    response.CoverLetter,
+				CreatedAt:      response.CreatedAt,
+			})
+
+			if response.FreelancerID == userID {
+				res.HasActiveResponse = true
+			}
 		}
 	}
+	res.Order.Responses = responses
+
+	statuses := make([]Status, 0, len(order.Statuses))
+	for _, status := range order.Statuses {
+		statuses = append(statuses, Status(status))
+	}
+	res.Order.Statuses = statuses
 
 	return c.JSON(http.StatusOK, res)
 }
