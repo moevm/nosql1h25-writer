@@ -8,15 +8,20 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 )
 
 type service struct {
-	usersRepo users.Repo
+	usersRepo  users.Repo
+	ordersRepo orders.Repo
 }
 
-func New(repo users.Repo) Service {
-	return &service{usersRepo: repo}
+func New(usersRepo users.Repo, ordersRepo orders.Repo) Service {
+	return &service{
+		usersRepo:  usersRepo,
+		ordersRepo: ordersRepo,
+	}
 }
 
 func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, op OperationType, amount int) (int, error) {
@@ -75,4 +80,14 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 	}
 
 	return nil
+}
+
+func (s *service) FindOrdersByUserID(ctx context.Context, requesterID, targetUserID primitive.ObjectID) ([]entity.OrderExt, error) {
+	orders, err := s.ordersRepo.FindByUserIDExt(ctx, targetUserID)
+	if err != nil {
+		log.Errorf("users.service.FindOrdersByUserID - s.ordersRepo.FindByUserIDExt: %v", err)
+		return nil, ErrCannotFindOrders
+	}
+
+	return orders, nil
 }

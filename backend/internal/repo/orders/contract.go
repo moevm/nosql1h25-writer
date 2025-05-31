@@ -16,4 +16,5 @@ type Repo interface {
 	GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error)
 	Update(ctx context.Context, in UpdateIn) error
 	CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverLetter, freelancerName string) error
+	FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error)
 }

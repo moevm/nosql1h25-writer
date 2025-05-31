@@ -40,6 +40,7 @@ func (app *App) configureRouter(handler *echo.Echo) {
 	{
 		usersGroup.GET("/:id", app.GetUsersIDHandler().Handle, app.AuthMW().UserIdentity())
 		usersGroup.PATCH("/:id", app.PatchUsersIDHandler().Handle, app.AuthMW().UserIdentity())
+		usersGroup.GET("/:id/orders", app.GetUsersIDOrdersHandler().Handle, app.AuthMW().UserIdentity())
 	}
 
 	authGroup := handler.Group("/auth")

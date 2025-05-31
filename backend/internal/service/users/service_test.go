@@ -65,7 +65,7 @@ func TestService_GetByIDExt(t *testing.T) {
 			mockRepo := users_repo_mocks.NewMockRepo(ctrl)
 			tc.mockBehavior(mockRepo)
 
-			service := users_service.New(mockRepo)
+			service := users_service.New(mockRepo, nil)
 			got, err := service.GetByIDExt(ctx, userID)
 
 			assert.ErrorIs(t, err, tc.expectedErr)
@@ -115,7 +115,7 @@ func TestService_UpdateBalance_Deposit(t *testing.T) {
 
 			tc.mockBehavior(mockRepo)
 
-			svc := users_service.New(mockRepo)
+			svc := users_service.New(mockRepo, nil)
 
 			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
 
@@ -173,7 +173,7 @@ func TestService_UpdateBalance_Withdraw(t *testing.T) {
 
 			tc.mockBehavior(mockRepo)
 
-			svc := users_service.New(mockRepo)
+			svc := users_service.New(mockRepo, nil)
 
 			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
 

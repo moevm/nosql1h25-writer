@@ -273,3 +273,22 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 
 	return nil
 }
+
+func (r *repository) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error) {
+	filter := bson.M{
+		"active":   true,
+		"clientId": userID,
+	}
+
+	cursor, err := r.ordersColl.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []entity.OrderExt
+	if err := cursor.All(ctx, &orders); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}

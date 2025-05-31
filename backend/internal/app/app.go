@@ -63,9 +63,9 @@ type App struct {
 	postOrdersHandler         api.Handler
 	postOrdersResponseHandler api.Handler
 
-	patchUsersIDHandler api.Handler
-
-	patchOrdersIDHandler api.Handler
+	patchUsersIDHandler     api.Handler
+	patchOrdersIDHandler    api.Handler
+	getUsersIDOrdersHandler api.Handler
 
 	// middlewares
 	authMW *mw.AuthMW
