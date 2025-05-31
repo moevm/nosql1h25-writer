@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+	orders_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders/mocks"
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	users_repo_mocks "github.com/moevm/nosql1h25-writer/backend/internal/repo/users/mocks"
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
@@ -65,7 +66,7 @@ func TestService_GetByIDExt(t *testing.T) {
 			mockRepo := users_repo_mocks.NewMockRepo(ctrl)
 			tc.mockBehavior(mockRepo)
 
-			service := users_service.New(mockRepo)
+			service := users_service.New(mockRepo, nil)
 			got, err := service.GetByIDExt(ctx, userID)
 
 			assert.ErrorIs(t, err, tc.expectedErr)
@@ -115,7 +116,7 @@ func TestService_UpdateBalance_Deposit(t *testing.T) {
 
 			tc.mockBehavior(mockRepo)
 
-			svc := users_service.New(mockRepo)
+			svc := users_service.New(mockRepo, nil)
 
 			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
 
@@ -173,9 +174,109 @@ func TestService_UpdateBalance_Withdraw(t *testing.T) {
 
 			tc.mockBehavior(mockRepo)
 
-			svc := users_service.New(mockRepo)
+			svc := users_service.New(mockRepo, nil)
 
 			got, err := svc.UpdateBalance(ctx, userID, operation, amount)
+
+			assert.ErrorIs(t, err, tc.wantErr)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
+func TestService_FindOrdersByUserID(t *testing.T) {
+	var (
+		ctx      = context.TODO()
+		targetID = primitive.NewObjectID()
+		orders   = []entity.OrderExt{
+			{
+				Order: entity.Order{
+					ID:       primitive.NewObjectID(),
+					ClientID: targetID,
+					Title:    "Test Order",
+				},
+			},
+		}
+	)
+
+	type MockBehavior func(repo *orders_repo_mocks.MockRepo, usersRepo *users_repo_mocks.MockRepo)
+
+	tests := []struct {
+		name         string
+		requesterID  primitive.ObjectID
+		targetID     primitive.ObjectID
+		isAdmin      bool
+		mockBehavior MockBehavior
+		want         []entity.OrderExt
+		wantErr      error
+	}{
+		{
+			name:        "admin can view any user orders",
+			requesterID: primitive.NewObjectID(),
+			targetID:    targetID,
+			isAdmin:     true,
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersRepo *users_repo_mocks.MockRepo) {
+				usersRepo.EXPECT().GetByIDExt(ctx, targetID).Return(entity.UserExt{}, nil)
+				repo.EXPECT().FindByUserIDExt(ctx, targetID, true).Return(orders, nil)
+			},
+			want: orders,
+		},
+		{
+			name:        "user can view own orders",
+			requesterID: targetID,
+			targetID:    targetID,
+			isAdmin:     false,
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersRepo *users_repo_mocks.MockRepo) {
+				usersRepo.EXPECT().GetByIDExt(ctx, targetID).Return(entity.UserExt{}, nil)
+				repo.EXPECT().FindByUserIDExt(ctx, targetID, false).Return(orders, nil)
+			},
+			want: orders,
+		},
+		{
+			name:        "user cannot view other user orders",
+			requesterID: primitive.NewObjectID(),
+			targetID:    targetID,
+			isAdmin:     false,
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersRepo *users_repo_mocks.MockRepo) {
+			},
+			wantErr: users_service.ErrForbidden,
+		},
+		{
+			name:        "target user not found",
+			requesterID: targetID,
+			targetID:    targetID,
+			isAdmin:     false,
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersRepo *users_repo_mocks.MockRepo) {
+				usersRepo.EXPECT().GetByIDExt(ctx, targetID).Return(entity.UserExt{}, users_repo.ErrUserNotFound)
+			},
+			wantErr: users_service.ErrUserNotFound,
+		},
+		{
+			name:        "error getting orders",
+			requesterID: targetID,
+			targetID:    targetID,
+			isAdmin:     false,
+			mockBehavior: func(repo *orders_repo_mocks.MockRepo, usersRepo *users_repo_mocks.MockRepo) {
+				usersRepo.EXPECT().GetByIDExt(ctx, targetID).Return(entity.UserExt{}, nil)
+				repo.EXPECT().FindByUserIDExt(ctx, targetID, false).Return(nil, assert.AnError)
+			},
+			wantErr: users_service.ErrCannotFindOrders,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			ctrl := gomock.NewController(t)
+
+			mockOrdersRepo := orders_repo_mocks.NewMockRepo(ctrl)
+			mockUsersRepo := users_repo_mocks.NewMockRepo(ctrl)
+
+			tc.mockBehavior(mockOrdersRepo, mockUsersRepo)
+
+			s := users_service.New(mockUsersRepo, mockOrdersRepo)
+
+			got, err := s.FindOrdersByUserID(ctx, tc.requesterID, tc.targetID, tc.isAdmin)
 
 			assert.ErrorIs(t, err, tc.wantErr)
 			assert.Equal(t, tc.want, got)

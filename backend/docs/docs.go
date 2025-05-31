@@ -853,6 +853,68 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}/orders": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Получить список заказов пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получить список заказов пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "\"507f1f77bcf86cd799439011\"",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.OrderExt"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -860,6 +922,81 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {}
+            }
+        },
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.OrderExt": {
+            "type": "object",
+            "properties": {
+                "clientID": {
+                    "type": "string"
+                },
+                "completionTime": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "freelancerID": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.Response"
+                    }
+                },
+                "statuses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.Status"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.Response": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "coverLetter": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "freelancerID": {
+                    "type": "string"
+                },
+                "freelancerName": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.Status": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                }
             }
         },
         "github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType": {

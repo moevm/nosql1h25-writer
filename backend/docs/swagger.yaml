@@ -4,6 +4,55 @@ definitions:
     properties:
       message: {}
     type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.OrderExt:
+    properties:
+      clientID:
+        type: string
+      completionTime:
+        type: integer
+      cost:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      freelancerID:
+        type: string
+      id:
+        type: string
+      responses:
+        items:
+          $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.Response'
+        type: array
+      statuses:
+        items:
+          $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.Status'
+        type: array
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.Response:
+    properties:
+      active:
+        type: boolean
+      coverLetter:
+        type: string
+      createdAt:
+        type: string
+      freelancerID:
+        type: string
+      freelancerName:
+        type: string
+    type: object
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.Status:
+    properties:
+      createdAt:
+        type: string
+      type:
+        $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
+    type: object
   github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType:
     enum:
     - beginning
@@ -989,6 +1038,46 @@ paths:
       security:
       - JWT: []
       summary: Update user
+      tags:
+      - Users
+  /users/{id}/orders:
+    get:
+      description: Получить список заказов пользователя
+      parameters:
+      - description: ID пользователя
+        example: '"507f1f77bcf86cd799439011"'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.OrderExt'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Получить список заказов пользователя
       tags:
       - Users
 securityDefinitions:
