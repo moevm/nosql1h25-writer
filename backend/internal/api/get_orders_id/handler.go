@@ -46,20 +46,21 @@ type Status struct {
 }
 
 type Order struct {
-	ID             primitive.ObjectID `json:"id" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
-	ClientName     string             `json:"clientName" validate:"required" example:"John Doe"`
-	ClientRating   float64            `json:"clientRating" validate:"required" example:"4.8"`
-	ClientID       primitive.ObjectID `json:"clientId" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
-	FreelancerID   primitive.ObjectID `json:"freelancerId,omitzero" validate:"omitzero" example:"582ebf010936ac3ba5cd00e4"`
-	Status         entity.StatusType  `json:"status" validate:"required" example:"beginning"`
-	Title          string             `json:"title" validate:"required" example:"Write something for me"`
-	Description    string             `json:"description" validate:"required" example:"Write something for me but more words"`
-	CompletionTime int64              `json:"completionTime" validate:"required" example:"3600000000000"`
-	Cost           int                `json:"cost,omitempty" validate:"omitempty" example:"500"`
-	Responses      []OrderResponse    `json:"responses,omitempty" validate:"omitempty"`
-	Statuses       []Status           `json:"statuses" validate:"required"`
-	CreatedAt      time.Time          `json:"createdAt" validate:"required" example:"2020-01-01T00:00:00Z"`
-	UpdatedAt      time.Time          `json:"updatedAt" validate:"required" example:"2020-01-01T00:00:00Z"`
+	ID              primitive.ObjectID `json:"id" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
+	ClientName      string             `json:"clientName" validate:"required" example:"John Doe"`
+	ClientRating    float64            `json:"clientRating" validate:"required" example:"4.8"`
+	ClientID        primitive.ObjectID `json:"clientId" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
+	FreelancerID    primitive.ObjectID `json:"freelancerId,omitzero" validate:"omitzero" example:"582ebf010936ac3ba5cd00e4"`
+	FreelancerEmail string             `json:"freelancerEmail,omitempty" validate:"omitempty" example:"test@mail.com"`
+	Status          entity.StatusType  `json:"status" validate:"required" example:"beginning"`
+	Title           string             `json:"title" validate:"required" example:"Write something for me"`
+	Description     string             `json:"description" validate:"required" example:"Write something for me but more words"`
+	CompletionTime  int64              `json:"completionTime" validate:"required" example:"3600000000000"`
+	Cost            int                `json:"cost,omitempty" validate:"omitempty" example:"500"`
+	Responses       []OrderResponse    `json:"responses,omitempty" validate:"omitempty"`
+	Statuses        []Status           `json:"statuses" validate:"required"`
+	CreatedAt       time.Time          `json:"createdAt" validate:"required" example:"2020-01-01T00:00:00Z"`
+	UpdatedAt       time.Time          `json:"updatedAt" validate:"required" example:"2020-01-01T00:00:00Z"`
 }
 
 type Response struct {
@@ -102,21 +103,34 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("client fetching: %v", err))
 	}
 
+	var freelancer entity.UserExt
+	if !order.FreelancerID.IsZero() {
+		freelancer, err = h.usersService.GetByIDExt(c.Request().Context(), order.FreelancerID)
+		if err != nil {
+			if errors.Is(err, users.ErrUserNotFound) {
+				return echo.NewHTTPError(http.StatusNotFound, fmt.Sprintf("freelancer fetching: %v", err))
+			}
+
+			return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("freelancer fetching: %v", err))
+		}
+	}
+
 	userID := c.Get(mw.UserIDKey).(primitive.ObjectID) //nolint:forcetypeassert
 	res := Response{
 		Order: Order{
-			ID:             order.ID,
-			ClientName:     client.DisplayName,
-			ClientRating:   client.Client.Rating,
-			ClientID:       order.ClientID,
-			FreelancerID:   order.FreelancerID,
-			Status:         order.Statuses[len(order.Statuses)-1].Type,
-			Title:          order.Title,
-			Description:    order.Description,
-			CompletionTime: order.CompletionTime,
-			Cost:           order.Cost,
-			CreatedAt:      order.CreatedAt,
-			UpdatedAt:      order.UpdatedAt,
+			ID:              order.ID,
+			ClientName:      client.DisplayName,
+			ClientRating:    client.Client.Rating,
+			ClientID:        order.ClientID,
+			FreelancerID:    order.FreelancerID,
+			FreelancerEmail: freelancer.Email,
+			Status:          order.Statuses[len(order.Statuses)-1].Type,
+			Title:           order.Title,
+			Description:     order.Description,
+			CompletionTime:  order.CompletionTime,
+			Cost:            order.Cost,
+			CreatedAt:       order.CreatedAt,
+			UpdatedAt:       order.UpdatedAt,
 		},
 		IsClient:     userID == order.ClientID,
 		IsFreelancer: userID == order.FreelancerID,
