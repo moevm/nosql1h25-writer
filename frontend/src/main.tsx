@@ -14,10 +14,10 @@ import DemoTable from './routes/demo.table'
 import DemoTanstackQuery from './routes/demo.tanstack-query'
 import AuthRoute from './routes/auth.route'
 import RegisterRoute from './routes/register.route'
-import OrdersRoute from './routes/orders.route'
-import OrderDetailsRoute from './routes/order.details.route'
-import CreateOrderRoute from './routes/create-order.route'
-import OrderEditRoute from './routes/orders.edit.route.tsx'
+import { createOrdersRoute } from './routes/orders.route'
+import { createOrderDetailsRoute } from './routes/order.details.route'
+import { createCreateOrderRoute } from './routes/create-order.route'
+import { createOrderEditRoute } from './routes/orders.edit.route.tsx'
 import AdminLayout from './routes/AdminLayout'
 import AdminUsers from './routes/AdminUsers'
 import { AdminImportRoute } from './routes/admin.import.route'
@@ -103,10 +103,10 @@ const routeTree = rootRoute.addChildren([
   DemoTanstackQuery(rootRoute),
   AuthRoute(rootRoute),
   RegisterRoute(rootRoute),
-  OrdersRoute(rootRoute),
-  OrderDetailsRoute(rootRoute),
-  CreateOrderRoute(rootRoute),
-  OrderEditRoute(rootRoute),
+  createOrdersRoute(rootRoute),
+  createOrderDetailsRoute(rootRoute),
+  createCreateOrderRoute(rootRoute),
+  createOrderEditRoute(rootRoute),
   profileRoute,
 ])
 

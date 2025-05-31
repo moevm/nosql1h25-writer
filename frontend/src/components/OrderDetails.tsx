@@ -5,6 +5,7 @@ import { Avatar, Button, Card, Input, List, Spin, Tag } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { api } from '../integrations/api'
 import { roleUtils } from '../utils/role'
+import { formatCompletionTime } from '../utils/time'
 
 interface OrderDetailsType {
   order: {
@@ -55,17 +56,6 @@ const getStatusText = (status: string) => {
     case 'dispute': return 'Спор'
     default: return status
   }
-}
-
-const formatCompletionTime = (nanoseconds: number) => {
-  const seconds = nanoseconds / 1_000_000_000 // конвертируем наносекунды в секунды
-  const days = Math.floor(seconds / (24 * 60 * 60))
-  const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60))
-  
-  if (days > 0) {
-    return `${days} д. ${hours} ч.`
-  }
-  return `${hours} ч.`
 }
 
 const formatRating = (rating: number) => {
@@ -225,4 +215,4 @@ const OrderDetails: React.FC = () => {
   )
 }
 
-export default OrderDetails
+export default OrderDetails;

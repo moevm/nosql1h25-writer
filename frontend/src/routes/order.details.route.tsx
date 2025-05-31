@@ -1,9 +1,9 @@
 import { createRoute } from '@tanstack/react-router'
-import type { RootRoute } from '@tanstack/react-router'
 import ProtectedRoute from '../components/ProtectedRoute'
 import OrderDetails from '../components/OrderDetails'
+import type { RootRoute } from '@tanstack/react-router'
 
-export default (parentRoute: RootRoute) =>
+export const createOrderDetailsRoute = (parentRoute: RootRoute) =>
   createRoute({
     path: '/orders/$id',
     component: () => (

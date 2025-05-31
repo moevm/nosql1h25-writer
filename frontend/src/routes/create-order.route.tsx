@@ -3,7 +3,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import CreateOrderPage from '../components/CreateOrderPage';
 import type { RootRoute } from '@tanstack/react-router';
 
-export default (parentRoute: RootRoute) =>
+export const createCreateOrderRoute = (parentRoute: RootRoute) =>
   createRoute({
     path: '/orders/create',
     component: () => (
