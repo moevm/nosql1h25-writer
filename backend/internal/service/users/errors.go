@@ -10,4 +10,5 @@ var (
 	ErrUserAlreadyExists = errors.New("user already exists")
 	ErrCannotCreateUser  = errors.New("cannot create user")
 	ErrCannotUpdateUser  = errors.New("cannot update user")
+	ErrCannotFindOrders  = errors.New("cannot find orders")
 )
