@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin_export"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders_id"
@@ -65,6 +66,15 @@ func (app *App) GetAdminHandler() api.Handler {
 
 	app.getAdminHandler = get_admin.New()
 	return app.getAdminHandler
+}
+
+func (app *App) GetAdminExportHandler() api.Handler {
+	if app.getAdminExportHandler != nil {
+		return app.getAdminExportHandler
+	}
+
+	app.getAdminExportHandler = get_admin_export.New()
+	return app.getAdminExportHandler
 }
 
 func (app *App) PostBalanceDepositHandler() api.Handler {

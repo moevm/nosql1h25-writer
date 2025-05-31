@@ -53,6 +53,7 @@ func (app *App) configureRouter(handler *echo.Echo) {
 	adminGroup := handler.Group("/admin", app.AuthMW().UserIdentity())
 	{
 		adminGroup.GET("", app.GetAdminHandler().Handle, app.AuthMW().Role(entity.SystemRoleTypeAdmin))
+		adminGroup.GET("/export", app.GetAdminExportHandler().Handle, app.authMW.Role(entity.SystemRoleTypeAdmin))
 	}
 
 	balanceGroup := handler.Group("/balance", app.AuthMW().UserIdentity())
