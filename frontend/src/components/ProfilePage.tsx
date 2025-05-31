@@ -76,7 +76,7 @@ export default function ProfilePage() {
           <Space>
             <Button type="primary">Мои заказы</Button>
             {currentRole === 'client' ?
-              <Button>Создать заказ</Button> :
+              <Button onClick={() => navigate({ to: '/edit-order' })}>Создать заказ</Button> :
               <Button onClick={() => navigate({ to: '/orders' })}>На главную</Button>
             }
           </Space>

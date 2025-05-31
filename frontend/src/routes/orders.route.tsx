@@ -250,7 +250,7 @@ function createOrdersRoute(parentRoute: RootRoute) {
   return createRoute({
     path: '/orders',
     component: () => (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={['freelancer']}>
         <OrdersPage />
       </ProtectedRoute>
     ),
