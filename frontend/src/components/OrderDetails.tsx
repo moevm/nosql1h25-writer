@@ -367,7 +367,7 @@ const OrderDetails: React.FC = () => {
           </div>
         )}
 
-        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status !== 'beginning' && (
+        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status !== 'beginning' && !data.hasActiveResponse && (
           <div style={{ 
             marginTop: 32,
             padding: 16,
