@@ -1372,6 +1372,9 @@ const docTemplate = `{
                     "minLength": 16,
                     "example": "New Order Description"
                 },
+                "freelancerId": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
