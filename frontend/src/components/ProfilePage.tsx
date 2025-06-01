@@ -127,7 +127,9 @@ export default function ProfilePage() {
                     </Text>
                   </div>
                   <div style={{marginTop: 12}}>
-                    <Button>Редактировать</Button>
+                    <Link to="/user/edit">
+                      <Button>Редактировать</Button>
+                    </Link>
                   </div>
                 </Col>
               </Row>
