@@ -244,6 +244,10 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 		updateSet["cost"] = *in.Cost
 	}
 
+	if in.FreelancerID != nil {
+		updateSet["freelancerId"] = *in.FreelancerID
+	}
+
 	update := bson.M{
 		"$set": updateSet,
 	}

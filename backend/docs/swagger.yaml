@@ -259,6 +259,8 @@ definitions:
         maxLength: 2048
         minLength: 16
         type: string
+      freelancerId:
+        type: string
       id:
         type: string
       status:

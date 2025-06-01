@@ -36,4 +36,5 @@ type UpdateIn struct {
 	CompletionTime *int64
 	Cost           *int
 	Status         *entity.StatusType
+	FreelancerID   *primitive.ObjectID
 }
