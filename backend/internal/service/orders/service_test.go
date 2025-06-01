@@ -81,23 +81,23 @@ func TestService_Find(t *testing.T) {
 		minCost = 0
 		maxCost = 1000000
 		sortBy  = "cost_asc"
+		search  = "sadf"
 	)
 
-	sampleOrder := orders_repo.OrderWithClientData{
+	in := orders_service.FindIn{
+		Limit:   limit,
+		Offset:  offset,
+		MinCost: &minCost,
+		MaxCost: &maxCost,
+		Search:  &search,
+		SortBy:  &sortBy,
+	}
+
+	sampleOrder := entity.Order{
 		Title:          "Title",
 		Description:    "Description",
 		CompletionTime: 123456,
 		Cost:           100,
-		ClientName:     "Name",
-		Rating:         4.7,
-	}
-	expectedOrder := orders_service.OrderWithClientData{
-		Title:          sampleOrder.Title,
-		Description:    sampleOrder.Description,
-		CompletionTime: sampleOrder.CompletionTime,
-		Cost:           sampleOrder.Cost,
-		ClientName:     sampleOrder.ClientName,
-		Rating:         sampleOrder.Rating,
 	}
 
 	type MockBehavior func(repo *orders_repo_mocks.MockRepo)
@@ -111,14 +111,14 @@ func TestService_Find(t *testing.T) {
 		{
 			name: "successful find",
 			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
-				r.EXPECT().Find(ctx, offset, limit, &minCost, &maxCost, &sortBy).Return(orders_repo.FindOut{Orders: []orders_repo.OrderWithClientData{sampleOrder}}, nil)
+				r.EXPECT().Find(ctx, orders_repo.FindIn(in)).Return(orders_repo.FindOut{Orders: []entity.Order{sampleOrder}}, nil)
 			},
-			want: orders_service.FindOut{Orders: []orders_service.OrderWithClientData{expectedOrder}},
+			want: orders_service.FindOut{Orders: []entity.Order{sampleOrder}},
 		},
 		{
 			name: "find failure",
 			mockBehavior: func(r *orders_repo_mocks.MockRepo) {
-				r.EXPECT().Find(ctx, offset, limit, &minCost, &maxCost, &sortBy).Return(orders_repo.FindOut{}, assert.AnError)
+				r.EXPECT().Find(ctx, orders_repo.FindIn(in)).Return(orders_repo.FindOut{}, assert.AnError)
 			},
 			want:    orders_service.FindOut{},
 			wantErr: orders_service.ErrCannotFindOrders,
@@ -137,7 +137,7 @@ func TestService_Find(t *testing.T) {
 
 			svc := orders_service.New(mockRepo, mockUsersService)
 
-			got, err := svc.Find(ctx, offset, limit, &minCost, &maxCost, &sortBy)
+			got, err := svc.Find(ctx, in)
 
 			assert.ErrorIs(t, err, tc.wantErr)
 			assert.Equal(t, tc.want, got)

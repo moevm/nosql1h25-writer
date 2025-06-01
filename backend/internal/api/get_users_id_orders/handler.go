@@ -1,7 +1,6 @@
 package get_users_id_orders
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
@@ -56,7 +55,6 @@ func New(users users.Service) api.Handler {
 // @Success		200	{object}	Response
 // @Failure		400	{object}	echo.HTTPError
 // @Failure		403	{object}	echo.HTTPError
-// @Failure		404	{object}	echo.HTTPError
 // @Failure		500	{object}	echo.HTTPError
 // @Router			/users/{id}/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
@@ -69,9 +67,6 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 
 	ordersExt, err := h.users.FindOrdersByUserID(c.Request().Context(), requesterID, in.ID)
 	if err != nil {
-		if errors.Is(err, users.ErrCannotFindOrders) {
-			return echo.NewHTTPError(http.StatusNotFound, err.Error())
-		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
