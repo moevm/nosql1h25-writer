@@ -24,26 +24,23 @@ func New(ordersRepo orders.Repo, usersService users.Service) Service {
 	}
 }
 
-func (s *service) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
-	out, err := s.ordersRepo.Find(ctx, offset, limit, minCost, maxCost, sortBy)
+func (s *service) Find(ctx context.Context, in FindIn) (FindOut, error) {
+	out, err := s.ordersRepo.Find(ctx, orders.FindIn{
+		Limit:   in.Limit,
+		Offset:  in.Offset,
+		MinCost: in.MinCost,
+		MaxCost: in.MaxCost,
+		MinTime: in.MinTime,
+		MaxTime: in.MaxTime,
+		Search:  in.Search,
+		SortBy:  in.SortBy,
+	})
 	if err != nil {
 		log.Errorf("orders.service.Find - s.ordersRepo.Find: %v", err)
 		return FindOut{}, ErrCannotFindOrders
 	}
 
-	serviceFindOut := FindOut{Total: out.Total}
-	for _, order := range out.Orders {
-		serviceFindOut.Orders = append(serviceFindOut.Orders, OrderWithClientData{
-			ID:             order.ID,
-			Title:          order.Title,
-			Description:    order.Description,
-			CompletionTime: order.CompletionTime,
-			Cost:           order.Cost,
-			ClientName:     order.ClientName,
-			Rating:         order.Rating,
-		})
-	}
-	return serviceFindOut, nil
+	return FindOut{Total: out.Total, Orders: out.Orders}, nil
 }
 
 func (s *service) GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error) {
@@ -98,6 +95,7 @@ func (s *service) Update(ctx context.Context, in UpdateIn) error {
 		CompletionTime: in.CompletionTime,
 		Cost:           in.Cost,
 		Status:         in.Status,
+		FreelancerID:   in.FreelancerID,
 	})
 	if err != nil {
 		if errors.Is(err, orders.ErrOrderNotFound) {

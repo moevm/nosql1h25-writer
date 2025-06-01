@@ -1,11 +1,12 @@
-import React from 'react'
-import { useQuery } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { Avatar, Button, Card, Input, List, Spin, Tag } from 'antd'
+import { Avatar, Button, Card, Input, List, Spin, Tag, message } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { api } from '../integrations/api'
 import { roleUtils } from '../utils/role'
 import { formatCompletionTime } from '../utils/time'
+import { getUserIdFromToken } from '../integrations/auth'
 
 interface OrderDetailsType {
   order: {
@@ -20,12 +21,15 @@ interface OrderDetailsType {
     status: string
     createdAt: string
     updatedAt: string
+    freelancerId?: string
+    freelancerEmail?: string
     responses?: Array<{
       freelancerName: string
       freelancerId: string
       coverLetter: string
       createdAt: string
     }>
+    clientEmail: string
   }
   isClient: boolean
   isFreelancer: boolean
@@ -72,10 +76,75 @@ const formatRating = (rating: number) => {
 
 const OrderDetails: React.FC = () => {
   const { id } = useParams({ from: '/orders/$id' })
+  const [coverLetter, setCoverLetter] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const queryClient = useQueryClient()
+
   const { data, isLoading } = useQuery<OrderDetailsType>({
     queryKey: ['order', id],
     queryFn: () => api.get(`/orders/${id}`).then(res => res.data)
   })
+
+  const handleSubmitResponse = async () => {
+    if (!coverLetter.trim()) {
+      message.error('Пожалуйста, напишите сопроводительное письмо')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      await api.post(`/orders/${id}/response`, {
+        coverLetter: coverLetter.trim(),
+        orderID: id
+      })
+      
+      message.success('Отклик успешно отправлен')
+      setCoverLetter('')
+      // Обновляем данные заказа
+      await queryClient.invalidateQueries({ queryKey: ['order', id] })
+    } catch (error) {
+      message.error('Ошибка при отправке отклика')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleCloseOrder = async () => {
+    try {
+      setIsSubmitting(true)
+      await api.patch(`/orders/${id}`, {
+        id,
+        status: 'finished'
+      })
+      
+      message.success('Заказ успешно закрыт')
+      // Обновляем данные заказа
+      await queryClient.invalidateQueries({ queryKey: ['order', id] })
+    } catch (error) {
+      message.error('Ошибка при закрытии заказа')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleAcceptResponse = async (freelancerId: string) => {
+    try {
+      setIsSubmitting(true)
+      await api.patch(`/orders/${id}`, {
+        id,
+        status: 'work',
+        freelancerId
+      })
+      
+      message.success('Отклик принят')
+      // Обновляем данные заказа
+      await queryClient.invalidateQueries({ queryKey: ['order', id] })
+    } catch (error) {
+      message.error('Ошибка при принятии отклика')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -129,6 +198,9 @@ const OrderDetails: React.FC = () => {
             </div>
             <div>
               <div style={{ fontWeight: 600 }}>{order.clientName}</div>
+              <div style={{ color: '#888', fontSize: '0.9em' }}>
+                {order.clientEmail}
+              </div>
               <div style={{ color: '#faad14' }}>
                 {formatRating(order.clientRating)}
               </div>
@@ -145,6 +217,11 @@ const OrderDetails: React.FC = () => {
         </div>
 
         <Tag color={getStatusColor(order.status)}>{getStatusText(order.status)}</Tag>
+        {data.isFreelancer && order.freelancerId === getUserIdFromToken() && (
+          <Tag color="success" style={{ marginLeft: 8 }}>
+            Вас выбрали исполнителем
+          </Tag>
+        )}
 
         <h2 style={{ marginTop: 24 }}>{order.title}</h2>
 
@@ -156,6 +233,18 @@ const OrderDetails: React.FC = () => {
         }}>
           {order.description}
         </div>
+
+        {data.isClient && isCurrentRoleClient && order.status !== 'finished' && (
+          <div style={{ marginTop: 32, textAlign: 'right' }}>
+            <Button 
+              danger
+              onClick={handleCloseOrder}
+              loading={isSubmitting}
+            >
+              Закрыть заказ
+            </Button>
+          </div>
+        )}
 
         {data.isClient && isCurrentRoleClient && (
           <div style={{ 
@@ -175,22 +264,73 @@ const OrderDetails: React.FC = () => {
             {order.responses && order.responses.length > 0 ? (
               <List
                 dataSource={order.responses}
-                renderItem={(response) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<Avatar icon={<UserOutlined />} />}
-                      title={response.freelancerName}
-                      description={
-                        <div>
-                          <div style={{ marginBottom: 8 }}>{response.coverLetter}</div>
-                          <div style={{ color: '#888', fontSize: 12 }}>
-                            {new Date(response.createdAt).toLocaleString('ru-RU')}
-                          </div>
-                        </div>
-                      }
-                    />
-                  </List.Item>
-                )}
+                renderItem={(response) => {
+                  const isSelected = order.freelancerId === response.freelancerId
+
+                  return (
+                    <List.Item
+                      style={{
+                        marginBottom: 8,
+                      }}
+                    >
+                       <div style={{
+                         ...(isSelected ? {
+                           backgroundColor: '#f6ffed',
+                           border: '1px solid #b7eb8f',
+                           borderRadius: 8,
+                         } : {}),
+                         padding: '16px',
+                         display: 'flex',
+                         alignItems: 'flex-start',
+                         gap: 24,
+                         width: '100%'
+                       }}>
+                         <List.Item.Meta
+                           avatar={<Avatar icon={<UserOutlined />} />}
+                           title={
+                             <div>
+                               {response.freelancerName}
+                               {isSelected && order.freelancerEmail && (
+                                 <span style={{ 
+                                   marginLeft: 8, 
+                                   color: '#888', 
+                                   fontWeight: 'normal',
+                                   fontSize: '0.9em'
+                                 }}>
+                                   {order.freelancerEmail}
+                                 </span>
+                               )}
+                               {isSelected && (
+                                 <Tag color="success" style={{ marginLeft: 8 }}>
+                                   Выбранный исполнитель
+                                 </Tag>
+                               )}
+                             </div>
+                           }
+                           description={
+                             <div>
+                               <div style={{ marginBottom: 8 }}>{response.coverLetter}</div>
+                               <div style={{ color: '#888', fontSize: 12 }}>
+                                 {new Date(response.createdAt).toLocaleString('ru-RU')}
+                               </div>
+                             </div>
+                           }
+                         />
+                         {(order.status === 'beginning' && !isSelected) && (
+                           <div style={{ flexShrink: 0 }}>
+                              <Button
+                                type="primary"
+                                onClick={() => handleAcceptResponse(response.freelancerId)}
+                                loading={isSubmitting}
+                              >
+                                Принять отклик
+                              </Button>
+                           </div>
+                         )}
+                       </div>
+                    </List.Item>
+                  )
+                }}
               />
             ) : (
               <div style={{ 
@@ -204,10 +344,39 @@ const OrderDetails: React.FC = () => {
           </div>
         )}
 
-        {!data.isClient && !data.hasActiveResponse && (
+        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status === 'beginning' && (
           <div style={{ marginTop: 32 }}>
-            <Input.TextArea placeholder="Написать заказчику..." rows={4} style={{ marginBottom: 12 }} />
-            <Button type="primary">Готов взяться</Button>
+            <Input.TextArea 
+              placeholder="Написать заказчику..." 
+              rows={4} 
+              style={{ marginBottom: 12 }}
+              value={coverLetter}
+              onChange={(e) => setCoverLetter(e.target.value)}
+              maxLength={512}
+              showCount
+              disabled={data.hasActiveResponse}
+            />
+            <Button 
+              type="primary" 
+              onClick={handleSubmitResponse}
+              loading={isSubmitting}
+              disabled={!coverLetter.trim() || data.hasActiveResponse}
+            >
+              {data.hasActiveResponse ? 'Вы уже откликнулись' : 'Готов взяться'}
+            </Button>
+          </div>
+        )}
+
+        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status !== 'beginning' && !data.hasActiveResponse && (
+          <div style={{ 
+            marginTop: 32,
+            padding: 16,
+            backgroundColor: '#f5f5f5',
+            borderRadius: 8,
+            textAlign: 'center',
+            color: '#666'
+          }}>
+            Откликаться на заказ можно только в статусе "Новый"
           </div>
         )}
       </Card>

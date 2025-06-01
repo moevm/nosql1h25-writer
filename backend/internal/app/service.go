@@ -30,6 +30,7 @@ func (app *App) UsersService() users.Service {
 
 	app.usersService = users.New(
 		app.UsersRepo(),
+		app.OrdersRepo(),
 	)
 	return app.usersService
 }

@@ -230,53 +230,59 @@ export function OrdersPage() {
           <Spin size="large" />
         </div>
       ) : (
-        <Row gutter={[16, 16]}>
-          {orders.map((order, idx) => (
-            <Col xs={24} sm={12} md={8} key={idx}>
-              <Link to={`/orders/${order.id}` as any}>
-                <Card
-                  className="order-card"
-                  style={{
-                    height: '100%',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.09)',
-                  }}
-                  hoverable
-                >
-                  <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 16 }}>{order.title}</div>
-                  <div style={{
-                    marginBottom: 12,
-                    minHeight: 48,
-                    color: '#666',
-                    lineHeight: 1.5
-                  }}>
-                    {order.description.length > 80
-                      ? order.description.slice(0, 80) + '...'
-                      : order.description}
-                  </div>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderTop: '1px solid #f0f0f0',
-                    paddingTop: 12,
-                    marginTop: 12
-                  }}>
-                    <span style={{ color: '#666' }}>
-                      ⏰ {formatCompletionTime(order.completionTime)}
-                    </span>
-                    <span style={{
-                      fontWeight: 700,
-                      fontSize: 18,
-                      color: '#1890ff'
+        orders.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2em', color: '#888' }}>
+            Заказов пока нет
+          </div>
+        ) : (
+          <Row gutter={[16, 16]}>
+            {orders.map((order, idx) => (
+              <Col xs={24} sm={12} md={8} key={idx}>
+                <Link to={`/orders/${order.id}` as any}>
+                  <Card
+                    className="order-card"
+                    style={{
+                      height: '100%',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.09)',
+                    }}
+                    hoverable
+                  >
+                    <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 16 }}>{order.title}</div>
+                    <div style={{
+                      marginBottom: 12,
+                      minHeight: 48,
+                      color: '#666',
+                      lineHeight: 1.5
                     }}>
-                      💰 {order.cost ? `${order.cost.toLocaleString()} ₽` : 'По договорённости'}
-                    </span>
-                  </div>
-                </Card>
-              </Link>
-            </Col>
-          ))}
-        </Row>
+                      {order.description.length > 80
+                        ? order.description.slice(0, 80) + '...'
+                        : order.description}
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      borderTop: '1px solid #f0f0f0',
+                      paddingTop: 12,
+                      marginTop: 12
+                    }}>
+                      <span style={{ color: '#666' }}>
+                        ⏰ {formatCompletionTime(order.completionTime)}
+                      </span>
+                      <span style={{
+                        fontWeight: 700,
+                        fontSize: 18,
+                        color: '#1890ff'
+                      }}>
+                        💰 {order.cost ? `${order.cost.toLocaleString()} ₽` : 'По договорённости'}
+                      </span>
+                    </div>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        )
       )}
       <div style={{ marginTop: 24, textAlign: 'center' }}>
         <Pagination

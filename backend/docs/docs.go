@@ -46,6 +46,89 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/export": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Export mongodb state and return file",
+                "produces": [
+                    "application/gzip"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Export mongodb state and return file",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/import": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Import mongodb state into current instance",
+                "consumes": [
+                    "application/gzip"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Import mongodb state into current instance",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Generate ` + "`" + `access` + "`" + ` and ` + "`" + `refresh` + "`" + ` token pair. ` + "`" + `refreshToken` + "`" + ` sets in httpOnly cookie also.",
@@ -853,6 +936,118 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}/orders": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Получить список заказов пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получить список заказов пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "\"507f1f77bcf86cd799439011\"",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_users_id_orders.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}/responses": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Получить список заказов, на которые откликался пользователь",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получить список заказов, на которые откликался пользователь",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "\"507f1f77bcf86cd799439011\"",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_users_id_responses.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -918,9 +1113,6 @@ const docTemplate = `{
         "internal_api_get_orders.Order": {
             "type": "object",
             "properties": {
-                "clientName": {
-                    "type": "string"
-                },
                 "completionTime": {
                     "type": "integer"
                 },
@@ -932,9 +1124,6 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
-                },
-                "rating": {
-                    "type": "number"
                 },
                 "title": {
                     "type": "string"
@@ -959,6 +1148,7 @@ const docTemplate = `{
         "internal_api_get_orders_id.Order": {
             "type": "object",
             "required": [
+                "clientEmail",
                 "clientId",
                 "clientName",
                 "clientRating",
@@ -972,6 +1162,10 @@ const docTemplate = `{
                 "updatedAt"
             ],
             "properties": {
+                "clientEmail": {
+                    "type": "string",
+                    "example": "goida@mail.ru"
+                },
                 "clientId": {
                     "type": "string",
                     "example": "582ebf010936ac3ba5cd00e4"
@@ -999,6 +1193,10 @@ const docTemplate = `{
                 "description": {
                     "type": "string",
                     "example": "Write something for me but more words"
+                },
+                "freelancerEmail": {
+                    "type": "string",
+                    "example": "test@mail.com"
                 },
                 "freelancerId": {
                     "type": "string",
@@ -1155,6 +1353,92 @@ const docTemplate = `{
                 }
             }
         },
+        "internal_api_get_users_id_orders.Order": {
+            "type": "object",
+            "properties": {
+                "clientId": {
+                    "type": "string"
+                },
+                "completionTime": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "freelancerId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "totalResponses": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_api_get_users_id_orders.Response": {
+            "type": "object",
+            "properties": {
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_users_id_orders.Order"
+                    }
+                }
+            }
+        },
+        "internal_api_get_users_id_responses.Response": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_users_id_responses.ResponseOrder"
+                    }
+                }
+            }
+        },
+        "internal_api_get_users_id_responses.ResponseOrder": {
+            "type": "object",
+            "properties": {
+                "completionTime": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "coverLetter": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "orderId": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "internal_api_patch_orders_id.Request": {
             "type": "object",
             "required": [
@@ -1176,6 +1460,9 @@ const docTemplate = `{
                     "maxLength": 2048,
                     "minLength": 16,
                     "example": "New Order Description"
+                },
+                "freelancerId": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "string"

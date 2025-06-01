@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/AlekSi/pointer"
 	"github.com/jonboulle/clockwork"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
@@ -37,38 +38,56 @@ func (r *repository) Create(ctx context.Context, in CreateIn) (primitive.ObjectI
 	return res.InsertedID.(primitive.ObjectID), nil //nolint:forcetypeassert
 }
 
-func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error) {
+func (r *repository) Find(ctx context.Context, in FindIn) (FindOut, error) {
 	matchFilter := bson.M{
 		"active": true,
 	}
 
 	costCond := bson.M{}
-	if minCost != nil {
-		costCond["$gte"] = *minCost
+	if in.MinCost != nil {
+		costCond["$gte"] = *in.MinCost
 	}
-	if maxCost != nil {
-		costCond["$lte"] = *maxCost
+	if in.MaxCost != nil {
+		costCond["$lte"] = *in.MaxCost
 	}
 	if len(costCond) > 0 {
 		matchFilter["cost"] = costCond
 	}
 
-	var sortStage bson.D
-	if sortBy == nil {
-		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
-	} else {
-		switch *sortBy {
-		case "newest":
-			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
-		case "oldest":
-			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: 1}}}}
-		case "cost_asc":
-			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "cost", Value: 1}}}}
-		case "cost_desc":
-			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "cost", Value: -1}}}}
-		default:
-			sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}} // fallback
+	timeCond := bson.M{}
+	if in.MinTime != nil {
+		timeCond["$gte"] = *in.MinTime
+	}
+	if in.MaxTime != nil {
+		timeCond["$lte"] = *in.MaxTime
+	}
+	if len(timeCond) > 0 {
+		matchFilter["completionTime"] = timeCond
+	}
+
+	if pointer.Get(in.Search) != "" {
+		matchFilter["$or"] = bson.A{
+			bson.M{"title": bson.M{"$regex": *in.Search, "$options": "i"}},
+			bson.M{"description": bson.M{"$regex": *in.Search, "$options": "i"}},
 		}
+	}
+
+	var sortStage bson.D
+	switch pointer.Get(in.SortBy) {
+	case "newest":
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
+	case "oldest":
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: 1}}}}
+	case "cost_asc":
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "cost", Value: 1}}}}
+	case "cost_desc":
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "cost", Value: -1}}}}
+	case "time_asc":
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "completionTime", Value: 1}}}}
+	case "time_desc":
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "completionTime", Value: -1}}}}
+	default:
+		sortStage = bson.D{{Key: "$sort", Value: bson.D{{Key: "createdAt", Value: -1}}}}
 	}
 
 	ordersPipeline := mongo.Pipeline{
@@ -82,8 +101,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 			"freelancerId":   1,
 			"createdAt":      1,
 			"updatedAt":      1,
-			"responses":      1,
-			"statuses":       1,
+			"active":         1,
 		}}},
 	}
 
@@ -92,8 +110,8 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 	}
 
 	ordersPipeline = append(ordersPipeline,
-		bson.D{{Key: "$skip", Value: int64(offset)}},
-		bson.D{{Key: "$limit", Value: int64(limit)}},
+		bson.D{{Key: "$skip", Value: int64(in.Offset)}},
+		bson.D{{Key: "$limit", Value: int64(in.Limit)}},
 	)
 
 	pipeline := mongo.Pipeline{
@@ -120,7 +138,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 	}
 
 	var result []struct {
-		Orders []entity.OrderExt `bson:"orders"`
+		Orders []entity.Order `bson:"orders"`
 		Total  []struct {
 			Count int `bson:"count"`
 		} `bson:"total"`
@@ -135,20 +153,7 @@ func (r *repository) Find(ctx context.Context, offset, limit int, minCost, maxCo
 		totalCount = result[0].Total[0].Count
 	}
 
-	var out FindOut
-	out.Total = totalCount
-	for _, order := range result[0].Orders {
-		out.Orders = append(out.Orders, OrderWithClientData{
-			ID:             order.ID,
-			Title:          order.Title,
-			Description:    order.Description,
-			CompletionTime: order.CompletionTime,
-			Cost:           order.Cost,
-			ClientName:     "",  // пока без объединения с юзерами
-			Rating:         0.0, // пока без объединения с юзерами
-		})
-	}
-	return out, nil
+	return FindOut{Orders: result[0].Orders, Total: totalCount}, nil
 }
 
 func (r *repository) GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error) {
@@ -244,6 +249,10 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 		updateSet["cost"] = *in.Cost
 	}
 
+	if in.FreelancerID != nil {
+		updateSet["freelancerId"] = *in.FreelancerID
+	}
+
 	update := bson.M{
 		"$set": updateSet,
 	}
@@ -272,4 +281,47 @@ func (r *repository) Update(ctx context.Context, in UpdateIn) error {
 	}
 
 	return nil
+}
+
+func (r *repository) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error) {
+	filter := bson.M{
+		"active":   true,
+		"clientId": userID,
+	}
+
+	cursor, err := r.ordersColl.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []entity.OrderExt
+	if err := cursor.All(ctx, &orders); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
+func (r *repository) FindByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error) {
+	filter := bson.M{
+		"active": true,
+		"responses": bson.M{
+			"$elemMatch": bson.M{
+				"freelancerId": freelancerID,
+				"active":       true,
+			},
+		},
+	}
+
+	cursor, err := r.ordersColl.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []entity.OrderExt
+	if err := cursor.All(ctx, &orders); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
 }

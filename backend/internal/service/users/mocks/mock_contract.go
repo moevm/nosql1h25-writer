@@ -43,6 +43,36 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
+// FindOrdersByResponseUserID mocks base method.
+func (m *MockService) FindOrdersByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOrdersByResponseUserID", ctx, freelancerID)
+	ret0, _ := ret[0].([]entity.OrderExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOrdersByResponseUserID indicates an expected call of FindOrdersByResponseUserID.
+func (mr *MockServiceMockRecorder) FindOrdersByResponseUserID(ctx, freelancerID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOrdersByResponseUserID", reflect.TypeOf((*MockService)(nil).FindOrdersByResponseUserID), ctx, freelancerID)
+}
+
+// FindOrdersByUserID mocks base method.
+func (m *MockService) FindOrdersByUserID(ctx context.Context, requesterID, targetUserID primitive.ObjectID) ([]entity.OrderExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOrdersByUserID", ctx, requesterID, targetUserID)
+	ret0, _ := ret[0].([]entity.OrderExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOrdersByUserID indicates an expected call of FindOrdersByUserID.
+func (mr *MockServiceMockRecorder) FindOrdersByUserID(ctx, requesterID, targetUserID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOrdersByUserID", reflect.TypeOf((*MockService)(nil).FindOrdersByUserID), ctx, requesterID, targetUserID)
+}
+
 // GetByIDExt mocks base method.
 func (m *MockService) GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error) {
 	m.ctrl.T.Helper()

@@ -13,7 +13,12 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -o /bin/app ./cmd/app
 
 # Step 3: Final
-FROM scratch
+FROM alpine:3.22
+RUN apk add --no-cache \
+    mongodb-tools \
+    gzip \
+    bash \
+    ca-certificates
 COPY --from=builder /app/config /config
 COPY --from=builder /bin/app /app
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/

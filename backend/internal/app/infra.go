@@ -4,6 +4,7 @@ import (
 	"github.com/jonboulle/clockwork"
 
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
+	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb/mongotools"
 )
 
 func (app *App) PasswordHasher() hasher.PasswordHasher {
@@ -22,4 +23,13 @@ func (app *App) Clock() clockwork.Clock {
 
 	app.clock = clockwork.NewRealClock()
 	return app.clock
+}
+
+func (app *App) MongoDumper() mongotools.MongoDumper {
+	if app.mongoDumper != nil {
+		return app.mongoDumper
+	}
+
+	app.mongoDumper = mongotools.NewDumper(app.cfg.Mongo.Uri)
+	return app.mongoDumper
 }

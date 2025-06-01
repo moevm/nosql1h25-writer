@@ -11,9 +11,11 @@ import (
 //go:generate go tool mockgen -destination mocks/mock_$GOFILE -package=mocks . Repo
 type Repo interface {
 	Create(ctx context.Context, in CreateIn) (primitive.ObjectID, error)
-	Find(ctx context.Context, offset, limit int, minCost, maxCost *int, sortBy *string) (FindOut, error)
+	Find(ctx context.Context, in FindIn) (FindOut, error)
 	GetByID(ctx context.Context, id primitive.ObjectID) (OrderWithClientData, error)
 	GetByIDExt(ctx context.Context, id primitive.ObjectID) (entity.OrderExt, error)
 	Update(ctx context.Context, in UpdateIn) error
 	CreateResponse(ctx context.Context, orderID primitive.ObjectID, userID primitive.ObjectID, coverLetter, freelancerName string) error
+	FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error)
+	FindByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error)
 }

@@ -23,6 +23,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb"
+	"github.com/moevm/nosql1h25-writer/backend/pkg/mongodb/mongotools"
 )
 
 type App struct {
@@ -55,7 +56,9 @@ type App struct {
 	postAuthRefreshHandler  api.Handler
 	postAuthLogoutHandler   api.Handler
 
-	getAdminHandler api.Handler
+	getAdminHandler        api.Handler
+	getAdminExportHandler  api.Handler
+	postAdminImportHandler api.Handler
 
 	postBalanceDepositHandler  api.Handler
 	postBalanceWithdrawHandler api.Handler
@@ -63,10 +66,10 @@ type App struct {
 	postOrdersHandler         api.Handler
 	postOrdersResponseHandler api.Handler
 
-	patchUsersIDHandler api.Handler
-
-	patchOrdersIDHandler api.Handler
-
+	patchUsersIDHandler        api.Handler
+	patchOrdersIDHandler       api.Handler
+	getUsersIDOrdersHandler    api.Handler
+	getUsersIDResponsesHandler api.Handler
 	// middlewares
 	authMW *mw.AuthMW
 
@@ -83,6 +86,7 @@ type App struct {
 	// infra
 	passwordHasher hasher.PasswordHasher
 	clock          clockwork.Clock
+	mongoDumper    mongotools.MongoDumper
 }
 
 // New initiate logger and config in App struct for future Start call

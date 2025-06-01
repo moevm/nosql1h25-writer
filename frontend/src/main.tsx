@@ -1,11 +1,12 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  Navigate,
   Outlet,
   RouterProvider,
   createRootRoute,
   createRoute,
-  createRouter,
+  createRouter
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import DemoFormAddress from './routes/demo.form.address'
@@ -18,6 +19,8 @@ import { createOrdersRoute } from './routes/orders.route'
 import { createOrderDetailsRoute } from './routes/order.details.route'
 import { createCreateOrderRoute } from './routes/create-order.route'
 import { createOrderEditRoute } from './routes/orders.edit.route.tsx'
+import { createUserOrdersRoute } from './routes/user-orders.route'
+import { createUserResponsesRoute } from './routes/user-responses.route'
 import { createEditProfileRoute } from './routes/edit-profile.route.tsx'
 import AdminLayout from './routes/AdminLayout'
 import AdminUsers from './routes/AdminUsers'
@@ -36,7 +39,6 @@ import 'antd/dist/reset.css'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
-import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext'
 
 const rootRoute = createRootRoute({
@@ -54,7 +56,7 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: App,
+  component: () => <Navigate to="/orders" />,
 })
 
 const adminRoute = createRoute({
@@ -108,6 +110,8 @@ const routeTree = rootRoute.addChildren([
   createOrderDetailsRoute(rootRoute),
   createCreateOrderRoute(rootRoute),
   createOrderEditRoute(rootRoute),
+  createUserOrdersRoute(rootRoute),
+  createUserResponsesRoute(rootRoute),
   createEditProfileRoute(rootRoute),
   profileRoute,
 ])
