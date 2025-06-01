@@ -21,6 +21,7 @@ require (
 )
 
 require (
+	github.com/AlekSi/pointer v1.2.0
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect

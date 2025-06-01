@@ -24,12 +24,10 @@ type Request struct {
 	Limit   *int    `query:"limit" validate:"gte=1,lte=200" example:"10"`
 	MinCost *int    `query:"minCost" validate:"omitempty,gte=0" example:"100"`
 	MaxCost *int    `query:"maxCost" validate:"omitempty,gte=0" example:"1000"`
-	SortBy  *string `query:"sortBy" validate:"omitempty,oneof=newest oldest cost_asc cost_desc" example:"cost"`
-}
-
-type Response struct {
-	Orders []Order `json:"orders"`
-	Total  int     `json:"total" example:"250"`
+	MinTime *int64  `query:"minTime" validate:"omitempty,gte=3600000000000" example:"3600000000000"`
+	MaxTime *int64  `query:"maxTime" validate:"omitempty,gte=3600000000000" example:"3600000000000"`
+	Search  *string `query:"search" validate:"omitempty" example:"Написать сценарий"`
+	SortBy  *string `query:"sortBy" validate:"omitempty,oneof=newest oldest cost_asc cost_desc time_asc time_desc" example:"newest"`
 }
 
 type Order struct {
@@ -38,8 +36,11 @@ type Order struct {
 	Description    string             `json:"description"`
 	CompletionTime int64              `json:"completionTime"`
 	Cost           int                `json:"cost,omitempty"`
-	ClientName     string             `json:"clientName"`
-	Rating         float64            `json:"rating"`
+}
+
+type Response struct {
+	Orders []Order `json:"orders"`
+	Total  int     `json:"total" example:"250"`
 }
 
 // Handle - Get Orders
@@ -57,39 +58,48 @@ type Order struct {
 //	@Failure		500	{object}	echo.HTTPError
 //	@Router			/orders [get]
 func (h *handler) Handle(c echo.Context, in Request) error {
-	offset, limit := applyDefaults(in)
+	offset, limit := h.applyDefaults(in)
 
-	findOut, err := h.orderService.Find(c.Request().Context(), offset, limit, in.MinCost, in.MaxCost, in.SortBy)
+	out, err := h.orderService.Find(c.Request().Context(), orders.FindIn{
+		Limit:   limit,
+		Offset:  offset,
+		MinCost: in.MinCost,
+		MaxCost: in.MaxCost,
+		MinTime: in.MinTime,
+		MaxTime: in.MaxTime,
+		Search:  in.Search,
+		SortBy:  in.SortBy,
+	})
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	orderList := make([]Order, 0, len(findOut.Orders))
-	for _, order := range findOut.Orders {
-		orderList = append(orderList, Order{
+	orders := make([]Order, 0, len(out.Orders))
+	for _, order := range out.Orders {
+		orders = append(orders, Order{
 			ID:             order.ID,
 			Title:          order.Title,
 			Description:    order.Description,
 			CompletionTime: order.CompletionTime,
 			Cost:           order.Cost,
-			ClientName:     order.ClientName,
-			Rating:         order.Rating,
 		})
 	}
 
-	return c.JSON(http.StatusOK, Response{Orders: orderList, Total: findOut.Total})
+	return c.JSON(http.StatusOK, Response{Orders: orders, Total: out.Total})
 }
 
-func applyDefaults(in Request) (offset int, limit int) {
+func (h *handler) applyDefaults(in Request) (offset int, limit int) {
 	if in.Offset != nil {
 		offset = *in.Offset
 	} else {
 		offset = 0
 	}
+
 	if in.Limit != nil {
 		limit = *in.Limit
 	} else {
 		limit = 10
 	}
+
 	return
 }

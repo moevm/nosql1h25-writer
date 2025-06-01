@@ -12,7 +12,7 @@ type Order struct {
 	Title          string             `bson:"title"`
 	Description    string             `bson:"description"`
 	CompletionTime int64              `bson:"completionTime"`
-	Cost           int                `bson:"cost,omitempty"`
+	Cost           int                `bson:"cost"`
 	Active         bool               `bson:"active"`
 	FreelancerID   primitive.ObjectID `bson:"freelancerId,omitempty"`
 	CreatedAt      time.Time          `bson:"createdAt"`

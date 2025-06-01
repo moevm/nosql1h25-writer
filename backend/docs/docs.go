@@ -981,12 +981,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/echo.HTTPError"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -1060,9 +1054,6 @@ const docTemplate = `{
         "internal_api_get_orders.Order": {
             "type": "object",
             "properties": {
-                "clientName": {
-                    "type": "string"
-                },
                 "completionTime": {
                     "type": "integer"
                 },
@@ -1074,9 +1065,6 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
-                },
-                "rating": {
-                    "type": "number"
                 },
                 "title": {
                     "type": "string"

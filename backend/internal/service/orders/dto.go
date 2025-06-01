@@ -1,8 +1,9 @@
 package orders
 
 import (
-	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
 )
 
 type CreateIn struct {
@@ -13,8 +14,19 @@ type CreateIn struct {
 	Cost           int
 }
 
+type FindIn struct {
+	Limit   int
+	Offset  int
+	MinCost *int
+	MaxCost *int
+	MinTime *int64
+	MaxTime *int64
+	Search  *string
+	SortBy  *string
+}
+
 type FindOut struct {
-	Orders []OrderWithClientData
+	Orders []entity.Order
 	Total  int
 }
 
