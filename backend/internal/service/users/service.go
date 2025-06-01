@@ -24,6 +24,31 @@ func New(usersRepo users.Repo, ordersRepo orders.Repo) Service {
 	}
 }
 
+func (s *service) Find(ctx context.Context, in FindIn) (FindOut, error) {
+	out, err := s.usersRepo.Find(ctx, users.FindIn{
+		Limit:               in.Limit,
+		Offset:              in.Offset,
+		NameSearch:          in.NameSearch,
+		EmailSearch:         in.EmailSearch,
+		Roles:               in.Roles,
+		MinFreelancerRating: in.MinFreelancerRating,
+		MaxFreelancerRating: in.MaxFreelancerRating,
+		MinClientRating:     in.MinClientRating,
+		MaxClientRating:     in.MaxClientRating,
+		MinCreatedAt:        in.MinCreatedAt,
+		MaxCreatedAt:        in.MaxCreatedAt,
+		MinBalance:          in.MinBalance,
+		MaxBalance:          in.MaxBalance,
+		SortBy:              in.SortBy,
+	})
+	if err != nil {
+		log.Errorf("users.service.Find - s.usersRepo.Find: %v", err)
+		return FindOut{}, ErrCannotFindUsers
+	}
+
+	return FindOut{Users: out.Users, Total: out.Total}, nil
+}
+
 func (s *service) UpdateBalance(ctx context.Context, userID primitive.ObjectID, op OperationType, amount int) (int, error) {
 	var (
 		newBalance int

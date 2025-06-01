@@ -123,6 +123,70 @@
                 }
             }
         },
+        "/admin/users": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Return user list",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Return user list",
+                "parameters": [
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "default": 0,
+                        "example": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 200,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "example": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/get_admin_users.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Generate `access` and `refresh` token pair. `refreshToken` sets in httpOnly cookie also.",
@@ -1049,6 +1113,80 @@
             "type": "object",
             "properties": {
                 "message": {}
+            }
+        },
+        "get_admin_users.Response": {
+            "type": "object",
+            "required": [
+                "users"
+            ],
+            "properties": {
+                "total": {
+                    "type": "integer",
+                    "example": 250
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/get_admin_users.User"
+                    }
+                }
+            }
+        },
+        "get_admin_users.User": {
+            "type": "object",
+            "required": [
+                "balance",
+                "clientRating",
+                "createdAt",
+                "displayName",
+                "email",
+                "freelancerRating",
+                "id",
+                "systemRole",
+                "updatedAt"
+            ],
+            "properties": {
+                "balance": {
+                    "type": "integer",
+                    "example": 500
+                },
+                "clientRating": {
+                    "type": "number",
+                    "example": 4.7
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "displayName": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "goida@mail.ru"
+                },
+                "freelancerRating": {
+                    "type": "number",
+                    "example": 4.8
+                },
+                "id": {
+                    "type": "string",
+                    "example": "582ebf010936ac3ba5cd00e4"
+                },
+                "systemRole": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
+                        }
+                    ],
+                    "example": "admin"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                }
             }
         },
         "github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType": {
