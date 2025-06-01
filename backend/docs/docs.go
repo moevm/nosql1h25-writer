@@ -1425,10 +1425,10 @@ const docTemplate = `{
                 "coverLetter": {
                     "type": "string"
                 },
-                "id": {
+                "createdAt": {
                     "type": "string"
                 },
-                "responseTime": {
+                "orderId": {
                     "type": "string"
                 },
                 "status": {
