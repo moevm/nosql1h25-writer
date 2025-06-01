@@ -72,6 +72,9 @@ definitions:
     type: object
   internal_api_get_orders_id.Order:
     properties:
+      clientEmail:
+        example: goida@mail.ru
+        type: string
       clientId:
         example: 582ebf010936ac3ba5cd00e4
         type: string
@@ -121,6 +124,7 @@ definitions:
         example: "2020-01-01T00:00:00Z"
         type: string
     required:
+    - clientEmail
     - clientId
     - clientName
     - clientRating
