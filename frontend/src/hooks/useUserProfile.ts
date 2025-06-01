@@ -3,6 +3,7 @@ import { getUserIdFromToken } from '../integrations/auth';
 import { api } from '../integrations/api';
 
 interface UserProfile {
+  id: string;
   displayName: string;
   email: string;
   balance: number;
