@@ -19,6 +19,7 @@ RUN apk add --no-cache \
     gzip \
     bash \
     ca-certificates
+COPY dump.gzip /dump.gzip
 COPY --from=builder /app/config /config
 COPY --from=builder /bin/app /app
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
