@@ -7,6 +7,7 @@ import { api } from '../integrations/api'
 import { roleUtils } from '../utils/role'
 import { formatCompletionTime } from '../utils/time'
 import { getUserIdFromToken } from '../integrations/auth'
+import { useNavigate } from '@tanstack/react-router'
 
 interface OrderDetailsType {
   order: {
@@ -79,6 +80,7 @@ const OrderDetails: React.FC = () => {
   const [coverLetter, setCoverLetter] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const { data, isLoading } = useQuery<OrderDetailsType>({
     queryKey: ['order', id],
@@ -236,6 +238,12 @@ const OrderDetails: React.FC = () => {
 
         {data.isClient && isCurrentRoleClient && order.status !== 'finished' && (
           <div style={{ marginTop: 32, textAlign: 'right' }}>
+            <Button 
+              type="primary"
+              onClick={() => navigate({ to: `/orders/${id}/edit` })}  
+            >
+              Редактировать заказ
+            </Button>
             <Button 
               danger
               onClick={handleCloseOrder}
