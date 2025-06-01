@@ -35,7 +35,7 @@ type Request struct {
 	MaxCreatedAt        *time.Time `query:"maxCreatedAt" validate:"omitempty"`
 	MaxBalance          *int       `query:"maxBalance" validate:"omitempty,gte=0"`
 	MinBalance          *int       `query:"minBalance" validate:"omitempty,gte=0"`
-	SortBy              *string    `query:"sortBy" validate:"omitempty,oneof=newest oldest rich poor name_asc name_desc frelancer_rating_asc frelancer_rating_desc client_rating_asc client_rating_desc" example:"newest"`
+	SortBy              *string    `query:"sortBy" validate:"omitempty,oneof=newest oldest rich poor name_asc name_desc freelancer_rating_asc freelancer_rating_desc client_rating_asc client_rating_desc" example:"newest"`
 }
 
 type User struct {

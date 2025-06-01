@@ -4,19 +4,58 @@ definitions:
     properties:
       message: {}
     type: object
-  get_admin_users.Response:
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType:
+    enum:
+    - beginning
+    - negotiation
+    - budgeting
+    - work
+    - reviews
+    - finished
+    - dispute
+    type: string
+    x-enum-varnames:
+    - StatusTypeBeginning
+    - StatusTypeNegotiation
+    - StatusTypeBudgeting
+    - StatusTypeWork
+    - StatusTypeReviews
+    - StatusTypeFinished
+    - StatusTypeDispute
+  github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
+    enum:
+    - admin
+    - user
+    type: string
+    x-enum-varnames:
+    - SystemRoleTypeAdmin
+    - SystemRoleTypeUser
+  internal_api_get_admin.Response:
+    properties:
+      systemRole:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+        example: admin
+      userId:
+        example: 5a2493c33c95a1281836eb6a
+        type: string
+    required:
+    - systemRole
+    - userId
+    type: object
+  internal_api_get_admin_users.Response:
     properties:
       total:
         example: 250
         type: integer
       users:
         items:
-          $ref: '#/definitions/get_admin_users.User'
+          $ref: '#/definitions/internal_api_get_admin_users.User'
         type: array
     required:
     - users
     type: object
-  get_admin_users.User:
+  internal_api_get_admin_users.User:
     properties:
       balance:
         example: 500
@@ -56,45 +95,6 @@ definitions:
     - id
     - systemRole
     - updatedAt
-    type: object
-  github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType:
-    enum:
-    - beginning
-    - negotiation
-    - budgeting
-    - work
-    - reviews
-    - finished
-    - dispute
-    type: string
-    x-enum-varnames:
-    - StatusTypeBeginning
-    - StatusTypeNegotiation
-    - StatusTypeBudgeting
-    - StatusTypeWork
-    - StatusTypeReviews
-    - StatusTypeFinished
-    - StatusTypeDispute
-  github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType:
-    enum:
-    - admin
-    - user
-    type: string
-    x-enum-varnames:
-    - SystemRoleTypeAdmin
-    - SystemRoleTypeUser
-  internal_api_get_admin.Response:
-    properties:
-      systemRole:
-        allOf:
-        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
-        example: admin
-      userId:
-        example: 5a2493c33c95a1281836eb6a
-        type: string
-    required:
-    - systemRole
-    - userId
     type: object
   internal_api_get_orders.Order:
     properties:
@@ -651,7 +651,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/get_admin_users.Response'
+            $ref: '#/definitions/internal_api_get_admin_users.Response'
         "401":
           description: Unauthorized
           schema:

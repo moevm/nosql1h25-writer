@@ -169,7 +169,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/get_admin_users.Response"
+                            "$ref": "#/definitions/internal_api_get_admin_users.Response"
                         }
                     },
                     "401": {
@@ -1121,7 +1121,60 @@ const docTemplate = `{
                 "message": {}
             }
         },
-        "get_admin_users.Response": {
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType": {
+            "type": "string",
+            "enum": [
+                "beginning",
+                "negotiation",
+                "budgeting",
+                "work",
+                "reviews",
+                "finished",
+                "dispute"
+            ],
+            "x-enum-varnames": [
+                "StatusTypeBeginning",
+                "StatusTypeNegotiation",
+                "StatusTypeBudgeting",
+                "StatusTypeWork",
+                "StatusTypeReviews",
+                "StatusTypeFinished",
+                "StatusTypeDispute"
+            ]
+        },
+        "github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "user"
+            ],
+            "x-enum-varnames": [
+                "SystemRoleTypeAdmin",
+                "SystemRoleTypeUser"
+            ]
+        },
+        "internal_api_get_admin.Response": {
+            "type": "object",
+            "required": [
+                "systemRole",
+                "userId"
+            ],
+            "properties": {
+                "systemRole": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
+                        }
+                    ],
+                    "example": "admin"
+                },
+                "userId": {
+                    "type": "string",
+                    "example": "5a2493c33c95a1281836eb6a"
+                }
+            }
+        },
+        "internal_api_get_admin_users.Response": {
             "type": "object",
             "required": [
                 "users"
@@ -1134,12 +1187,12 @@ const docTemplate = `{
                 "users": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/get_admin_users.User"
+                        "$ref": "#/definitions/internal_api_get_admin_users.User"
                     }
                 }
             }
         },
-        "get_admin_users.User": {
+        "internal_api_get_admin_users.User": {
             "type": "object",
             "required": [
                 "balance",
@@ -1192,59 +1245,6 @@ const docTemplate = `{
                 "updatedAt": {
                     "type": "string",
                     "example": "2020-01-01T00:00:00Z"
-                }
-            }
-        },
-        "github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType": {
-            "type": "string",
-            "enum": [
-                "beginning",
-                "negotiation",
-                "budgeting",
-                "work",
-                "reviews",
-                "finished",
-                "dispute"
-            ],
-            "x-enum-varnames": [
-                "StatusTypeBeginning",
-                "StatusTypeNegotiation",
-                "StatusTypeBudgeting",
-                "StatusTypeWork",
-                "StatusTypeReviews",
-                "StatusTypeFinished",
-                "StatusTypeDispute"
-            ]
-        },
-        "github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType": {
-            "type": "string",
-            "enum": [
-                "admin",
-                "user"
-            ],
-            "x-enum-varnames": [
-                "SystemRoleTypeAdmin",
-                "SystemRoleTypeUser"
-            ]
-        },
-        "internal_api_get_admin.Response": {
-            "type": "object",
-            "required": [
-                "systemRole",
-                "userId"
-            ],
-            "properties": {
-                "systemRole": {
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType"
-                        }
-                    ],
-                    "example": "admin"
-                },
-                "userId": {
-                    "type": "string",
-                    "example": "5a2493c33c95a1281836eb6a"
                 }
             }
         },

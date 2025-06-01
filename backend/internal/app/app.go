@@ -57,6 +57,7 @@ type App struct {
 	postAuthLogoutHandler   api.Handler
 
 	getAdminHandler        api.Handler
+	getAdminUsersHandler   api.Handler
 	getAdminExportHandler  api.Handler
 	postAdminImportHandler api.Handler
 

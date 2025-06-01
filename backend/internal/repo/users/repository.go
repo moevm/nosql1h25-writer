@@ -99,9 +99,9 @@ func (r *repository) Find(ctx context.Context, in FindIn) (FindOut, error) {
 		sort = bson.D{{Key: "displayName", Value: 1}}
 	case "name_desc":
 		sort = bson.D{{Key: "displayName", Value: -1}}
-	case "frelancer_rating_asc":
+	case "freelancer_rating_asc":
 		sort = bson.D{{Key: "freelancer.rating", Value: 1}}
-	case "frelancer_rating_desc":
+	case "freelancer_rating_desc":
 		sort = bson.D{{Key: "freelancer.rating", Value: -1}}
 	case "client_rating_asc":
 		sort = bson.D{{Key: "client.rating", Value: 1}}
