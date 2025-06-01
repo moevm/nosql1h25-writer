@@ -4,6 +4,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin_export"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_admin_users"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_health"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders_id"
@@ -70,6 +71,15 @@ func (app *App) GetAdminHandler() api.Handler {
 
 	app.getAdminHandler = get_admin.New()
 	return app.getAdminHandler
+}
+
+func (app *App) GetAdminUsersHandler() api.Handler {
+	if app.getAdminUsersHandler != nil {
+		return app.getAdminUsersHandler
+	}
+
+	app.getAdminUsersHandler = get_admin_users.New(app.UsersService())
+	return app.getAdminUsersHandler
 }
 
 func (app *App) GetAdminExportHandler() api.Handler {

@@ -43,6 +43,21 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
+// Find mocks base method.
+func (m *MockService) Find(ctx context.Context, in users.FindIn) (users.FindOut, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Find", ctx, in)
+	ret0, _ := ret[0].(users.FindOut)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Find indicates an expected call of Find.
+func (mr *MockServiceMockRecorder) Find(ctx, in any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockService)(nil).Find), ctx, in)
+}
+
 // FindOrdersByResponseUserID mocks base method.
 func (m *MockService) FindOrdersByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error) {
 	m.ctrl.T.Helper()

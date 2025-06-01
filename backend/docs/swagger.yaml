@@ -43,6 +43,59 @@ definitions:
     - systemRole
     - userId
     type: object
+  internal_api_get_admin_users.Response:
+    properties:
+      total:
+        example: 250
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/internal_api_get_admin_users.User'
+        type: array
+    required:
+    - users
+    type: object
+  internal_api_get_admin_users.User:
+    properties:
+      balance:
+        example: 500
+        type: integer
+      clientRating:
+        example: 4.7
+        type: number
+      createdAt:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      displayName:
+        example: John Doe
+        type: string
+      email:
+        example: goida@mail.ru
+        type: string
+      freelancerRating:
+        example: 4.8
+        type: number
+      id:
+        example: 582ebf010936ac3ba5cd00e4
+        type: string
+      systemRole:
+        allOf:
+        - $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.SystemRoleType'
+        example: admin
+      updatedAt:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+    required:
+    - balance
+    - clientRating
+    - createdAt
+    - displayName
+    - email
+    - freelancerRating
+    - id
+    - systemRole
+    - updatedAt
+    type: object
   internal_api_get_orders.Order:
     properties:
       completionTime:
@@ -571,6 +624,49 @@ paths:
       security:
       - JWT: []
       summary: Import mongodb state into current instance
+      tags:
+      - admin
+  /admin/users:
+    get:
+      description: Return user list
+      parameters:
+      - default: 0
+        description: Offset
+        example: 0
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - default: 10
+        description: Limit
+        example: 10
+        in: query
+        maximum: 200
+        minimum: 1
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_admin_users.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Return user list
       tags:
       - admin
   /auth/login:
