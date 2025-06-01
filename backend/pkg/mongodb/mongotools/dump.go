@@ -20,7 +20,7 @@ func NewDumper(uri string) MongoDumper {
 
 func (d *dumper) Restore(filepath string) error {
 	if err := exec.Command("mongorestore",
-		"--uri="+d.uri,
+		"--uri="+d.uri+"/?authSource=admin",
 		"--archive="+filepath,
 		"--gzip",
 		"--drop",
@@ -33,7 +33,8 @@ func (d *dumper) Restore(filepath string) error {
 
 func (d *dumper) Dump(filepath string) error {
 	if err := exec.Command("mongodump",
-		"--uri="+d.uri,
+		"--uri="+d.uri+"/?authSource=admin",
+		"--db=main",
 		"--archive="+filepath,
 		"--gzip",
 	).Run(); err != nil {

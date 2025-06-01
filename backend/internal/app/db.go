@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 
-	"github.com/sirupsen/logrus"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -94,7 +93,6 @@ func (app *App) importDump() {
 		panic("error while import dump")
 	}
 
-	logrus.Info("here")
 	if out.Total != 0 {
 		return
 	}
