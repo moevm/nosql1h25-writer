@@ -19,6 +19,8 @@ import { createOrdersRoute } from './routes/orders.route'
 import { createOrderDetailsRoute } from './routes/order.details.route'
 import { createCreateOrderRoute } from './routes/create-order.route'
 import { createOrderEditRoute } from './routes/orders.edit.route.tsx'
+import { createUserOrdersRoute } from './routes/user-orders.route'
+import { createUserResponsesRoute } from './routes/user-responses.route'
 import AdminLayout from './routes/AdminLayout'
 import AdminUsers from './routes/AdminUsers'
 import { AdminImportRoute } from './routes/admin.import.route'
@@ -107,6 +109,8 @@ const routeTree = rootRoute.addChildren([
   createOrderDetailsRoute(rootRoute),
   createCreateOrderRoute(rootRoute),
   createOrderEditRoute(rootRoute),
+  createUserOrdersRoute(rootRoute),
+  createUserResponsesRoute(rootRoute),
   profileRoute,
 ])
 

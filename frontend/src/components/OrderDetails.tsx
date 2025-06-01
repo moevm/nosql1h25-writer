@@ -6,6 +6,7 @@ import { UserOutlined } from '@ant-design/icons'
 import { api } from '../integrations/api'
 import { roleUtils } from '../utils/role'
 import { formatCompletionTime } from '../utils/time'
+import { getUserIdFromToken } from '../integrations/auth'
 
 interface OrderDetailsType {
   order: {
@@ -28,6 +29,7 @@ interface OrderDetailsType {
       coverLetter: string
       createdAt: string
     }>
+    clientEmail: string
   }
   isClient: boolean
   isFreelancer: boolean
@@ -196,6 +198,9 @@ const OrderDetails: React.FC = () => {
             </div>
             <div>
               <div style={{ fontWeight: 600 }}>{order.clientName}</div>
+              <div style={{ color: '#888', fontSize: '0.9em' }}>
+                {order.clientEmail}
+              </div>
               <div style={{ color: '#faad14' }}>
                 {formatRating(order.clientRating)}
               </div>
@@ -212,6 +217,11 @@ const OrderDetails: React.FC = () => {
         </div>
 
         <Tag color={getStatusColor(order.status)}>{getStatusText(order.status)}</Tag>
+        {data.isFreelancer && order.freelancerId === getUserIdFromToken() && (
+          <Tag color="success" style={{ marginLeft: 8 }}>
+            Вас выбрали исполнителем
+          </Tag>
+        )}
 
         <h2 style={{ marginTop: 24 }}>{order.title}</h2>
 
@@ -357,7 +367,7 @@ const OrderDetails: React.FC = () => {
           </div>
         )}
 
-        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status !== 'beginning' && (
+        {!data.isClient && roleUtils.getRole() === 'freelancer' && order.status !== 'beginning' && !data.hasActiveResponse && (
           <div style={{ 
             marginTop: 32,
             padding: 16,
