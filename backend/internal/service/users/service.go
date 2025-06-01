@@ -91,3 +91,13 @@ func (s *service) FindOrdersByUserID(ctx context.Context, requesterID, targetUse
 
 	return orders, nil
 }
+
+func (s *service) FindOrdersByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error) {
+	orders, err := s.ordersRepo.FindByResponseUserID(ctx, freelancerID)
+	if err != nil {
+		log.Errorf("users.service.FindOrdersByResponseUserID - s.ordersRepo.FindByResponseUserID: %v", err)
+		return nil, ErrCannotFindOrders
+	}
+
+	return orders, nil
+}

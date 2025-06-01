@@ -296,3 +296,27 @@ func (r *repository) FindByUserIDExt(ctx context.Context, userID primitive.Objec
 
 	return orders, nil
 }
+
+func (r *repository) FindByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error) {
+	filter := bson.M{
+		"active": true,
+		"responses": bson.M{
+			"$elemMatch": bson.M{
+				"freelancerId": freelancerID,
+				"active":       true,
+			},
+		},
+	}
+
+	cursor, err := r.ordersColl.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []entity.OrderExt
+	if err := cursor.All(ctx, &orders); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}

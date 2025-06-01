@@ -13,4 +13,5 @@ type Service interface {
 	GetByIDExt(ctx context.Context, userID primitive.ObjectID) (entity.UserExt, error)
 	Update(ctx context.Context, in UpdateIn) error
 	FindOrdersByUserID(ctx context.Context, requesterID, targetUserID primitive.ObjectID) ([]entity.OrderExt, error)
+	FindOrdersByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error)
 }

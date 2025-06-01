@@ -87,6 +87,21 @@ func (mr *MockRepoMockRecorder) Find(ctx, offset, limit, minCost, maxCost, sortB
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockRepo)(nil).Find), ctx, offset, limit, minCost, maxCost, sortBy)
 }
 
+// FindByResponseUserID mocks base method.
+func (m *MockRepo) FindByResponseUserID(ctx context.Context, freelancerID primitive.ObjectID) ([]entity.OrderExt, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByResponseUserID", ctx, freelancerID)
+	ret0, _ := ret[0].([]entity.OrderExt)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByResponseUserID indicates an expected call of FindByResponseUserID.
+func (mr *MockRepoMockRecorder) FindByResponseUserID(ctx, freelancerID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByResponseUserID", reflect.TypeOf((*MockRepo)(nil).FindByResponseUserID), ctx, freelancerID)
+}
+
 // FindByUserIDExt mocks base method.
 func (m *MockRepo) FindByUserIDExt(ctx context.Context, userID primitive.ObjectID) ([]entity.OrderExt, error) {
 	m.ctrl.T.Helper()
