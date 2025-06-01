@@ -259,9 +259,9 @@ definitions:
         type: integer
       coverLetter:
         type: string
-      id:
+      createdAt:
         type: string
-      responseTime:
+      orderId:
         type: string
       status:
         $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
