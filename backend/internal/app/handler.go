@@ -9,6 +9,7 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_orders_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users_id_orders"
+	"github.com/moevm/nosql1h25-writer/backend/internal/api/get_users_id_responses"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/patch_orders_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/patch_users_id"
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/post_admin_import"
@@ -177,4 +178,13 @@ func (app *App) GetUsersIDOrdersHandler() api.Handler {
 
 	app.getUsersIDOrdersHandler = get_users_id_orders.New(app.UsersService())
 	return app.getUsersIDOrdersHandler
+}
+
+func (app *App) GetUsersIDResponsesHandler() api.Handler {
+	if app.getUsersIDResponsesHandler != nil {
+		return app.getUsersIDResponsesHandler
+	}
+
+	app.getUsersIDResponsesHandler = get_users_id_responses.New(app.UsersService())
+	return app.getUsersIDResponsesHandler
 }

@@ -995,6 +995,65 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}/responses": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Получить список заказов, на которые откликался пользователь",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получить список заказов, на которые откликался пользователь",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "\"507f1f77bcf86cd799439011\"",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_users_id_responses.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1352,6 +1411,43 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/internal_api_get_users_id_orders.Order"
                     }
+                }
+            }
+        },
+        "internal_api_get_users_id_responses.Response": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_users_id_responses.ResponseOrder"
+                    }
+                }
+            }
+        },
+        "internal_api_get_users_id_responses.ResponseOrder": {
+            "type": "object",
+            "properties": {
+                "completionTime": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "coverLetter": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "responseTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },

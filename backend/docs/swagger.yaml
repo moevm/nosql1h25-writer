@@ -248,6 +248,30 @@ definitions:
           $ref: '#/definitions/internal_api_get_users_id_orders.Order'
         type: array
     type: object
+  internal_api_get_users_id_responses.Response:
+    properties:
+      responses:
+        items:
+          $ref: '#/definitions/internal_api_get_users_id_responses.ResponseOrder'
+        type: array
+    type: object
+  internal_api_get_users_id_responses.ResponseOrder:
+    properties:
+      completionTime:
+        type: integer
+      cost:
+        type: integer
+      coverLetter:
+        type: string
+      id:
+        type: string
+      responseTime:
+        type: string
+      status:
+        $ref: '#/definitions/github_com_moevm_nosql1h25-writer_backend_internal_entity.StatusType'
+      title:
+        type: string
+    type: object
   internal_api_patch_orders_id.Request:
     properties:
       completionTime:
@@ -1120,6 +1144,44 @@ paths:
       security:
       - JWT: []
       summary: Получить список заказов пользователя
+      tags:
+      - Users
+  /users/{id}/responses:
+    get:
+      description: Получить список заказов, на которые откликался пользователь
+      parameters:
+      - description: ID пользователя
+        example: '"507f1f77bcf86cd799439011"'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_users_id_responses.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Получить список заказов, на которые откликался пользователь
       tags:
       - Users
 securityDefinitions:
