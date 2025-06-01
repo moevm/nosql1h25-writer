@@ -1101,6 +1101,7 @@ const docTemplate = `{
         "internal_api_get_orders_id.Order": {
             "type": "object",
             "required": [
+                "clientEmail",
                 "clientId",
                 "clientName",
                 "clientRating",
@@ -1114,6 +1115,10 @@ const docTemplate = `{
                 "updatedAt"
             ],
             "properties": {
+                "clientEmail": {
+                    "type": "string",
+                    "example": "goida@mail.ru"
+                },
                 "clientId": {
                     "type": "string",
                     "example": "582ebf010936ac3ba5cd00e4"

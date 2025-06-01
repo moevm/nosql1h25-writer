@@ -48,6 +48,7 @@ type Status struct {
 type Order struct {
 	ID              primitive.ObjectID `json:"id" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
 	ClientName      string             `json:"clientName" validate:"required" example:"John Doe"`
+	ClientEmail     string             `json:"clientEmail" validate:"required" example:"goida@mail.ru"`
 	ClientRating    float64            `json:"clientRating" validate:"required" example:"4.8"`
 	ClientID        primitive.ObjectID `json:"clientId" validate:"required" example:"582ebf010936ac3ba5cd00e4"`
 	FreelancerID    primitive.ObjectID `json:"freelancerId,omitzero" validate:"omitzero" example:"582ebf010936ac3ba5cd00e4"`
@@ -120,6 +121,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		Order: Order{
 			ID:              order.ID,
 			ClientName:      client.DisplayName,
+			ClientEmail:     client.Email,
 			ClientRating:    client.Client.Rating,
 			ClientID:        order.ClientID,
 			FreelancerID:    order.FreelancerID,
