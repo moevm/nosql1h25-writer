@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/AlekSi/pointer"
 	"github.com/jonboulle/clockwork"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,6 +25,109 @@ func New(usersColl mongoifc.Collection, clock clockwork.Clock) Repo {
 		usersColl: usersColl,
 		clock:     clock,
 	}
+}
+
+func (r *repository) Find(ctx context.Context, in FindIn) (FindOut, error) {
+	filter := bson.M{"active": true}
+
+	freelancerRatingCond := bson.M{}
+	if in.MinFreelancerRating != nil {
+		freelancerRatingCond["$gte"] = *in.MinFreelancerRating
+	}
+	if in.MaxFreelancerRating != nil {
+		freelancerRatingCond["$lte"] = *in.MaxFreelancerRating
+	}
+	if len(freelancerRatingCond) > 0 {
+		filter["freelancer.rating"] = freelancerRatingCond
+	}
+
+	clientRatingCond := bson.M{}
+	if in.MinClientRating != nil {
+		clientRatingCond["$gte"] = *in.MinClientRating
+	}
+	if in.MaxFreelancerRating != nil {
+		clientRatingCond["$lte"] = *in.MaxClientRating
+	}
+	if len(clientRatingCond) > 0 {
+		filter["client.rating"] = clientRatingCond
+	}
+
+	createdAtCond := bson.M{}
+	if in.MinCreatedAt != nil {
+		createdAtCond["$gte"] = *in.MinCreatedAt
+	}
+	if in.MaxCreatedAt != nil {
+		createdAtCond["$lte"] = *in.MaxCreatedAt
+	}
+	if len(createdAtCond) > 0 {
+		filter["createdAt"] = createdAtCond
+	}
+
+	balanceCond := bson.M{}
+	if in.MinBalance != nil {
+		balanceCond["$gte"] = *in.MinBalance
+	}
+	if in.MaxBalance != nil {
+		balanceCond["$lte"] = *in.MaxBalance
+	}
+	if len(balanceCond) > 0 {
+		filter["balance"] = balanceCond
+	}
+
+	if pointer.Get(in.NameSearch) != "" {
+		filter["displayName"] = bson.M{"$regex": *in.NameSearch, "$options": "i"}
+	}
+	if pointer.Get(in.EmailSearch) != "" {
+		filter["email"] = bson.M{"$regex": *in.EmailSearch, "$options": "i"}
+	}
+
+	if len(in.Roles) != 0 {
+		filter["systemRole"] = bson.M{"$in": in.Roles}
+	}
+
+	var sort bson.D
+	switch pointer.Get(in.SortBy) {
+	case "newest":
+		sort = bson.D{{Key: "createdAt", Value: -1}}
+	case "oldest":
+		sort = bson.D{{Key: "createdAt", Value: 1}}
+	case "rich":
+		sort = bson.D{{Key: "balance", Value: -1}}
+	case "poor":
+		sort = bson.D{{Key: "balance", Value: 1}}
+	case "name_asc":
+		sort = bson.D{{Key: "displayName", Value: 1}}
+	case "name_desc":
+		sort = bson.D{{Key: "displayName", Value: -1}}
+	case "freelancer_rating_asc":
+		sort = bson.D{{Key: "freelancer.rating", Value: 1}}
+	case "freelancer_rating_desc":
+		sort = bson.D{{Key: "freelancer.rating", Value: -1}}
+	case "client_rating_asc":
+		sort = bson.D{{Key: "client.rating", Value: 1}}
+	case "client_rating_desc":
+		sort = bson.D{{Key: "client.rating", Value: -1}}
+	default:
+		sort = bson.D{{Key: "createdAt", Value: -1}}
+	}
+
+	opts := options.Find().SetLimit(int64(in.Limit)).SetSkip(int64(in.Offset)).SetSort(sort)
+	cursor, err := r.usersColl.Find(ctx, filter, opts)
+	if err != nil {
+		return FindOut{}, err
+	}
+
+	var users []entity.UserExt
+	if err := cursor.All(ctx, &users); err != nil {
+		return FindOut{}, err
+	}
+
+	total, err := r.usersColl.CountDocuments(ctx, filter)
+	if err != nil {
+		return FindOut{}, err
+	}
+
+	return FindOut{Users: users, Total: int(total)}, nil
 }
 
 func (r *repository) GetByEmail(ctx context.Context, email string) (u entity.User, _ error) {
