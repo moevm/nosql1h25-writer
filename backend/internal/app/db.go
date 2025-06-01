@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 
+	"github.com/sirupsen/logrus"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -84,7 +85,7 @@ func (app *App) OrdersRepo() orders.Repo {
 	return app.ordersRepo
 }
 
-func (app *App) ImportDump() {
+func (app *App) importDump() {
 	usersRepo := app.UsersRepo()
 	dumper := app.MongoDumper()
 
@@ -93,6 +94,7 @@ func (app *App) ImportDump() {
 		panic("error while import dump")
 	}
 
+	logrus.Info("here")
 	if out.Total != 0 {
 		return
 	}
