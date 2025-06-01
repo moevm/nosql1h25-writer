@@ -20,8 +20,8 @@ func New(orderService orders.Service) api.Handler {
 }
 
 type Request struct {
-	Offset  *int    `query:"offset" validate:"gte=0" example:"0"`
-	Limit   *int    `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	Offset  *int    `query:"offset" validate:"omitempty,gte=0" example:"0"`
+	Limit   *int    `query:"limit" validate:"omitempty,gte=1,lte=200" example:"10"`
 	MinCost *int    `query:"minCost" validate:"omitempty,gte=0" example:"100"`
 	MaxCost *int    `query:"maxCost" validate:"omitempty,gte=0" example:"1000"`
 	MinTime *int64  `query:"minTime" validate:"omitempty,gte=3600000000000" example:"3600000000000"`
@@ -52,6 +52,7 @@ type Response struct {
 //	@Param			offset	query	int		false	"Offset"											default(0)	minimum(0)	example(0)
 //	@Param			limit	query	int		false	"Limit"												default(10)	minimum(1)	maximum(200)	example(10)
 //	@Param			sortBy	query	string	false	"Sort field: cost_asc, cost_desc, newest, oldest"	Enums(cost_asc,cost_desc,newest,oldest)
+//	@Param			request	body	Request	true "fields in query"
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	Response

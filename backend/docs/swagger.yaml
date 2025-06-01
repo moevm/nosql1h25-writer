@@ -43,6 +43,68 @@ definitions:
     - systemRole
     - userId
     type: object
+  internal_api_get_admin_users.Request:
+    properties:
+      emailSearch:
+        example: mail.ru
+        type: string
+      limit:
+        example: 10
+        maximum: 200
+        minimum: 1
+        type: integer
+      maxBalance:
+        minimum: 0
+        type: integer
+      maxClientRating:
+        maximum: 5
+        minimum: 0
+        type: number
+      maxCreatedAt:
+        type: string
+      maxFreelancerRating:
+        maximum: 5
+        minimum: 0
+        type: number
+      minBalance:
+        minimum: 0
+        type: integer
+      minClientRating:
+        maximum: 5
+        minimum: 0
+        type: number
+      minCreatedAt:
+        type: string
+      minFreelancerRating:
+        maximum: 5
+        minimum: 0
+        type: number
+      nameSearch:
+        example: Joh
+        type: string
+      offset:
+        example: 0
+        minimum: 0
+        type: integer
+      roles:
+        items:
+          type: string
+        type: array
+      sortBy:
+        enum:
+        - newest
+        - oldest
+        - rich
+        - poor
+        - name_asc
+        - name_desc
+        - freelancer_rating_asc
+        - freelancer_rating_desc
+        - client_rating_asc
+        - client_rating_desc
+        example: newest
+        type: string
+    type: object
   internal_api_get_admin_users.Response:
     properties:
       total:
@@ -107,6 +169,47 @@ definitions:
       id:
         type: string
       title:
+        type: string
+    type: object
+  internal_api_get_orders.Request:
+    properties:
+      limit:
+        example: 10
+        maximum: 200
+        minimum: 1
+        type: integer
+      maxCost:
+        example: 1000
+        minimum: 0
+        type: integer
+      maxTime:
+        example: 3600000000000
+        minimum: 3600000000000
+        type: integer
+      minCost:
+        example: 100
+        minimum: 0
+        type: integer
+      minTime:
+        example: 3600000000000
+        minimum: 3600000000000
+        type: integer
+      offset:
+        example: 0
+        minimum: 0
+        type: integer
+      search:
+        example: Написать сценарий
+        type: string
+      sortBy:
+        enum:
+        - newest
+        - oldest
+        - cost_asc
+        - cost_desc
+        - time_asc
+        - time_desc
+        example: newest
         type: string
     type: object
   internal_api_get_orders.Response:
@@ -645,6 +748,12 @@ paths:
         minimum: 1
         name: limit
         type: integer
+      - description: fields in query
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_get_admin_users.Request'
       produces:
       - application/json
       responses:
@@ -923,6 +1032,12 @@ paths:
         in: query
         name: sortBy
         type: string
+      - description: fields in query
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_api_get_orders.Request'
       produces:
       - application/json
       responses:

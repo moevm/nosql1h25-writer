@@ -61,8 +61,9 @@ type Response struct {
 //	@Description	Return user list
 //	@Tags			admin
 //	@Security		JWT
-//	@Param			offset	query	int	false	"Offset"	default(0)	minimum(0)	example(0)
-//	@Param			limit	query	int	false	"Limit"		default(10)	minimum(1)	maximum(200)	example(10)
+//	@Param			offset	query	int		false	"Offset"	default(0)	minimum(0)	example(0)
+//	@Param			limit	query	int		false	"Limit"		default(10)	minimum(1)	maximum(200)	example(10)
+//	@Param			request	body	Request	true	"fields in query"
 //	@Produce		json
 //	@Success		200	{object}	Response
 //	@Failure		401	{object}	echo.HTTPError
