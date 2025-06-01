@@ -1,7 +1,6 @@
 package get_users_id_responses
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
@@ -24,13 +23,13 @@ type Request struct {
 }
 
 type ResponseOrder struct {
-	ID             primitive.ObjectID `json:"id"`
+	OrderID        primitive.ObjectID `json:"orderId"`
 	Title          string             `json:"title"`
 	CompletionTime int64              `json:"completionTime"`
-	Cost           int                `json:"cost"`
+	Cost           int                `json:"cost,omitempty"`
 	Status         entity.StatusType  `json:"status"`
 	CoverLetter    string             `json:"coverLetter"`
-	ResponseTime   time.Time          `json:"responseTime"`
+	CreatedAt      time.Time          `json:"createdAt"`
 }
 
 type Response struct {
@@ -65,36 +64,27 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 
 	ordersExt, err := h.users.FindOrdersByResponseUserID(c.Request().Context(), in.ID)
 	if err != nil {
-		if errors.Is(err, users.ErrCannotFindOrders) {
-			return echo.NewHTTPError(http.StatusNotFound, err.Error())
-		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	responses := make([]ResponseOrder, 0, len(ordersExt))
 	for _, orderExt := range ordersExt {
-		var userResponse *entity.Response
+		var userResponse entity.Response
 		for _, response := range orderExt.Responses {
-			if response.FreelancerID == in.ID && response.Active {
-				userResponse = &response
+			if response.FreelancerID == in.ID {
+				userResponse = response
 				break
 			}
 		}
 
-		if userResponse == nil {
-			continue
-		}
-
-		status := orderExt.Statuses[len(orderExt.Statuses)-1].Type
-
 		responses = append(responses, ResponseOrder{
-			ID:             orderExt.ID,
+			OrderID:        orderExt.ID,
 			Title:          orderExt.Title,
 			CompletionTime: orderExt.CompletionTime,
 			Cost:           orderExt.Cost,
-			Status:         status,
+			Status:         orderExt.Statuses[len(orderExt.Statuses)-1].Type,
 			CoverLetter:    userResponse.CoverLetter,
-			ResponseTime:   userResponse.CreatedAt,
+			CreatedAt:      userResponse.CreatedAt,
 		})
 	}
 
