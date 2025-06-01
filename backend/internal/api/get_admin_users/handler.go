@@ -22,8 +22,8 @@ func New(usersService users.Service) api.Handler {
 }
 
 type Request struct {
-	Offset              *int       `query:"offset" validate:"gte=0" example:"0"`
-	Limit               *int       `query:"limit" validate:"gte=1,lte=200" example:"10"`
+	Offset              *int       `query:"offset" validate:"omitempty,gte=0" example:"0"`
+	Limit               *int       `query:"limit" validate:"omitempty,gte=1,lte=200" example:"10"`
 	NameSearch          *string    `query:"nameSearch" validate:"omitempty" example:"Joh"`
 	EmailSearch         *string    `query:"emailSearch" validate:"omitempty" example:"mail.ru"`
 	Roles               []string   `query:"role" validate:"omitempty,dive,oneof=user admin"`
