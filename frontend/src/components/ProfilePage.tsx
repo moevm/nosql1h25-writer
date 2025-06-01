@@ -122,12 +122,12 @@ export default function ProfilePage() {
                   <div style={{margin: '8px 0'}}>
                     <Text>
                       {selectedRole === 'client'
-                      ? data.client?.description || 'Описание'
-                      : data.freelancer?.description || 'Описание'}
+                      ? data.client?.description || 'Этот пользователь не установил описание'
+                      : data.freelancer?.description || 'Этот пользователь не установил описание'}
                     </Text>
                   </div>
                   <div style={{marginTop: 12}}>
-                    <Link to="/user/edit">
+                    <Link to="/profile/edit">
                       <Button>Редактировать</Button>
                     </Link>
                   </div>
@@ -148,11 +148,6 @@ export default function ProfilePage() {
                           : data.freelancer?.rating.toFixed(1) ?? '—'}
                     </Text>
                   </div>
-                  {/* <Text type="secondary">
-                    Завершённых заказов: {selectedRole === 'client'
-                      ? data.client?.completedOrders ?? '—'
-                      : data.freelancer?.completedOrders ?? '—'}
-                  </Text> */}
                 </div>
                 <Button>Показать отзывы</Button>
               </div>

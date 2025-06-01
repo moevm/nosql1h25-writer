@@ -5,7 +5,7 @@ import type { RootRoute } from '@tanstack/react-router';
 
 export const createEditProfileRoute = (parentRoute: RootRoute) =>
   createRoute({
-    path: '/user/edit',
+    path: '/profile/edit',
     component: () => (
       <ProtectedRoute allowedRoles={['client', 'freelancer']}>
         <EditProfilePage />
