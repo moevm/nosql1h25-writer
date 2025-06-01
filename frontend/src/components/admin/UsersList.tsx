@@ -61,7 +61,7 @@ export const UsersList = () => {
         try {
             setTableLoading(true);
             const params: Record<string, any> = {
-                offset: page * size,
+                offset: (page - 1) * size,
                 limit: size,
                 nameSearch: filterParams.nameSearch || undefined,
                 emailSearch: filterParams.emailSearch || undefined,
