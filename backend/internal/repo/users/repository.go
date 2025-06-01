@@ -45,7 +45,7 @@ func (r *repository) Find(ctx context.Context, in FindIn) (FindOut, error) {
 	if in.MinClientRating != nil {
 		clientRatingCond["$gte"] = *in.MinClientRating
 	}
-	if in.MaxFreelancerRating != nil {
+	if in.MaxClientRating != nil {
 		clientRatingCond["$lte"] = *in.MaxClientRating
 	}
 	if len(clientRatingCond) > 0 {
