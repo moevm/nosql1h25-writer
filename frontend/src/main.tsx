@@ -23,9 +23,9 @@ import { createUserOrdersRoute } from './routes/user-orders.route'
 import { createUserResponsesRoute } from './routes/user-responses.route'
 import { createEditProfileRoute } from './routes/edit-profile.route.tsx'
 import AdminLayout from './routes/AdminLayout'
-import AdminUsers from './routes/AdminUsers'
-import { AdminImportRoute } from './routes/admin.import.route'
-import { AdminExportRoute } from './routes/admin.export.route'
+import { createAdminUsersRoute } from './routes/AdminUsers'
+import { createAdminImportRoute } from './routes/admin.import.route'
+import { createAdminExportRoute } from './routes/admin.export.route'
 import ProfilePage from './components/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -65,24 +65,6 @@ const adminRoute = createRoute({
   component: AdminLayout,
 })
 
-const adminUsersRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  path: '/users',
-  component: AdminUsers,
-})
-
-const adminImportRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  path: '/import',
-  component: AdminImportRoute,
-})
-
-const adminExportRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  path: '/export',
-  component: AdminExportRoute,
-})
-
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
@@ -96,9 +78,9 @@ const profileRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   adminRoute.addChildren([
-    adminUsersRoute,
-    adminImportRoute,
-    adminExportRoute,
+    createAdminUsersRoute(adminRoute),
+    createAdminImportRoute(adminRoute),
+    createAdminExportRoute(adminRoute),
   ]),
   DemoFormAddress(rootRoute),
   DemoFormSimple(rootRoute),

@@ -3,6 +3,8 @@ import { api } from './api';
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
 
+let refreshPromise: Promise<string> | null = null;
+
 function notifyAuthChanged() {
   window.dispatchEvent(new Event('auth-changed'));
 }
@@ -32,17 +34,30 @@ export function isAuthenticated() {
 }
 
 export async function refreshAccessToken() {
-  try {
-    const res = await api.post('/auth/refresh', {
-      refreshToken: getRefreshToken(),
-    });
-    setTokens(res.data.accessToken, res.data.refreshToken);
-    return res.data.accessToken;
-  } catch (refreshError) {
-    clearTokens();
-    window.location.href = '/login';
-    throw refreshError;
+  // Если уже есть запрос на обновление токена, возвращаем его
+  if (refreshPromise) {
+    return refreshPromise;
   }
+
+  // Создаем новый запрос на обновление токена
+  refreshPromise = (async () => {
+    try {
+      const res = await api.post('/auth/refresh', {
+        refreshToken: getRefreshToken(),
+      });
+      setTokens(res.data.accessToken, res.data.refreshToken);
+      return res.data.accessToken;
+    } catch (refreshError) {
+      clearTokens();
+      window.location.href = '/login';
+      throw refreshError;
+    } finally {
+      // Очищаем промис после завершения запроса
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
 }
 
 export function parseJwt(token: string): any {

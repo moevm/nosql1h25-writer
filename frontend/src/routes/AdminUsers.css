@@ -56,12 +56,23 @@ tr:last-child td {
   border-bottom: none;
 }
 
+.admin-users {
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .admin-users h1 {
   margin-bottom: 20px;
   color: #333;
 }
 
 .admin-users h2 {
-  margin-bottom: 20px;
-  color: #333;
+    margin-bottom: 24px;
+    color: #1f1f1f;
+}
+
+.admin-users .ant-typography {
+    margin-bottom: 24px;
 } 
