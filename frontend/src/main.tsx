@@ -37,9 +37,11 @@ import * as TanstackQuery from './integrations/tanstack-query/root-provider'
 
 import 'antd/dist/reset.css'
 import './styles.css'
+import './styles/global.css'
 import reportWebVitals from './reportWebVitals.ts'
 
 import { AuthProvider } from './context/AuthContext'
+import { createUserProfileRoute } from './routes/user-profile.route'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -47,7 +49,6 @@ const rootRoute = createRootRoute({
       <Header />
       <Outlet />
       <TanStackRouterDevtools />
-
       <TanstackQueryLayout />
     </>
   ),
@@ -95,6 +96,7 @@ const routeTree = rootRoute.addChildren([
   createUserOrdersRoute(rootRoute),
   createUserResponsesRoute(rootRoute),
   createEditProfileRoute(rootRoute),
+  createUserProfileRoute(rootRoute),
   profileRoute,
 ])
 

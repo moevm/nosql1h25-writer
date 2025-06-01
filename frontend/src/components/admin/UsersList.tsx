@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, Col, DatePicker, Input, InputNumber, Pagination, Row, Select, Space } from 'antd';
+import { Link } from '@tanstack/react-router';
 import dayjs from 'dayjs';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import { api } from '@/integrations/api.ts';
@@ -292,7 +293,11 @@ export const UsersList = () => {
                     <tbody>
                         {users.map((user) => (
                             <tr key={user.id}>
-                                <td>{user.id}</td>
+                                <td>
+                                    <Link to="/users/$userId" params={{ userId: user.id }}>
+                                        {user.id}
+                                    </Link>
+                                </td>
                                 <td>{user.displayName}</td>
                                 <td>{user.email}</td>
                                 <td>{user.systemRole}</td>

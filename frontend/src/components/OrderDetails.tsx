@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useParams } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 import { Avatar, Button, Card, Input, List, Spin, Tag, message } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { api } from '../integrations/api'
@@ -197,7 +197,11 @@ const OrderDetails: React.FC = () => {
               {order.clientName[0]}
             </div>
             <div>
-              <div style={{ fontWeight: 600 }}>{order.clientName}</div>
+              <div style={{ fontWeight: 600 }}>
+                <Link to="/users/$userId" params={{ userId: order.clientId }}>
+                  {order.clientName}
+                </Link>
+              </div>
               <div style={{ color: '#888', fontSize: '0.9em' }}>
                 {order.clientEmail}
               </div>
@@ -289,7 +293,9 @@ const OrderDetails: React.FC = () => {
                            avatar={<Avatar icon={<UserOutlined />} />}
                            title={
                              <div>
-                               {response.freelancerName}
+                               <Link to="/users/$userId" params={{ userId: response.freelancerId }}>
+                                 {response.freelancerName}
+                               </Link>
                                {isSelected && order.freelancerEmail && (
                                  <span style={{ 
                                    marginLeft: 8, 
