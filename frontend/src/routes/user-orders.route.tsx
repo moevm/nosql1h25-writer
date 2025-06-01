@@ -7,7 +7,7 @@ export const createUserOrdersRoute = (parentRoute: RootRoute) =>
   createRoute({
     path: '/profile/orders',
     component: () => (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={['client']}>
         <UserOrders />
       </ProtectedRoute>
     ),
