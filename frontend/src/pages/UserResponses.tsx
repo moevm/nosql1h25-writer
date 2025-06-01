@@ -7,18 +7,14 @@ import { getUserIdFromToken } from '../integrations/auth';
 
 const { Title, Text } = Typography;
 
-interface Order {
-  id: string;
+interface Response {
+  orderId: string;
   title: string;
-  description: string;
+  coverLetter: string;
   cost: number;
   status: string;
   completionTime: number;
   createdAt: string;
-  updatedAt: string;
-  clientId: string;
-  freelancerId: string | null;
-  totalResponses: number;
 }
 
 // Порядок статусов от более раннего к более позднему
@@ -32,18 +28,18 @@ const statusOrder: Record<string, number> = {
   dispute: 6,
 };
 
-export const UserOrders = () => {
+export const UserResponses = () => {
   const userId = getUserIdFromToken();
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<Array<Order>>([]);
+  const [responses, setResponses] = useState<Array<Response>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchResponses = async () => {
       try {
-        const response = await api.get(`/users/${userId}/orders`);
-        // Сортируем заказы по статусу и времени создания
-        const sortedOrders = response.data.orders.sort((a: Order, b: Order) => {
+        const response = await api.get(`/users/${userId}/responses`);
+        // Сортируем отклики по статусу и времени создания
+        const sortedResponses = response.data.responses.sort((a: Response, b: Response) => {
           // Сначала сравниваем по статусу
           const statusComparison = statusOrder[a.status] - statusOrder[b.status];
           if (statusComparison !== 0) {
@@ -52,16 +48,16 @@ export const UserOrders = () => {
           // Если статусы одинаковые, сортируем по времени создания (новые сверху)
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
-        setOrders(sortedOrders);
+        setResponses(sortedResponses);
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error('Error fetching responses:', error);
       } finally {
         setLoading(false);
       }
     };
 
     if (userId) {
-      fetchOrders();
+      fetchResponses();
     }
   }, [userId]);
 
@@ -102,54 +98,51 @@ export const UserOrders = () => {
   return (
     <div style={{ maxWidth: 1200, margin: '32px auto', padding: '0 24px' }}>
       <Title level={2} style={{ marginBottom: 24 }}>
-        Мои заказы
+        Мои отклики
       </Title>
-      {orders.length === 0 ? (
+      {responses.length === 0 ? (
         <Card style={{ textAlign: 'center', padding: '48px 24px' }}>
           <Title level={3} style={{ marginBottom: 16, color: '#1890ff' }}>
-            У вас пока нет заказов
+            У вас пока нет откликов
           </Title>
           <Text style={{ fontSize: 16, color: '#666' }}>
-            Создайте свой первый заказ и найдите исполнителя для вашего проекта! 
-            Опишите задачу, укажите сроки и бюджет - и начните сотрудничество с профессионалами.
+            Это отличное время, чтобы найти интересные проекты и предложить свою помощь! 
+            Просмотрите доступные заказы и сделайте первый шаг к успешному сотрудничеству.
           </Text>
           <div style={{ marginTop: 24 }}>
-            <Button type="primary" size="large" onClick={() => navigate({ to: '/orders/create' })}>
-              Создать заказ
+            <Button type="primary" size="large" onClick={() => navigate({ to: '/orders' })}>
+              Найти заказы
             </Button>
           </div>
         </Card>
       ) : (
         <Row gutter={[16, 16]}>
-          {orders.map((order) => (
-            <Col xs={24} key={order.id}>
+          {responses.map((response) => (
+            <Col xs={24} key={response.orderId}>
               <Card>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
                   <Link 
                     to="/orders/$id" 
-                    params={{ id: order.id }}
+                    params={{ id: response.orderId }}
                     style={{ textDecoration: 'none' }}
                   >
                     <Title level={4} style={{ margin: 0, color: '#1890ff' }}>
-                      {order.title}
+                      {response.title}
                     </Title>
                   </Link>
-                  <Tag color={getStatusColor(order.status)}>
-                    {getStatusLabel(order.status)}
+                  <Tag color={getStatusColor(response.status)}>
+                    {getStatusLabel(response.status)}
                   </Tag>
                 </div>
                 <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-                  Создан: {formatDate(order.createdAt)}
+                  Отклик отправлен: {formatDate(response.createdAt)}
                 </Text>
                 <Text style={{ display: 'block', marginBottom: 16 }}>
-                  {order.description}
+                  {response.coverLetter}
                 </Text>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Text type="secondary">
-                    Бюджет: {order.cost ? `${order.cost.toLocaleString()} ₽` : 'По договорённости'}
-                  </Text>
-                  <Text type="secondary">
-                    Откликов: {order.totalResponses || 0}
+                    Бюджет: {response.cost ? `${response.cost.toLocaleString()} ₽` : 'По договорённости'}
                   </Text>
                 </div>
               </Card>

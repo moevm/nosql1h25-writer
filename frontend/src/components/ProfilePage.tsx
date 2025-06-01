@@ -1,5 +1,5 @@
 import { Button, Card, Col, Dropdown, Row, Space, Typography } from 'antd';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { roleUtils } from '../utils/role';
@@ -20,6 +20,18 @@ export default function ProfilePage() {
 
   const handleMyOrdersClick = () => {
     navigate({ to: '/profile/orders' });
+  };
+
+  const handleMyResponsesClick = () => {
+    navigate({ to: '/profile/responses' });
+  };
+
+  const handleCreateOrderClick = () => {
+    navigate({ to: '/orders/create' });
+  };
+
+  const handleOrdersClick = () => {
+    navigate({ to: '/orders' });
   };
 
   const profileMenuItems: MenuProps['items'] = [
@@ -88,15 +100,25 @@ export default function ProfilePage() {
         </Col>
         <Col>
           <Space>
-            <Button type="primary" onClick={handleMyOrdersClick}>Мои заказы</Button>
-            {selectedRole === 'client' ?
-              <Link to="/orders/create">
-                <Button>Создать заказ</Button>
-              </Link> :
-              <Link to="/orders">
-                <Button>Заказы</Button>
-              </Link>
-            }
+            {selectedRole === 'client' ? (
+              <>
+                <Button type="primary" onClick={handleMyOrdersClick}>
+                  Мои заказы
+                </Button>
+                <Button type="primary" onClick={handleCreateOrderClick}>
+                  Создать заказ
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button type="primary" onClick={handleMyResponsesClick}>
+                  Мои отклики
+                </Button>
+                <Button type="primary" onClick={handleOrdersClick}>
+                  Заказы
+                </Button>
+              </>
+            )}
           </Space>
         </Col>
       </Row>
