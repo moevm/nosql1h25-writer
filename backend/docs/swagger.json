@@ -157,6 +157,15 @@
                         "description": "Limit",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "description": "fields in query",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_admin_users.Request"
+                        }
                     }
                 ],
                 "responses": {
@@ -579,6 +588,15 @@
                         "description": "Sort field: cost_asc, cost_desc, newest, oldest",
                         "name": "sortBy",
                         "in": "query"
+                    },
+                    {
+                        "description": "fields in query",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_orders.Request"
+                        }
                     }
                 ],
                 "responses": {
@@ -1168,6 +1186,86 @@
                 }
             }
         },
+        "internal_api_get_admin_users.Request": {
+            "type": "object",
+            "properties": {
+                "emailSearch": {
+                    "type": "string",
+                    "example": "mail.ru"
+                },
+                "limit": {
+                    "type": "integer",
+                    "maximum": 200,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "maxBalance": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "maxClientRating": {
+                    "type": "number",
+                    "maximum": 5,
+                    "minimum": 0
+                },
+                "maxCreatedAt": {
+                    "type": "string"
+                },
+                "maxFreelancerRating": {
+                    "type": "number",
+                    "maximum": 5,
+                    "minimum": 0
+                },
+                "minBalance": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "minClientRating": {
+                    "type": "number",
+                    "maximum": 5,
+                    "minimum": 0
+                },
+                "minCreatedAt": {
+                    "type": "string"
+                },
+                "minFreelancerRating": {
+                    "type": "number",
+                    "maximum": 5,
+                    "minimum": 0
+                },
+                "nameSearch": {
+                    "type": "string",
+                    "example": "Joh"
+                },
+                "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 0
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sortBy": {
+                    "type": "string",
+                    "enum": [
+                        "newest",
+                        "oldest",
+                        "rich",
+                        "poor",
+                        "name_asc",
+                        "name_desc",
+                        "freelancer_rating_asc",
+                        "freelancer_rating_desc",
+                        "client_rating_asc",
+                        "client_rating_desc"
+                    ],
+                    "example": "newest"
+                }
+            }
+        },
         "internal_api_get_admin_users.Response": {
             "type": "object",
             "required": [
@@ -1259,6 +1357,58 @@
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_api_get_orders.Request": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer",
+                    "maximum": 200,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "maxCost": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1000
+                },
+                "maxTime": {
+                    "type": "integer",
+                    "minimum": 3600000000000,
+                    "example": 3600000000000
+                },
+                "minCost": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 100
+                },
+                "minTime": {
+                    "type": "integer",
+                    "minimum": 3600000000000,
+                    "example": 3600000000000
+                },
+                "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 0
+                },
+                "search": {
+                    "type": "string",
+                    "example": "Написать сценарий"
+                },
+                "sortBy": {
+                    "type": "string",
+                    "enum": [
+                        "newest",
+                        "oldest",
+                        "cost_asc",
+                        "cost_desc",
+                        "time_asc",
+                        "time_desc"
+                    ],
+                    "example": "newest"
                 }
             }
         },
