@@ -1,5 +1,5 @@
 import { Button, Card, Col, Dropdown, Row, Space, Typography } from 'antd';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { roleUtils } from '../utils/role';
@@ -82,7 +82,7 @@ export default function ProfilePage() {
   if (isLoading) return <div style={{textAlign: 'center', padding: 40}}>Загрузка...</div>;
   if (!data) return <div style={{textAlign: 'center', padding: 40}}>Профиль не найден</div>;
 
-  const { displayName, email, balance, client } = data;
+  const { displayName, email, balance} = data;
 
   return (
     <div style={{maxWidth: 700, margin: '32px auto', background: '#f7faff', borderRadius: 16, padding: 32}}>
@@ -146,16 +146,16 @@ export default function ProfilePage() {
               <Title level={4} style={{marginBottom: 0}}>{displayName || 'Имя'}</Title>
               <Text type="secondary">{email}</Text>
               <div style={{margin: '8px 0'}}>
-                <Text>Город: —</Text>
-              </div>
-              <div>
-                <Text>Пол: —</Text>
-              </div>
-              <div>
-                <Text>Дата рождения: —</Text>
+                <Text>
+                  {selectedRole === 'client'
+                  ? data.client?.description || 'Этот пользователь не установил описание'
+                  : data.freelancer?.description || 'Этот пользователь не установил описание'}
+                </Text>
               </div>
               <div style={{marginTop: 12}}>
-                <Button>Редактировать</Button>
+                <Link to="/profile/edit">
+                  <Button>Редактировать</Button>
+                </Link>
               </div>
             </Col>
           </Row>
@@ -171,15 +171,10 @@ export default function ProfilePage() {
                 <span style={{color: '#faad14', fontSize: 20}}>★</span>
                 <Text style={{fontSize: 18, marginLeft: 8}}>
                   {selectedRole === 'client'
-                    ? client?.rating.toFixed(1) ?? '—'
+                    ? data.client?.rating.toFixed(1) ?? '—'
                     : data.freelancer?.rating.toFixed(1) ?? '—'}
                 </Text>
               </div>
-              <Text type="secondary">
-                Завершённых заказов: {selectedRole === 'client'
-                  ? client?.completedOrders ?? '—'
-                  : data.freelancer?.completedOrders ?? '—'}
-              </Text>
             </div>
             <Button>Показать отзывы</Button>
           </div>
