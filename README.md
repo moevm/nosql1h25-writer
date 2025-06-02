@@ -29,4 +29,12 @@
 
 ### Заказчики
 
+- `client1@mail.com`
+- `client2@mail.com`
+
 ### Фрилансеры
+
+- `freelancer1@mail.com`
+- `freelancer2@mail.com`
+- `freelancer3@mail.com`
+- `freelancer4@mail.com`
