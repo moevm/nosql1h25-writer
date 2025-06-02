@@ -83,3 +83,21 @@ func (app *App) OrdersRepo() orders.Repo {
 	app.ordersRepo = orders.New(app.OrdersCollection(), app.Clock())
 	return app.ordersRepo
 }
+
+func (app *App) importDump() {
+	usersRepo := app.UsersRepo()
+	dumper := app.MongoDumper()
+
+	out, err := usersRepo.Find(context.Background(), users.FindIn{Limit: 1})
+	if err != nil {
+		panic("error while import dump")
+	}
+
+	if out.Total != 0 {
+		return
+	}
+
+	if err := dumper.Restore("dump.gzip"); err != nil {
+		panic("error while import dump")
+	}
+}

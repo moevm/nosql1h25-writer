@@ -16,3 +16,27 @@
 <a href=" ./../../../actions/workflows/6_report.yml" >![6. Пояснительная записка]( ./../../actions/workflows/6_report.yml/badge.svg)</a>
 
 <a href=" ./../../../actions/workflows/7_app_is_ready.yml" >![7. App is ready]( ./../../actions/workflows/7_app_is_ready.yml/badge.svg)</a>
+
+
+## Данные для входа
+
+Регистрация и логин полностью рабочие, так что можно создавать своих юзеров, при этом есть заготовлен тестовый сет с заказами и откликами + админом, который загружается в БД при запуске, если коллекция юзеров пустая.
+
+Пароль для всех тестовых юзеров: `password123`
+Далее будут указываться только почты для входа
+
+### Админ
+
+`admin@mail.com`
+
+### Заказчики
+
+- `client1@mail.com`
+- `client2@mail.com`
+
+### Фрилансеры
+
+- `freelancer1@mail.com`
+- `freelancer2@mail.com`
+- `freelancer3@mail.com`
+- `freelancer4@mail.com`

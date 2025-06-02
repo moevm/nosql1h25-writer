@@ -148,6 +148,9 @@ func (app *App) Start() {
 		}
 	}()
 
+	log.Info("Import dump if need...")
+	app.importDump()
+
 	select {
 	case s := <-app.interrupt:
 		log.Infof("app - Start - signal: %v", s)
