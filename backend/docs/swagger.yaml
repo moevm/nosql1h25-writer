@@ -651,12 +651,12 @@ definitions:
     required:
     - id
     type: object
-host: localhost:80
+host: localhost:1025
 info:
   contact: {}
   description: API for freelancer's site
   title: Writer
-  version: 1.0.0
+  version: 0.8.0
 paths:
   /admin:
     get:
