@@ -17,7 +17,7 @@ func New(uri string) (mongoifc.Client, error) {
     currentAttempt := 0
 
     for currentAttempt < connectionAttempts {
-        client, err := connectToMongo(uri)
+        client, err = connectToMongo(uri)
         if err == nil {
             return client, nil
         }

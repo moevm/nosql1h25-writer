@@ -109,10 +109,10 @@ func New(configPath string) *App {
 }
 
 //	@title			Writer
-//	@version		1.0.0
+//	@version		0.8.0
 //	@description	API for freelancer's site
 
-//	@host		localhost:80
+//	@host		localhost:1025
 //	@BasePath	/api
 
 //	@securityDefinitions.apikey	JWT
