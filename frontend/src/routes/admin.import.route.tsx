@@ -4,7 +4,7 @@ import type { Route } from '@tanstack/react-router';
 
 export const createAdminImportRoute = (parentRoute: Route) =>
   createRoute({
-    path: '/import',
-    component: () => <ImportDatabase />,
     getParentRoute: () => parentRoute,
+    path: 'import',
+    component: () => <ImportDatabase />,
   }); 
