@@ -16,10 +16,9 @@ interface EditProfileForm {
 export default function EditProfilePage() {
   const navigate = useNavigate();
   const userId = getUserIdFromToken();
-  const { data: user, isLoading, refetch } = useUserProfile();
-  const [form] = Form.useForm<EditProfileForm>();
-
   const [selectedRole] = useState<UserRole>(roleUtils.getRole());
+  const { data: user, isLoading, refetch } = useUserProfile(String(userId), selectedRole);
+  const [form] = Form.useForm<EditProfileForm>();
 
   useEffect(() => {
     if (user) {
