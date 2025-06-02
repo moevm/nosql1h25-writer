@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { getUserIdFromToken } from '../integrations/auth';
 import { api } from '../integrations/api';
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   displayName: string;
   email: string;
@@ -19,20 +18,13 @@ interface UserProfile {
   };
 }
 
-export function useUserProfile() {
-  const userId = getUserIdFromToken();
-
+export function useUserProfile(userId: string, role?: 'client' | 'freelancer') {
   return useQuery<UserProfile>({
-    queryKey: ['userProfile', userId],
+    queryKey: ['userProfile', userId, role],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      params.append('profile', 'client');
-      params.append('profile', 'freelancer');
-
-      const response = await api.get(`/users/${userId}?${params.toString()}`);
-      console.log(`ANSWER: ${response.data.client}`)
+      const response = await api.get(`/users/${userId}${role ? `?profile=${role}` : ''}`);
       return response.data;
     },
-    enabled: !!userId,
+    enabled: !!userId
   });
 }
