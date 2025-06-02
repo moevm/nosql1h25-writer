@@ -8,10 +8,26 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const connectTimeout = 7 * time.Second
+const connectionTimeout = 7 * time.Second
+const connectionAttempts = 3
 
 func New(uri string) (mongoifc.Client, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout)
+    var client mongoifc.Client
+    var err error
+    currentAttempt := 0
+
+    for currentAttempt < connectionAttempts {
+        client, err := connectToMongo(uri)
+        if err == nil {
+            return client, nil
+        }
+        currentAttempt++
+    }
+    return nil, err
+}
+
+func connectToMongo(uri string) (mongoifc.Client, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), connectionTimeout)
 	defer cancel()
 
 	client, err := mongoifc.Connect(ctx, options.Client().ApplyURI(uri))
