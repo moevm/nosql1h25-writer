@@ -40,3 +40,9 @@
 - `freelancer2@mail.com`
 - `freelancer3@mail.com`
 - `freelancer4@mail.com`
+
+
+## Инструкция для запуска
+1. Создать файл `.env`, можно скопировать [`.env.example`](.env.example) (файл уже создан, этот шаг можно пропустить).
+2. Выполнить команду `make compose-up` ИЛИ `docker-compose up -d`.
+3. Открыть в браузере страницу `127.0.0.1:1025`.
