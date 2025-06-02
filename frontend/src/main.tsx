@@ -8,11 +8,7 @@ import {
   createRoute,
   createRouter
 } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import DemoFormAddress from './routes/demo.form.address'
-import DemoFormSimple from './routes/demo.form.simple'
-import DemoTable from './routes/demo.table'
-import DemoTanstackQuery from './routes/demo.tanstack-query'
+import { Typography } from 'antd'
 import AuthRoute from './routes/auth.route'
 import RegisterRoute from './routes/register.route'
 import { createOrdersRoute } from './routes/orders.route'
@@ -23,15 +19,10 @@ import { createUserOrdersRoute } from './routes/user-orders.route'
 import { createUserResponsesRoute } from './routes/user-responses.route'
 import { createEditProfileRoute } from './routes/edit-profile.route.tsx'
 import AdminLayout from './routes/AdminLayout'
-import { createAdminUsersRoute } from './routes/AdminUsers'
-import { createAdminImportRoute } from './routes/admin.import.route'
-import { createAdminExportRoute } from './routes/admin.export.route'
 import ProfilePage from './components/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 
 import Header from './components/Header'
-
-import TanstackQueryLayout from './integrations/tanstack-query/layout'
 
 import * as TanstackQuery from './integrations/tanstack-query/root-provider'
 
@@ -42,14 +33,17 @@ import reportWebVitals from './reportWebVitals.ts'
 
 import { AuthProvider } from './context/AuthContext'
 import { createUserProfileRoute } from './routes/user-profile.route'
+import { UsersList } from '@/components/admin/UsersList'
+import { ImportDatabase } from '@/components/admin/ImportDatabase'
+import { ExportDatabase } from '@/components/admin/ExportDatabase'
+
+const { Title } = Typography;
 
 const rootRoute = createRootRoute({
   component: () => (
     <>
       <Header />
       <Outlet />
-      <TanStackRouterDevtools />
-      <TanstackQueryLayout />
     </>
   ),
 })
@@ -57,13 +51,36 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: () => <Navigate to="/orders" />,
+  component: () => <Navigate to="/orders" search={{}} />,
 })
 
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/admin',
+  path: 'admin',
   component: AdminLayout,
+})
+
+const adminUsersRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: 'users',
+  component: () => (
+    <div className="admin-users">
+      <Title level={2}>Управление пользователями</Title>
+      <UsersList />
+    </div>
+  ),
+})
+
+const adminImportRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: 'import',
+  component: () => <ImportDatabase />,
+})
+
+const adminExportRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: 'export',
+  component: () => <ExportDatabase />,
 })
 
 const profileRoute = createRoute({
@@ -79,14 +96,10 @@ const profileRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   adminRoute.addChildren([
-    createAdminUsersRoute(adminRoute),
-    createAdminImportRoute(adminRoute),
-    createAdminExportRoute(adminRoute),
+    adminUsersRoute,
+    adminImportRoute,
+    adminExportRoute,
   ]),
-  DemoFormAddress(rootRoute),
-  DemoFormSimple(rootRoute),
-  DemoTable(rootRoute),
-  DemoTanstackQuery(rootRoute),
   AuthRoute(rootRoute),
   RegisterRoute(rootRoute),
   createOrdersRoute(rootRoute),
