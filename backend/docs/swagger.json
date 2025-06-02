@@ -4,9 +4,9 @@
         "description": "API for freelancer's site",
         "title": "Writer",
         "contact": {},
-        "version": "1.0.0"
+        "version": "0.8.0"
     },
-    "host": "localhost:80",
+    "host": "localhost:1025",
     "basePath": "/api",
     "paths": {
         "/admin": {
