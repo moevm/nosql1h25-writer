@@ -23,9 +23,9 @@ import { createUserOrdersRoute } from './routes/user-orders.route'
 import { createUserResponsesRoute } from './routes/user-responses.route'
 import { createEditProfileRoute } from './routes/edit-profile.route.tsx'
 import AdminLayout from './routes/AdminLayout'
-import AdminUsers from './routes/AdminUsers'
-import { AdminImportRoute } from './routes/admin.import.route'
-import { AdminExportRoute } from './routes/admin.export.route'
+import { createAdminUsersRoute } from './routes/AdminUsers'
+import { createAdminImportRoute } from './routes/admin.import.route'
+import { createAdminExportRoute } from './routes/admin.export.route'
 import ProfilePage from './components/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -37,9 +37,11 @@ import * as TanstackQuery from './integrations/tanstack-query/root-provider'
 
 import 'antd/dist/reset.css'
 import './styles.css'
+import './styles/global.css'
 import reportWebVitals from './reportWebVitals.ts'
 
 import { AuthProvider } from './context/AuthContext'
+import { createUserProfileRoute } from './routes/user-profile.route'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -47,7 +49,6 @@ const rootRoute = createRootRoute({
       <Header />
       <Outlet />
       <TanStackRouterDevtools />
-
       <TanstackQueryLayout />
     </>
   ),
@@ -65,24 +66,6 @@ const adminRoute = createRoute({
   component: AdminLayout,
 })
 
-const adminUsersRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  path: '/users',
-  component: AdminUsers,
-})
-
-const adminImportRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  path: '/import',
-  component: AdminImportRoute,
-})
-
-const adminExportRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  path: '/export',
-  component: AdminExportRoute,
-})
-
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
@@ -96,9 +79,9 @@ const profileRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   adminRoute.addChildren([
-    adminUsersRoute,
-    adminImportRoute,
-    adminExportRoute,
+    createAdminUsersRoute(adminRoute),
+    createAdminImportRoute(adminRoute),
+    createAdminExportRoute(adminRoute),
   ]),
   DemoFormAddress(rootRoute),
   DemoFormSimple(rootRoute),
@@ -113,6 +96,7 @@ const routeTree = rootRoute.addChildren([
   createUserOrdersRoute(rootRoute),
   createUserResponsesRoute(rootRoute),
   createEditProfileRoute(rootRoute),
+  createUserProfileRoute(rootRoute),
   profileRoute,
 ])
 

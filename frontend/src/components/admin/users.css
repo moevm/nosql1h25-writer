@@ -1,0 +1,108 @@
+.users-list {
+    padding: 20px;
+}
+
+.users-list h2 {
+    color: #1890ff;
+    margin-bottom: 20px;
+}
+
+.filters-container {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+}
+
+.filters-container .ant-space {
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.filters-container .ant-input-search,
+.filters-container .ant-select {
+    width: 200px;
+}
+
+.filters-container .ant-input-number {
+    width: 120px;
+}
+
+.filters-container .ant-picker {
+    width: 150px;
+}
+
+.filters-container .ant-space-item {
+    margin-bottom: 8px;
+}
+
+.filters-container .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filters-container .filter-group .ant-space {
+    width: auto;
+}
+
+.table-container {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    margin-bottom: 20px;
+}
+
+.table-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #1890ff;
+    z-index: 1;
+}
+
+.users-list table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.users-list th,
+.users-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.users-list th {
+    background: #fafafa;
+    font-weight: 500;
+}
+
+.users-list tr:hover {
+    background: #fafafa;
+}
+
+.users-list .error {
+    color: #ff4d4f;
+    padding: 20px;
+    text-align: center;
+    background: #fff2f0;
+    border: 1px solid #ffccc7;
+    border-radius: 8px;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+} 
