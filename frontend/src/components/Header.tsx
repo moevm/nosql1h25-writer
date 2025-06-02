@@ -26,26 +26,6 @@ export default function Header() {
     <header className="p-2 flex gap-2 bg-white text-black justify-between items-center fixed top-0 left-0 right-0 z-10 h-16">
       <nav className="flex flex-row">
         <div className="px-2 font-bold">
-          <Link to="/">Home</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/form/simple">Simple Form</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/form/address">Address Form</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/table">TanStack Table</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/tanstack-query">TanStack Query</Link>
-        </div>
-
-        <div className="px-2 font-bold">
           <Link to="/orders">Заказы</Link>
         </div>
 
@@ -56,12 +36,21 @@ export default function Header() {
         )}
       </nav>
       <div className="flex items-center gap-2">
-        {auth && (
+        {auth ? (
           <>
             <Link to="/profile">
               <Button type="primary">Профиль</Button>
             </Link>
             <LogoutButton />
+          </>
+        ) : (
+          <>
+            <Link to="/login">
+              <Button type="primary">Войти</Button>
+            </Link>
+            <Link to="/register">
+              <Button>Регистрация</Button>
+            </Link>
           </>
         )}
       </div>

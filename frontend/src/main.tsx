@@ -1,21 +1,14 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  
   Navigate,
   Outlet,
-  
   RouterProvider,
   createRootRoute,
   createRoute,
   createRouter
 } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Typography } from 'antd'
-import DemoFormAddress from './routes/demo.form.address'
-import DemoFormSimple from './routes/demo.form.simple'
-import DemoTable from './routes/demo.table'
-import DemoTanstackQuery from './routes/demo.tanstack-query'
 import AuthRoute from './routes/auth.route'
 import RegisterRoute from './routes/register.route'
 import { createOrdersRoute } from './routes/orders.route'
@@ -30,8 +23,6 @@ import ProfilePage from './components/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 
 import Header from './components/Header'
-
-import TanstackQueryLayout from './integrations/tanstack-query/layout'
 
 import * as TanstackQuery from './integrations/tanstack-query/root-provider'
 
@@ -53,8 +44,6 @@ const rootRoute = createRootRoute({
     <>
       <Header />
       <Outlet />
-      <TanStackRouterDevtools />
-      <TanstackQueryLayout />
     </>
   ),
 })
@@ -111,10 +100,6 @@ const routeTree = rootRoute.addChildren([
     adminImportRoute,
     adminExportRoute,
   ]),
-  DemoFormAddress(rootRoute),
-  DemoFormSimple(rootRoute),
-  DemoTable(rootRoute),
-  DemoTanstackQuery(rootRoute),
   AuthRoute(rootRoute),
   RegisterRoute(rootRoute),
   createOrdersRoute(rootRoute),
