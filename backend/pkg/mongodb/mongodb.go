@@ -12,18 +12,18 @@ const connectionTimeout = 7 * time.Second
 const connectionAttempts = 3
 
 func New(uri string) (mongoifc.Client, error) {
-    var client mongoifc.Client
-    var err error
-    currentAttempt := 0
+	var client mongoifc.Client
+	var err error
+	currentAttempt := 0
 
-    for currentAttempt < connectionAttempts {
-        client, err = connectToMongo(uri)
-        if err == nil {
-            return client, nil
-        }
-        currentAttempt++
-    }
-    return nil, err
+	for currentAttempt < connectionAttempts {
+		client, err = connectToMongo(uri)
+		if err == nil {
+			return client, nil
+		}
+		currentAttempt++
+	}
+	return nil, err
 }
 
 func connectToMongo(uri string) (mongoifc.Client, error) {
