@@ -16,9 +16,11 @@ import (
 	"github.com/moevm/nosql1h25-writer/backend/internal/api/common/mw"
 	auth_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
 	orders_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	stats_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/stats"
 	users_repo "github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 	auth_service "github.com/moevm/nosql1h25-writer/backend/internal/service/auth"
 	orders_service "github.com/moevm/nosql1h25-writer/backend/internal/service/orders"
+	stats_service "github.com/moevm/nosql1h25-writer/backend/internal/service/stats"
 	users_service "github.com/moevm/nosql1h25-writer/backend/internal/service/users"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/hasher"
 	"github.com/moevm/nosql1h25-writer/backend/pkg/httpserver"
@@ -57,6 +59,7 @@ type App struct {
 	postAuthLogoutHandler   api.Handler
 
 	getAdminHandler        api.Handler
+	getAdminStatsHandler   api.Handler
 	getAdminUsersHandler   api.Handler
 	getAdminExportHandler  api.Handler
 	postAdminImportHandler api.Handler
@@ -78,11 +81,13 @@ type App struct {
 	authService   auth_service.Service
 	usersService  users_service.Service
 	ordersService orders_service.Service
+	statsService  stats_service.Service
 
 	// repositories
 	usersRepo  users_repo.Repo
 	authRepo   auth_repo.Repo
 	ordersRepo orders_repo.Repo
+	statsRepo  stats_repo.Repo
 
 	// infra
 	passwordHasher hasher.PasswordHasher

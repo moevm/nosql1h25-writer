@@ -10,6 +10,7 @@ import (
 
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/auth"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/orders"
+	"github.com/moevm/nosql1h25-writer/backend/internal/repo/stats"
 	"github.com/moevm/nosql1h25-writer/backend/internal/repo/users"
 )
 
@@ -82,6 +83,15 @@ func (app *App) OrdersRepo() orders.Repo {
 
 	app.ordersRepo = orders.New(app.OrdersCollection(), app.Clock())
 	return app.ordersRepo
+}
+
+func (app *App) StatsRepo() stats.Repo {
+	if app.statsRepo != nil {
+		return app.statsRepo
+	}
+
+	app.statsRepo = stats.New(app.UsersCollection(), app.OrdersCollection(), app.Clock())
+	return app.statsRepo
 }
 
 func (app *App) importDump() {
