@@ -52,7 +52,11 @@ func buildPipeline(x, y string, aggType entity.Aggregation) (mongo.Pipeline, str
 			return nil, "", fmt.Errorf("X and Y are from different collections: %s vs %s", collName, infoY.Coll)
 		}
 		if infoY.IsArray {
-			projFields = append(projFields, bson.E{Key: "y", Value: bson.D{{"$size", "$_" + infoY.Path}}})
+			projFields = append(projFields, bson.E{Key: "y", Value: bson.D{
+				{"$size", bson.D{
+					{"$ifNull", bson.A{"$" + infoY.Path, bson.A{}}},
+				}},
+			}})
 		} else {
 			projFields = append(projFields, bson.E{Key: "y", Value: "$" + infoY.Path})
 		}
