@@ -1,7 +1,7 @@
 import { createRoute } from '@tanstack/react-router';
 import ProtectedRoute from '../components/ProtectedRoute';
-import EditProfilePage from '@/components/EditProfilePage';
 import type { RootRoute } from '@tanstack/react-router';
+import EditProfilePage from '@/components/EditProfilePage';
 
 export const createEditProfileRoute = (parentRoute: RootRoute) =>
   createRoute({

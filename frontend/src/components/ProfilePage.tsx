@@ -294,7 +294,7 @@ export default function ProfilePage() {
               { type: 'number', min: 1, message: 'Сумма должна быть больше 0' },
               () => ({
                 validator(_, value) {
-                  if (!value || value <= data?.balance) {
+                  if (!value || value <= data.balance) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error('Недостаточно средств'));
@@ -306,7 +306,7 @@ export default function ProfilePage() {
               style={{ width: '100%' }}
               placeholder="Введите сумму"
               min={1}
-              max={data?.balance}
+              max={data.balance}
             />
           </Form.Item>
           <Form.Item>
