@@ -15,7 +15,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 # Step 3: Final
 FROM alpine:3.22
 RUN apk add --no-cache \
-    mongodb-tools=100.9.4-r10 \
+    mongodb-tools=100.12.0-r0 \
     gzip=1.14-r1 \
     bash=5.2.37-r0 \
     ca-certificates=20241121-r2
