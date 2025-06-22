@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Link, useParams } from '@tanstack/react-router'
+import { Link, useNavigate, useParams } from '@tanstack/react-router'
 import { Avatar, Button, Card, Input, List, Spin, Tag, message } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { api } from '../integrations/api'
 import { roleUtils } from '../utils/role'
 import { formatCompletionTime } from '../utils/time'
 import { getUserIdFromToken } from '../integrations/auth'
-import { useNavigate } from '@tanstack/react-router'
 
 interface OrderDetailsType {
   order: {
