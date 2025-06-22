@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jonboulle/clockwork"
 	"github.com/sv-tools/mongoifc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -16,7 +15,6 @@ import (
 type repository struct {
 	usersColl  mongoifc.Collection
 	ordersColl mongoifc.Collection
-	clock      clockwork.Clock
 }
 
 func New(usersColl mongoifc.Collection, ordersColl mongoifc.Collection) Repo {
@@ -37,56 +35,56 @@ func buildPipeline(x, y string, aggType entity.Aggregation) (mongo.Pipeline, str
 	var pipe mongo.Pipeline
 
 	// $project: задаём поля x и y
-	projFields := bson.D{{"x", "$" + infoX.Path}}
+	projFields := bson.D{{Key: "x", Value: "$" + infoX.Path}}
 	// для y: обрабатываем count или IsArray
 	if y == "count" {
 		// count без привязки к Path
-		projFields = append(projFields, bson.E{Key: "y_count", Value: bson.D{{"$literal", 1}}})
+		projFields = append(projFields, bson.E{Key: "y_count", Value: bson.D{{Key: "$literal", Value: 1}}})
 	} else {
 		infoY, okY := fieldInfo[y]
 		if !okY {
-			return nil, "", fmt.Errorf("invalid Y field %s", y)
+			return nil, "", fmt.Errorf("invalid y field %s", y)
 		}
 		// проверка на совпадение коллекций
 		if infoY.Coll != collName {
-			return nil, "", fmt.Errorf("X and Y are from different collections: %s vs %s", collName, infoY.Coll)
+			return nil, "", fmt.Errorf("x and y are from different collections: %s vs %s", collName, infoY.Coll)
 		}
 		if infoY.IsArray {
 			projFields = append(projFields, bson.E{Key: "y", Value: bson.D{
-				{"$size", bson.D{
-					{"$ifNull", bson.A{"$" + infoY.Path, bson.A{}}},
+				{Key: "$size", Value: bson.D{
+					{Key: "$ifNull", Value: bson.A{"$" + infoY.Path, bson.A{}}},
 				}},
 			}})
 		} else {
 			projFields = append(projFields, bson.E{Key: "y", Value: "$" + infoY.Path})
 		}
 	}
-	pipe = append(pipe, bson.D{{"$project", projFields}})
+	pipe = append(pipe, bson.D{{Key: "$project", Value: projFields}})
 
 	// $group: группируем по x
 	var aggExpr primitive.D
 	switch aggType {
 	case entity.AggregationCount:
 		// суммируем константу 1
-		aggExpr = bson.D{{"$sum", 1}}
+		aggExpr = bson.D{{Key: "$sum", Value: 1}}
 	case entity.AggregationSum:
-		aggExpr = bson.D{{"$sum", "$y"}}
+		aggExpr = bson.D{{Key: "$sum", Value: "$y"}}
 	case entity.AggregationAvg:
-		aggExpr = bson.D{{"$avg", "$y"}}
+		aggExpr = bson.D{{Key: "$avg", Value: "$y"}}
 	case entity.AggregationMin:
-		aggExpr = bson.D{{"$min", "$y"}}
+		aggExpr = bson.D{{Key: "$min", Value: "$y"}}
 	case entity.AggregationMax:
-		aggExpr = bson.D{{"$max", "$y"}}
+		aggExpr = bson.D{{Key: "$max", Value: "$y"}}
 	default:
 		return nil, "", fmt.Errorf("unsupported aggregation %v", aggType)
 	}
-	group := bson.D{{"$group", bson.D{{"_id", "$x"}, {"value", aggExpr}}}}
+	group := bson.D{{"$group", bson.D{{Key: "_id", Value: "$x"}, {Key: "value", Value: aggExpr}}}}
 	pipe = append(pipe, group)
 
 	// $project: превращаем _id в строку и переименовываем в x
-	pipe = append(pipe, bson.D{{"$project", bson.D{
-		{"x", bson.D{{"$toString", "$_id"}}},
-		{"value", 1},
+	pipe = append(pipe, bson.D{{Key: "$project", Value: bson.D{
+		{Key: "x", Value: bson.D{{Key: "$toString", Value: "$_id"}}},
+		{Key: "value", Value: 1},
 	}}})
 
 	return pipe, collName, nil

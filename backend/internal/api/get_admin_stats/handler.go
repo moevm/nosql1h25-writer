@@ -58,8 +58,7 @@ func (h *handler) Handle(c echo.Context, in Request) error {
 		AggType: entity.Aggregation(in.Agg),
 	})
 	if err != nil {
-		switch {
-		case errors.Is(err, stats.ErrInvalidRequest):
+		if errors.Is(err, stats.ErrInvalidRequest) {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
