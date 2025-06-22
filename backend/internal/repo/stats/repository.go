@@ -78,7 +78,7 @@ func buildPipeline(x, y string, aggType entity.Aggregation) (mongo.Pipeline, str
 	default:
 		return nil, "", fmt.Errorf("unsupported aggregation %v", aggType)
 	}
-	group := bson.D{{"$group", bson.D{{Key: "_id", Value: "$x"}, {Key: "value", Value: aggExpr}}}}
+	group := bson.D{{Key: "$group", Value: bson.D{{Key: "_id", Value: "$x"}, {Key: "value", Value: aggExpr}}}}
 	pipe = append(pipe, group)
 
 	// $project: превращаем _id в строку и переименовываем в x
