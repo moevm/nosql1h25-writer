@@ -43,6 +43,20 @@ definitions:
     - systemRole
     - userId
     type: object
+  internal_api_get_admin_stats.Point:
+    properties:
+      x:
+        type: string
+      "y":
+        type: number
+    type: object
+  internal_api_get_admin_stats.Response:
+    properties:
+      points:
+        items:
+          $ref: '#/definitions/internal_api_get_admin_stats.Point'
+        type: array
+    type: object
   internal_api_get_admin_users.Request:
     properties:
       emailSearch:
@@ -727,6 +741,52 @@ paths:
       security:
       - JWT: []
       summary: Import mongodb state into current instance
+      tags:
+      - admin
+  /admin/stats:
+    get:
+      description: Return stats
+      parameters:
+      - description: X
+        example: user_created_at
+        in: query
+        name: x
+        required: true
+        type: string
+      - description: "Y"
+        example: count
+        in: query
+        name: "y"
+        required: true
+        type: string
+      - description: Aggregation Type
+        example: count
+        in: query
+        name: agg
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_api_get_admin_stats.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      security:
+      - JWT: []
+      summary: Return stats
       tags:
       - admin
   /admin/users:
