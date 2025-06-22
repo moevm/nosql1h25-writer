@@ -1,22 +1,16 @@
 package stats
 
-import "github.com/samber/lo"
+import (
+	"github.com/samber/lo"
+
+	"github.com/moevm/nosql1h25-writer/backend/internal/entity"
+)
 
 type GraphIn struct {
 	X       string
 	Y       string
-	AggType Aggregation
+	AggType entity.Aggregation
 }
-
-type Aggregation string
-
-const (
-	AggregationCount Aggregation = "count"
-	AggregationSum   Aggregation = "sum"
-	AggregationMax   Aggregation = "max"
-	AggregationMin   Aggregation = "min"
-	AggregationAvg   Aggregation = "avg"
-)
 
 var allowedToBeAsX = map[string]struct{}{
 	"user_id":             {},
@@ -30,29 +24,24 @@ var allowedToBeAsX = map[string]struct{}{
 	"order_created_at":    {},
 }
 
-func CanBeX(x string) bool {
+func canBeX(x string) bool {
 	_, ok := allowedToBeAsX[x]
 	return ok
 }
 
-var allowedAggregationsForY = map[string][]Aggregation{
-	"count":                  {AggregationCount},
-	"user_reviews_count":     {AggregationAvg, AggregationMin, AggregationMax},
-	"user_balance":           {AggregationAvg, AggregationMin, AggregationMax, AggregationSum},
-	"user_client_rating":     {AggregationAvg, AggregationMin, AggregationMax},
-	"user_freelancer_rating": {AggregationAvg, AggregationMin, AggregationMax},
-	"order_completion_time":  {AggregationAvg, AggregationMin, AggregationMax, AggregationSum},
-	"order_cost":             {AggregationAvg, AggregationMin, AggregationMax, AggregationSum},
+var allowedAggregationsForY = map[string][]entity.Aggregation{
+	"count":                  {entity.AggregationCount},
+	"user_balance":           {entity.AggregationAvg, entity.AggregationMin, entity.AggregationMax, entity.AggregationSum},
+	"user_client_rating":     {entity.AggregationAvg, entity.AggregationMin, entity.AggregationMax},
+	"user_freelancer_rating": {entity.AggregationAvg, entity.AggregationMin, entity.AggregationMax},
+	"order_completion_time":  {entity.AggregationAvg, entity.AggregationMin, entity.AggregationMax, entity.AggregationSum},
+	"order_cost":             {entity.AggregationAvg, entity.AggregationMin, entity.AggregationMax, entity.AggregationSum},
+	"order_responses_count":  {entity.AggregationAvg, entity.AggregationMin, entity.AggregationMax, entity.AggregationSum},
 }
 
-func AllowedAggregationsForY(x string) ([]Aggregation, bool) {
-	value, exists := allowedAggregationsForY[x]
-	return value, exists
-}
-
-func ValidRequest(x, y string, agg Aggregation) bool {
-	value, exists := AllowedAggregationsForY(y)
-	return CanBeX(x) && exists && lo.Contains(value, agg)
+func validRequest(x, y string, agg entity.Aggregation) bool {
+	value, exists := allowedAggregationsForY[y]
+	return canBeX(x) && exists && lo.Contains(value, agg)
 }
 
 type GraphOut struct {

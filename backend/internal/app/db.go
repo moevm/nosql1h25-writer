@@ -90,7 +90,7 @@ func (app *App) StatsRepo() stats.Repo {
 		return app.statsRepo
 	}
 
-	app.statsRepo = stats.New(app.UsersCollection(), app.OrdersCollection(), app.Clock())
+	app.statsRepo = stats.New(app.UsersCollection(), app.OrdersCollection())
 	return app.statsRepo
 }
 

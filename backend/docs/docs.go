@@ -129,6 +129,75 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/stats": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Return stats",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Return stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "user_created_at",
+                        "description": "X",
+                        "name": "x",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "count",
+                        "description": "Y",
+                        "name": "y",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "count",
+                        "description": "Aggregation Type",
+                        "name": "agg",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_get_admin_stats.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/users": {
             "get": {
                 "security": [
@@ -1189,6 +1258,28 @@ const docTemplate = `{
                 "userId": {
                     "type": "string",
                     "example": "5a2493c33c95a1281836eb6a"
+                }
+            }
+        },
+        "internal_api_get_admin_stats.Point": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "type": "string"
+                },
+                "y": {
+                    "type": "number"
+                }
+            }
+        },
+        "internal_api_get_admin_stats.Response": {
+            "type": "object",
+            "properties": {
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_api_get_admin_stats.Point"
+                    }
                 }
             }
         },

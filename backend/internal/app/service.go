@@ -50,6 +50,6 @@ func (app *App) StatsService() stats.Service {
 		return app.statsService
 	}
 
-	app.statsService = stats.New(app.StatsRepo(), app.UsersService())
+	app.statsService = stats.New(app.StatsRepo())
 	return app.statsService
 }
