@@ -33,6 +33,7 @@ import reportWebVitals from './reportWebVitals.ts'
 
 import { AuthProvider } from './context/AuthContext'
 import { createUserProfileRoute } from './routes/user-profile.route'
+import AdminStatsPage from './components/admin/AdminStatsPage'
 import { UsersList } from '@/components/admin/UsersList'
 import { ImportDatabase } from '@/components/admin/ImportDatabase'
 import { ExportDatabase } from '@/components/admin/ExportDatabase'
@@ -83,6 +84,12 @@ const adminExportRoute = createRoute({
   component: () => <ExportDatabase />,
 })
 
+const adminStatsRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: 'stats',
+  component: () => <AdminStatsPage />,
+})
+
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
@@ -99,6 +106,7 @@ const routeTree = rootRoute.addChildren([
     adminUsersRoute,
     adminImportRoute,
     adminExportRoute,
+    adminStatsRoute,
   ]),
   AuthRoute(rootRoute),
   RegisterRoute(rootRoute),
